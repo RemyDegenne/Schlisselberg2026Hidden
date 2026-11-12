@@ -15,7 +15,7 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
 | R7 | Hoeffding's inequality for independent bounded variables, and i.i.d. sequences as `Measure.infinitePi` | exists | `ProbabilityTheory.HasSubgaussianMGF.measure_sum_ge_le_of_iIndepFun` | – | |
 | R8 | The descent lemma: quadratic bounds for a function with a Lipschitz derivative on a convex set | target | OnlineLearning 1.3 | PR #301 | `ForLMLExplore/Analysis/Convex/Smooth.lean` |
 | R9 | Multiplicative weights as the mirror descent step of the negative entropy on the simplex | target | OnlineLearning 6.2 | proved | `ForLMLExplore/OnlineLearning/ExponentiatedGradient.lean` |
-| R10 | Derivative and Bregman divergence of the negative entropy on `α → ℝ` | refactor | `LMLExplore.bregDiv_negEntropy` | proved | `ForLMLExplore/Analysis/Convex/NegEntropy.lean` |
+| R10 | Derivative and Bregman divergence of the negative entropy on `α → ℝ` | refactor | `LMLExplore.bregDiv_negEntropy` | PR #303 | `ForLMLExplore/Analysis/Convex/NegEntropy.lean` |
 | R11 | Approximate mirror descent steps: definition and basic API | staged | S1 | proved | `ForLMLExplore/OnlineLearning/ApproxMirrorDescent.lean` |
 | R12 | Regret of approximate mirror descent with a smooth regularizer, with the approximate first-order condition of an ε-minimizer | staged | S1 | proved | `ForLMLExplore/Analysis/Convex/ApproxMinimizer.lean`, `ForLMLExplore/OnlineLearning/ApproxMirrorDescent/Smooth.lean` |
 | R13 | Approximate FTRL plays: definition, basic API and regret bound | staged | S1 | proved | `ForLMLExplore/OnlineLearning/FTRL/Approx.lean`, `ForLMLExplore/Analysis/Real/Sqrt.lean` |
@@ -70,7 +70,10 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
   coordinate-separable lemmas of R14 give the `α → ℝ` forms. The local file names them
   `hasFDerivAt_negEntropy_pi`, `bregDiv_negEntropy_pi` and `bregDiv_negEntropy_pi_eq` (the
   generalized relative entropy off the simplex), beside LMLExplore's `PiLp` forms; the refactor
-  gives the `α → ℝ` forms the plain names.
+  gives the `α → ℝ` forms the plain names. PR #303 names them `hasFDerivAt_negEntropy`,
+  `bregDiv_negEntropy_of_mem_simplex` and `bregDiv_negEntropy`, renames the `PiLp p` derivative
+  `hasFDerivAt_negEntropy_ofLp`, and replaces the `PiLp p` divergence on the simplex by
+  `bregDiv_negEntropy_ofLp`, which equates it with the one on `α → ℝ`.
 - R11: the error `ε` and the learning rate `η` are parameters of a single step, so trajectories
   with per-round errors and rates need no new definition.
 - R12: the library theorem is the paper's Theorem 2 in a real normed space, with the one-step
