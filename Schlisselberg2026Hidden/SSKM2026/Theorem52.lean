@@ -17,8 +17,10 @@ an exact first play and `ε`-approximate plays afterwards, the regret against ev
 most `(R u - R (a 0)) / η + (2 η + √(2 ε)) T`.
 
 The proof compares each approximate play `a t` with the exact play `x (t + 1)` of the next
-round, `‖a t - x (t + 1)‖ ≤ 2 η + √(2 ε)` [SSKM26, Lemma 51], and uses the "be the leader"
-inequality for the exact plays [SSKM26, Lemma 50].
+round, `‖a t - x (t + 1)‖ ≤ 2 η + √(2 ε)` (Lemma 51 of [SSKM26],
+`LMLExplore.OnlineLearning.IsApproxFTRLPlay.norm_sub_le`), and uses the "be the leader"
+inequality for the exact plays (Lemma 50 of [SSKM26]). It is the case `m = 1`, `ε t = ε` and
+`‖y t‖ ≤ 1` of `LMLExplore.OnlineLearning.approxFTRL_sum_apply_sub_le`.
 
 ## Main statements
 
@@ -52,6 +54,15 @@ theorem approxFTRL_regret_le {K : Set E} (hK : Convex ℝ K) (hKc : IsCompact K)
     (hy : ∀ t < T, ‖y t‖ ≤ 1) (a : ℕ → E) (ha0 : IsFTRLPlay K R η y 0 (a 0))
     (ha : ∀ t < T, IsApproxFTRLPlay K R η y t ε (a t)) {u : E} (hu : u ∈ K) :
     regret (fun t b ↦ y t b) a u T ≤ (R u - R (a 0)) / η + (2 * η + √(2 * ε)) * T := by
-  sorry
+  have h := approxFTRL_sum_apply_sub_le hK hKc R' hR' hR one_pos hη y (fun _ ↦ ε) a ha0 ha hu
+  rw [regret_eq_sum_apply_sub (fun t ↦ y t)]
+  refine h.trans (add_le_add le_rfl ?_)
+  -- each term is at most `2 η + √(2 ε)` since `‖y t‖ ≤ 1`
+  refine (Finset.sum_le_sum (g := fun _ ↦ 2 * η + √(2 * ε)) fun t ht ↦ ?_).trans_eq
+    (by rw [Finset.sum_const, Finset.card_range, nsmul_eq_mul, mul_comm])
+  have hyt := hy t (Finset.mem_range.mp ht)
+  simp only [div_one]
+  calc ‖y t‖ * (2 * η * ‖y t‖ + √(2 * ε)) ≤ 1 * (2 * η * 1 + √(2 * ε)) := by gcongr
+  _ = 2 * η + √(2 * ε) := by ring
 
 end Schlisselberg2026Hidden

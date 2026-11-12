@@ -9,10 +9,17 @@ $\cK$ at which $\phi_t$ is at most $\eps$ above its infimum over $\cK$.
 
 \begin{definition}[{\cite[Algorithm 1]{SSKM26}}]
   \label{def:approx_ftrl}
-  \lean{LMLExplore.OnlineLearning.IsApproxFTRLPlay}
+  \lean{LMLExplore.OnlineLearning.IsApproxFTRLPlay,
+    LMLExplore.OnlineLearning.isApproxFTRLPlay_zero_iff,
+    LMLExplore.OnlineLearning.IsApproxFTRLPlay.mono,
+    LMLExplore.OnlineLearning.IsApproxFTRLPlay.nonneg,
+    LMLExplore.OnlineLearning.exists_isApproxFTRLPlay}
   \leanok
   $x$ is an \emph{$\eps$-approximate play of FTRL} at round $t$ if $x \in \cK$ and
-  $\phi_t(x) \le \phi_t(b) + \eps$ for all $b \in \cK$.
+  $\phi_t(x) \le \phi_t(b) + \eps$ for all $b \in \cK$. The $0$-approximate plays are the plays of
+  FTRL; an $\eps$-approximate play is $\eps'$-approximate for $\eps' \ge \eps$; approximate plays
+  exist only for $\eps \ge 0$, and for every $\eps > 0$ when $\phi_t$ is bounded below on a
+  nonempty $\cK$.
 \end{definition}
 
 The paper's Algorithm 1 writes $\phi_t(w) = \eta \sum_{s=1}^t \ip{w_t}{\ell_t} + R(w)$, a typo for
@@ -20,41 +27,55 @@ $\eta \sum_{s=1}^t \ip{w}{\ell_s} + R(w)$.
 
 \begin{lemma}[{\cite[Lemma 51]{SSKM26}}]
   \label{lem:ftrl_movement}
+  \lean{LMLExplore.OnlineLearning.IsApproxFTRLPlay.norm_sub_le}
+  \leanok
   \uses{def:approx_ftrl, lem:solve_quadratic}
   Let $\norm{\ell_t} \le 1$, let $\tilde w_t$ be an $\eps$-approximate play at round $t$ and let
   $w_{t+1}$ be an exact play at round $t + 1$ (it exists since $\cK$ is compact and $R$ is
   continuous on $\cK$). Then $\norm{\tilde w_t - w_{t+1}} \le 2\eta + \sqrt{2\eps}$.
+
+  The Lean statement has an $m$-strongly convex $R$, any loss and $\eta \ge 0$:
+  $\norm{\tilde w_t - w_{t+1}} \le 2\eta\norm{\ell_t}/m + \sqrt{2\eps/m}$.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   \uses{lem:solve_quadratic}
   Since $w_{t+1}$ minimizes $\phi_{t+1}$, whose derivative at $w_{t+1}$ is $\eta\sum_{s \le
   t}\ell_s + R'(w_{t+1})$, LMLExplore's \texttt{bregDiv\_le\_sub\_of\_isMinOn} gives
   $D_R(\tilde w_t, w_{t+1}) \le \phi_{t+1}(\tilde w_t) - \phi_{t+1}(w_{t+1})
   = \phi_t(\tilde w_t) - \phi_t(w_{t+1}) + \eta\,\ell_t(\tilde w_t - w_{t+1})
   \le \eps + \eta \norm{\tilde w_t - w_{t+1}}$. By strong convexity the left side is at least
-  $\frac12\norm{\tilde w_t - w_{t+1}}^2$, and Lemma~\ref{lem:solve_quadratic} with $a = 1/2$,
-  $b = \eta$, $c = \eps$ concludes.
+  $\frac12\norm{\tilde w_t - w_{t+1}}^2$, and the non-strict form of
+  Lemma~\ref{lem:solve_quadratic} with $a = 1/2$, $b = \eta$, $c = \eps$ concludes ($\eps$ may
+  vanish).
 \end{proof}
 
 \begin{theorem}[{\cite[Theorem 52]{SSKM26}}]
   \label{thm:approx_ftrl}
-  \lean{Schlisselberg2026Hidden.approxFTRL_regret_le}
+  \lean{Schlisselberg2026Hidden.approxFTRL_regret_le,
+    LMLExplore.OnlineLearning.approxFTRL_sum_apply_sub_le}
   \leanok
   \uses{lem:ftrl_movement}
   Let $\norm{\ell_t} \le 1$ for $t < T$, let $\tilde w_0$ be an exact play at round $0$ (a minimizer
   of $R$ over $\cK$) and let each $\tilde w_t$, $t < T$, be an $\eps$-approximate play at round $t$.
   Then for every $u \in \cK$,
   \[ \mathrm{Regret}_T(u) \le \frac{R(u) - R(\tilde w_0)}{\eta} + (2 \eta + \sqrt{2\eps}) T. \]
+
+  The library form \texttt{approxFTRL\_sum\_apply\_sub\_le} has an $m$-strongly convex $R$, errors
+  $\eps_t$ that may change with the round and any losses:
+  $\mathrm{Regret}_T(u) \le (R(u) - R(\tilde w_0))/\eta +
+  \sum_{t<T}\norm{\ell_t}(2\eta\norm{\ell_t}/m + \sqrt{2\eps_t/m})$.
 \end{theorem}
 
 \begin{proof}
+  \leanok
   \uses{lem:ftrl_movement}
-  Let $w_{t+1}$ be exact plays at the rounds $t + 1$, $t < T$. Applied to the losses
-  $f_0 = R/\eta + \ell_0$ and $f_t = \ell_t$ for $t \ge 1$, the be-the-leader inequality
-  (\cite[Lemma 50]{SSKM26}, LMLExplore's \texttt{sum\_le\_of\_isMinOn\_sum}) gives
-  $R(w_1)/\eta + \sum_{t<T}\ell_t(w_{t+1}) \le R(u)/\eta + \sum_{t<T}\ell_t(u)$, and
-  $R(\tilde w_0) \le R(w_1)$. Hence $\mathrm{Regret}_T(u) \le (R(u) - R(\tilde w_0))/\eta +
-  \sum_{t<T}\ell_t(\tilde w_t - w_{t+1})$, and each term of the sum is at most
-  $\norm{\tilde w_t - w_{t+1}} \le 2\eta + \sqrt{2\eps}$ by Lemma~\ref{lem:ftrl_movement}.
+  Let $w_t$ be exact plays at every round, with $w_0 = \tilde w_0$. The FTRL inequality for the
+  regularizer $R/\eta$ (LMLExplore's \texttt{regret\_le\_ftrl}, the be-the-leader argument of
+  \cite[Lemma 50]{SSKM26}), with the exact plays as leaders and the approximate plays as the
+  plays whose regret is bounded, gives $\mathrm{Regret}_T(u) \le (R(u) - R(\tilde w_0))/\eta +
+  \sum_{t<T}(\phi_t(w_t) - \phi_t(w_{t+1}))/\eta + \sum_{t<T}\ell_t(\tilde w_t - w_{t+1})$, and
+  $\phi_t(w_t) \le \phi_t(w_{t+1})$ since $w_t$ minimizes $\phi_t$. Each term of the last sum is
+  at most $\norm{\tilde w_t - w_{t+1}} \le 2\eta + \sqrt{2\eps}$ by Lemma~\ref{lem:ftrl_movement}.
 \end{proof}

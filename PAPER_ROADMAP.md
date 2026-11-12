@@ -13,12 +13,12 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
 | R5 | Bregman divergences of strongly convex functions and the stability bound of a step | exists | `LMLExplore.OnlineLearning.apply_sub_sub_div_le_of_mul_norm_sq_le` | – | |
 | R6 | The simplex, the negative entropy, Pinsker's inequality and the Gibbs variational principle | exists | `LMLExplore.negEntropy` | – | |
 | R7 | Hoeffding's inequality for independent bounded variables, and i.i.d. sequences as `Measure.infinitePi` | exists | `ProbabilityTheory.HasSubgaussianMGF.measure_sum_ge_le_of_iIndepFun` | – | |
-| R8 | The descent lemma: quadratic bounds for a function with a Lipschitz derivative on a convex set | target | OnlineLearning 1.3 | todo | `ForLMLExplore/Analysis/Convex/Smooth.lean` |
+| R8 | The descent lemma: quadratic bounds for a function with a Lipschitz derivative on a convex set | target | OnlineLearning 1.3 | proved | `ForLMLExplore/Analysis/Convex/Smooth.lean` |
 | R9 | Multiplicative weights as the mirror descent step of the negative entropy on the simplex | target | OnlineLearning 6.2 | todo | `ForLMLExplore/OnlineLearning/ExponentiatedGradient.lean` |
 | R10 | Derivative and Bregman divergence of the negative entropy on `α → ℝ` | refactor | `LMLExplore.bregDiv_negEntropy` | todo | `ForLMLExplore/Analysis/Convex/NegEntropy.lean` |
 | R11 | Approximate mirror descent steps: definition and basic API | staged | S1 | proved | `ForLMLExplore/OnlineLearning/ApproxMirrorDescent.lean` |
-| R12 | Regret of approximate mirror descent with a smooth regularizer, with the approximate first-order condition of an ε-minimizer | staged | S1 | todo | `ForLMLExplore/Analysis/Convex/ApproxMinimizer.lean`, `ForLMLExplore/OnlineLearning/ApproxMirrorDescent/Smooth.lean` |
-| R13 | Approximate FTRL plays: definition, basic API and regret bound | staged | S1 | todo | `ForLMLExplore/OnlineLearning/FTRL/Approx.lean`, `ForLMLExplore/Analysis/Real/Sqrt.lean` |
+| R12 | Regret of approximate mirror descent with a smooth regularizer, with the approximate first-order condition of an ε-minimizer | staged | S1 | proved | `ForLMLExplore/Analysis/Convex/ApproxMinimizer.lean`, `ForLMLExplore/OnlineLearning/ApproxMirrorDescent/Smooth.lean` |
+| R13 | Approximate FTRL plays: definition, basic API and regret bound | staged | S1 | proved | `ForLMLExplore/OnlineLearning/FTRL/Approx.lean`, `ForLMLExplore/Analysis/Real/Sqrt.lean` |
 | R14 | Power barriers and coordinate-separable regularizers: examples, scalar bounds, derivative, Bregman divergence, strong convexity | staged | S2 | todo | `ForLMLExplore/Analysis/Convex/PowerBarrier.lean` |
 | R15 | Polytopes in standard form inside the simplex: convexity, feasible directions, ℓ¹ bounds on differences | staged | S3 | todo | `ForLMLExplore/Analysis/Convex/StandardFormPolytope.lean` |
 | R16 | Stuck trajectories: the error of staying put, for the negative entropy and for power barriers | paper | | todo | |
@@ -44,9 +44,11 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
 - R8: OnlineLearning 1.3 defines `s`-smoothness on a convex set `V` (differentiable on an open set
   containing `V`, with an `s`-Lipschitz derivative on `V` for the dual norm) and asks for the
   two-sided bound `|f y - f x - f' x (y - x)| ≤ s / 2 * ‖y - x‖ ^ 2` on `V`. The paper uses the
-  upper bound with a derivative within `K` at every point of `K`. The port proves the two-sided
-  bound under that weaker hypothesis, gives the target's definition, and derives the target's form
-  from it. The other claims of 1.3 (gradient bound, self-bounded functions) are not needed here.
+  upper bound with a derivative within `K` at every point of `K`. The file proves the two-sided
+  bound under that weaker hypothesis (`Convex.abs_bregDiv_le_mul_norm_sub_sq`) and the target's
+  form with its hypotheses written out (`Convex.abs_bregDiv_fderiv_le_mul_norm_sub_sq`); the port
+  adds the target's definition and states that form with it. The other claims of 1.3 (gradient
+  bound, self-bounded functions) are not needed here.
 - R9: OnlineLearning 6.2 asks, on `simplex α`, that the mirror descent step with the negative
   entropy be the multiplicative update `x_{t+1} ∝ x_t e^{-η y_t}` and that its iterates stay
   positive. It also asks that from the uniform start with a constant rate the iterates be

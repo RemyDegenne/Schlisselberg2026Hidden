@@ -10,15 +10,23 @@ operator norm, which is the dual norm.
 
 \begin{lemma}[{\cite[proof of Theorem 2]{SSKM26}}]
   \label{lem:smooth_one_step}
+  \lean{LMLExplore.OnlineLearning.IsApproxMirrorDescentStep.mul_apply_sub_le_of_strongConvexOn,
+    LMLExplore.OnlineLearning.IsApproxMirrorDescentStep.mul_apply_sub_le_of_smooth}
+  \leanok
   \uses{lem:approx_first_order, lem:smooth_quadratic_bound}
   Under these assumptions, let $\eps \le D^2/2$, $\eta > 0$, and let $x$ be an $\eps$-approximate
   mirror descent step on $\cK$ from $a \in \cK$ for a loss $\ell$, with potential $R$ and
   derivative $R'(a)$. Then for every $u \in \cK$,
   \[ \eta\, \ell(x - u) \le D_R(u, a) - D_R(u, x) - D_R(x, a) + D \sqrt{2 \beta \eps}, \]
   where the divergences from $a$ and from $x$ use $R'(a)$ and $R'(x)$.
+
+  The Lean statements take any linear map in place of $R'(a)$, need neither $a \in \cK$ nor
+  $\eta > 0$, and hold for an $m$-strongly convex $R$ with $\eps \le m D^2 / 2$, or for any $R$
+  with $\eps \le \beta D^2 / 2$.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   \uses{lem:approx_first_order, lem:smooth_quadratic_bound}
   If $\cK$ has two distinct points $x_1 \ne x_2$, then
   $\frac12 \norm{x_1 - x_2}^2 \le D_R(x_1, x_2) \le \frac\beta2 \norm{x_1 - x_2}^2$ by strong
@@ -34,7 +42,8 @@ operator norm, which is the dual norm.
 
 \begin{theorem}[{\cite[Theorem 2]{SSKM26}}]
   \label{thm:ub_smooth}
-  \lean{Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_smooth}
+  \lean{Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_smooth,
+    LMLExplore.OnlineLearning.approxMirrorDescent_sum_apply_sub_le}
   \leanok
   \uses{def:approx_step, lem:smooth_one_step, lem:omd_helper}
   Under these assumptions, let $\eta > 0$, $\eps \le D^2/2$, and let the losses satisfy
@@ -42,9 +51,15 @@ operator norm, which is the dual norm.
   descent on $\cK$ with potential $R$ and every $u \in \cK$,
   \[ \mathrm{Regret}_T(u) \le \frac{D_R(u, w_0)}{\eta} + \frac{\eta T}{2}
     + \frac{T D \sqrt{2 \beta \eps}}{\eta}. \]
+
+  The library form \texttt{approxMirrorDescent\_sum\_apply\_sub\_le} has an $m$-strongly convex
+  $R$, errors $\eps_t \le m D^2 / 2$ that may change with the round and any losses:
+  $\mathrm{Regret}_T(u) \le D_R(u, w_0)/\eta + \frac{\eta}{2m}\sum_{t<T}\norm{\ell_t}^2 +
+  D \sum_{t<T}\sqrt{2\beta\eps_t}/\eta$.
 \end{theorem}
 
 \begin{proof}
+  \leanok
   \uses{lem:smooth_one_step, lem:omd_helper}
   Split $\ell_t(w_t - u) = \ell_t(w_t - w_{t+1}) + \ell_t(w_{t+1} - u)$. By
   Lemma~\ref{lem:smooth_one_step}, summed over $t < T$, the second terms add up to at most
@@ -59,11 +74,14 @@ operator norm, which is the dual norm.
 
 \begin{lemma}[{\cite[Lemma 27]{SSKM26}}]
   \label{lem:omd_helper}
+  \lean{LMLExplore.OnlineLearning.apply_sub_sub_div_le_of_mul_norm_sq_le}
+  \leanok
   If $R$ is $1$-strongly convex on $\cK$ and $\norm{\ell} \le 1$, then for $a, x \in \cK$ and
   $\eta > 0$, $\ell(a - x) - D_R(x, a)/\eta \le \eta / 2$.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   $D_R(x, a) \ge \frac12 \norm{x - a}^2$ (LMLExplore's
   \texttt{StrongConvexOn.mul\_norm\_sub\_sq\_le\_bregDiv}), $\ell(a - x) \le \norm{a - x}$, and
   $s - s^2/(2\eta) \le \eta/2$. This is LMLExplore's
@@ -83,6 +101,7 @@ operator norm, which is the dual norm.
 \end{theorem}
 
 \begin{proof}
+  \leanok
   Let $\ell_t = \ell = \min\{\sqrt{2 \beta \eps} / \eta, 1\}$ for all $t$ and $w_t = D/2$ for all
   $t$, $u = 0$. The objective $\phi(b) = \eta \ell b + \frac\beta2 (b - D/2)^2$ of every round is a
   quadratic with unconstrained minimizer $D/2 - \eta\ell/\beta$ and unconstrained minimum

@@ -68,8 +68,9 @@ status:
     paper is an explicit constant, and the constants and hypotheses are corrected where the
     paper's proofs do not support them (notes/paper-errata.md, E1-E35; the corrected proofs, with
     every constant derived, are notes/constants-*.md). The outline is notes/blueprint-outline.md,
-    the modelling notes/modelling.md.
-  sorry_count: 12
+    the modelling notes/modelling.md. Phase 2: Theorems 2, 3 and 52 proved (2026-11-12), with
+    the library-shaped Lemmas 22, 23, 51 and the descent lemma in ForLMLExplore/.
+  sorry_count: 9
   sorry_in_definitions: 0
 
 automation:
@@ -108,13 +109,13 @@ alignment:
     - source: "thm:ub_smooth — Theorem 2"
       lean: "Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_smooth"
       module: "Schlisselberg2026Hidden.SSKM2026.Theorem2"
-      status: "stated"
+      status: "proved"
       relation: "broadMatch"
       note: "Any real normed space and any upper bound D on the diameter; the O(...) is made explicit with the constants of the paper's proof: D_R(u,w_1)/eta + eta T/2 + T D sqrt(2 beta eps)/eta."
     - source: "thm:lb_smooth — Theorem 3"
       lean: "Schlisselberg2026Hidden.exists_approxMirrorDescent_le_regret_euclidean"
       module: "Schlisselberg2026Hidden.SSKM2026.Theorem3"
-      status: "stated"
+      status: "proved"
       relation: "exactMatch"
       note: "The Omega(...) is made explicit, min(T D sqrt(beta eps)/eta, D T)/2, with losses and trajectory independent of T."
     - source: "thm:lb_barrier_adversarial — Theorem 4"
@@ -183,6 +184,6 @@ alignment:
     - source: "thm:approx_ftrl — Theorem 52"
       lean: "Schlisselberg2026Hidden.approxFTRL_regret_le"
       module: "Schlisselberg2026Hidden.SSKM2026.Theorem52"
-      status: "stated"
+      status: "proved"
       relation: "broadMatch"
       note: "Any real normed space and compact convex K."

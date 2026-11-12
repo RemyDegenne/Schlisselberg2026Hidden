@@ -48,6 +48,42 @@ theorem exists_approxMirrorDescent_le_regret_euclidean {β ε D η : ℝ} (hβ :
         ((β * a t) • ContinuousLinearMap.id ℝ ℝ) ε (a (t + 1))) ∧
       ∃ u ∈ Set.Icc 0 D, ∀ T : ℕ,
         min (T * D * √(β * ε) / η) (D * T) / 2 ≤ regret (fun t b ↦ y t b) a u T := by
-  sorry
+  -- the constant loss `ℓ = min (√(2 β ε) / η) 1`, the constant trajectory `D / 2`, and `u = 0`
+  set ℓ := min (√(2 * β * ε) / η) 1 with hℓ
+  have hℓ0 : 0 ≤ ℓ := le_min (by positivity) zero_le_one
+  have hηℓ : η * ℓ ≤ √(2 * β * ε) := by
+    calc η * ℓ ≤ η * (√(2 * β * ε) / η) := mul_le_mul_of_nonneg_left (min_le_left _ _) hη.le
+    _ = √(2 * β * ε) := mul_div_cancel₀ _ hη.ne'
+  have hηℓ2 : (η * ℓ) ^ 2 ≤ 2 * β * ε := by
+    have := pow_le_pow_left₀ (by positivity) hηℓ 2
+    rwa [Real.sq_sqrt (by positivity)] at this
+  refine ⟨fun _ ↦ ℓ • ContinuousLinearMap.id ℝ ℝ, fun t ↦ ?_, fun _ ↦ D / 2,
+    ⟨by positivity, by linarith⟩, fun t ↦ ⟨⟨by positivity, by linarith⟩, fun b hb ↦ ?_⟩, 0,
+    ⟨le_rfl, hD.le⟩, fun T ↦ ?_⟩
+  · rw [norm_smul, ContinuousLinearMap.norm_id, mul_one, Real.norm_eq_abs, abs_of_nonneg hℓ0]
+    exact min_le_right _ _
+  · -- the objective `η ℓ b + β (b - D / 2)² / 2` is at least its value at `D / 2` minus
+    -- `η² ℓ² / (2 β) ≤ ε`
+    simp only [bregDiv, smul_apply, ContinuousLinearMap.id_apply, smul_eq_mul]
+    have key : 0 ≤ 2 * β * (η * ℓ * (b - D / 2) + β / 2 * (b - D / 2) ^ 2 + ε) := by
+      nlinarith [sq_nonneg (β * (b - D / 2) + η * ℓ)]
+    have := (mul_nonneg_iff_of_pos_left (by positivity : (0 : ℝ) < 2 * β)).mp key
+    nlinarith
+  · -- the regret against `0` is `T ℓ D / 2`
+    have h_reg : regret (fun t b ↦ (ℓ • ContinuousLinearMap.id ℝ ℝ) b) (fun _ ↦ D / 2) 0 T =
+        T * D * ℓ / 2 := by
+      simp only [regret_def, smul_apply, ContinuousLinearMap.id_apply, smul_eq_mul, mul_zero,
+        sub_zero, Finset.sum_const, Finset.card_range, nsmul_eq_mul]
+      ring
+    rw [h_reg]
+    have hTD : 0 ≤ (T : ℝ) * D := by positivity
+    have h1 : T * D * √(β * ε) / η ≤ T * D * (√(2 * β * ε) / η) := by
+      rw [← mul_div_assoc]
+      gcongr
+      nlinarith [mul_pos hβ hε]
+    have h2 : min (T * D * √(β * ε) / η) (D * T) ≤ T * D * ℓ := by
+      rw [hℓ, mul_min_of_nonneg _ _ hTD, mul_one]
+      exact min_le_min h1 (le_of_eq (mul_comm _ _))
+    linarith
 
 end Schlisselberg2026Hidden

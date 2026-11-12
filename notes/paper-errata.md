@@ -277,7 +277,8 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
 - **Where:** Lemma 22 (`lem:epsilon optimality conditions`), proof, Appendix A.
 - **Error:** the second case concludes `∇f(ŵ)(w - ŵ) ≥ ‖w - ŵ‖√(2βε)`.
 - **Correction:** `≥ -‖w - ŵ‖√(2βε)`.
-- **Lean:** blueprint `lem:approx_first_order`.
+- **Lean:** `LMLExplore.neg_max_le_apply_sub_of_le_add` (in `ForLMLExplore/`) proves the corrected
+  bound, blueprint `lem:approx_first_order`.
 - **Kind:** typo.
 - **Found:** phase-1 statement check, 2026-11-12.
 

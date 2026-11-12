@@ -22,43 +22,66 @@ a quadratic upper bound. $E$ is a real normed space and $\cK \subseteq E$.
 
 \begin{lemma}[{\cite[Lemma 23]{SSKM26}}]
   \label{lem:solve_quadratic}
-  If $a, b, c > 0$ and $a x^2 - b x - c \le 0$, then $x < b/a + \sqrt{c/a}$.
+  \lean{Real.lt_div_add_sqrt_div_of_mul_sq_le, Real.le_div_add_sqrt_div_of_mul_sq_le}
+  \leanok
+  If $a, b, c > 0$ and $a x^2 - b x - c \le 0$, then $x < b/a + \sqrt{c/a}$. If only $a > 0$ and
+  $b, c \ge 0$, then $x \le b/a + \sqrt{c/a}$.
 \end{lemma}
 
 \begin{proof}
-  The roots of $a x^2 - bx - c$ are below $(b + \sqrt{b^2 + 4ac})/(2a) < b/a + \sqrt{c/a}$.
+  \leanok
+  Let $s = \sqrt{c/a}$, so that $a s^2 = c$. If $x \ge b/a + s$, then $x > s \ge 0$ and
+  $a x - b \ge a s$, so $a x^2 - b x = x(ax - b) > s \cdot a s = c$ (strictly, as $b > 0$ gives
+  $x > s$ and $c > 0$ gives $as > 0$). The non-strict form is the same argument from $x > b/a + s$.
 \end{proof}
 
 \begin{lemma}
   \label{lem:smooth_quadratic_bound}
+  \lean{Convex.abs_bregDiv_le_mul_norm_sub_sq, Convex.bregDiv_le_mul_norm_sub_sq,
+    Convex.abs_bregDiv_fderiv_le_mul_norm_sub_sq}
+  \leanok
   Let $\cK$ be convex and let $f$ have a derivative $f'(x)$ within $\cK$ at every $x \in \cK$ with
   $\norm{f'(x) - f'(y)} \le \beta \norm{x - y}$ for $x, y \in \cK$. Then for $x, y \in \cK$,
-  $f(y) - f(x) - f'(x)(y - x) \le \frac\beta2 \norm{y - x}^2$.
+  $\abs{f(y) - f(x) - f'(x)(y - x)} \le \frac\beta2 \norm{y - x}^2$. The same holds for a function
+  differentiable on an open set containing $\cK$, with its Fréchet derivative.
 \end{lemma}
 
 \begin{proof}
-  Let $g(s) = f(x + s(y - x)) - f(x) - s f'(x)(y - x) - \frac{\beta s^2}{2}\norm{y - x}^2$ on
-  $[0, 1]$; its right derivative at $s$ is
-  $(f'(x + s(y - x)) - f'(x))(y - x) - \beta s \norm{y - x}^2 \le 0$, so $g(1) \le g(0) = 0$.
+  \leanok
+  Let $g(s) = f(x + s(y - x)) - f(x) - s f'(x)(y - x)$ on $[0, 1]$; its derivative within
+  $[0, 1]$ at $s$ is $(f'(x + s(y - x)) - f'(x))(y - x)$, of absolute value at most
+  $\beta s \norm{y - x}^2$, the derivative of $\frac{\beta s^2}{2}\norm{y - x}^2$. Since
+  $g(0) = 0$, the comparison of $\abs{g}$ with this bound (Mathlib's
+  \texttt{image\_norm\_le\_of\_norm\_deriv\_right\_le\_deriv\_boundary}) gives
+  $\abs{g(1)} \le \frac\beta2 \norm{y - x}^2$.
 \end{proof}
 
 \begin{lemma}[{\cite[Lemma 22]{SSKM26}}]
   \label{lem:approx_first_order}
-  Let $\cK$ be convex, let $\hat w \in \cK$ satisfy $f(\hat w) \le f(b) + \eps$ for all $b \in \cK$,
-  let $f$ have a derivative $f'$ within $\cK$ at $\hat w$, let $w \in \cK$, and assume
-  $f(y) - f(\hat w) - f'(y - \hat w) \le \frac\beta2 \norm{y - \hat w}^2$ for $y$ on the segment
-  $[\hat w, w]$, with $\beta > 0$. Then
+  \lean{LMLExplore.neg_max_le_apply_sub_of_le_add,
+    LMLExplore.neg_mul_sqrt_le_apply_sub_of_le_add}
+  \leanok
+  Let $\hat w, w \in E$, let $f(\hat w) \le f(z) + \eps$ for $z$ on the segment $[\hat w, w]$, let
+  $f'$ be a continuous linear functional, and assume
+  $f(z) - f(\hat w) - f'(z - \hat w) \le \frac\beta2 \norm{z - \hat w}^2$ for $z$ on the segment
+  $[\hat w, w]$. Then
   \[ f'(w - \hat w) \ge -\max\bigl\{\norm{w - \hat w}\sqrt{2 \beta \eps}, 2 \eps\bigr\}. \]
   In particular, if $\norm{w - \hat w} \le D$ and $\eps \le \beta D^2/2$, then
   $f'(w - \hat w) \ge -D\sqrt{2\beta\eps}$.
+
+  The paper assumes $\hat w$ to be an $\eps$-minimizer of $f$ on a convex set $\cK$ containing
+  $w$, $f'$ to be the gradient of $f$ at $\hat w$ and $\beta > 0$; the proof uses none of these
+  beyond the segment.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   For $\gamma \in (0, 1]$, $f(\hat w) - \eps \le f(\hat w + \gamma(w - \hat w)) \le f(\hat w) +
   \gamma f'(w - \hat w) + \gamma^2 \frac\beta2 \norm{w - \hat w}^2$, so
   $f'(w - \hat w) \ge -\eps/\gamma - \gamma\frac\beta2\norm{w - \hat w}^2$. Take $\gamma = 1$ if
-  $2\eps \ge \beta\norm{w - \hat w}^2$, which gives $-2\eps$, and
-  $\gamma = \sqrt{2\eps/\beta}/\norm{w - \hat w}$ otherwise, which gives
-  $-\norm{w - \hat w}\sqrt{2\beta\eps}$. For the last claim, $\eps \le \beta D^2/2$ gives
-  $2\eps \le D\sqrt{2\beta\eps}$. (The paper's proof has the sign of the second case wrong.)
+  $2\eps \ge \beta\norm{w - \hat w}^2$, which gives $-2\eps$. Otherwise $\beta > 0$ and
+  $w \ne \hat w$: for $\eps > 0$ take $\gamma = \sqrt{2\eps/\beta}/\norm{w - \hat w}$, which gives
+  $-\norm{w - \hat w}\sqrt{2\beta\eps}$, and for $\eps = 0$ let $\gamma \to 0$, which gives $0$.
+  For the last claim, $\eps \le \beta D^2/2$ gives $2\eps \le D\sqrt{2\beta\eps}$. (The paper's
+  proof has the sign of the second case wrong.)
 \end{proof}
