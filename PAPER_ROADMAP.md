@@ -13,7 +13,7 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
 | R5 | Bregman divergences of strongly convex functions and the stability bound of a step | exists | `LMLExplore.OnlineLearning.apply_sub_sub_div_le_of_mul_norm_sq_le` | – | |
 | R6 | The simplex, the negative entropy, Pinsker's inequality and the Gibbs variational principle | exists | `LMLExplore.negEntropy` | – | |
 | R7 | Hoeffding's inequality for independent bounded variables, and i.i.d. sequences as `Measure.infinitePi` | exists | `ProbabilityTheory.HasSubgaussianMGF.measure_sum_ge_le_of_iIndepFun` | – | |
-| R8 | The descent lemma: quadratic bounds for a function with a Lipschitz derivative on a convex set | target | OnlineLearning 1.3 | proved | `ForLMLExplore/Analysis/Convex/Smooth.lean` |
+| R8 | The descent lemma: quadratic bounds for a function with a Lipschitz derivative on a convex set | target | OnlineLearning 1.3 | PR #301 | `ForLMLExplore/Analysis/Convex/Smooth.lean` |
 | R9 | Multiplicative weights as the mirror descent step of the negative entropy on the simplex | target | OnlineLearning 6.2 | proved | `ForLMLExplore/OnlineLearning/ExponentiatedGradient.lean` |
 | R10 | Derivative and Bregman divergence of the negative entropy on `α → ℝ` | refactor | `LMLExplore.bregDiv_negEntropy` | proved | `ForLMLExplore/Analysis/Convex/NegEntropy.lean` |
 | R11 | Approximate mirror descent steps: definition and basic API | staged | S1 | proved | `ForLMLExplore/OnlineLearning/ApproxMirrorDescent.lean` |
@@ -48,7 +48,9 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
   bound under that weaker hypothesis (`Convex.abs_bregDiv_le_mul_norm_sub_sq`) and the target's
   form with its hypotheses written out (`Convex.abs_bregDiv_fderiv_le_mul_norm_sub_sq`); the port
   adds the target's definition and states that form with it. The other claims of 1.3 (gradient
-  bound, self-bounded functions) are not needed here.
+  bound, self-bounded functions) are not needed here. PR #301 ports it as `LMLExplore.SmoothOn`,
+  with `Convex.norm_bregDiv_le_mul_norm_sub_sq` (for `F`-valued functions, the local
+  `Convex.abs_bregDiv_le_mul_norm_sub_sq` at `F = ℝ`) and `Convex.bregDiv_le_mul_norm_sub_sq`.
 - R9: OnlineLearning 6.2 asks, on `simplex α`, that the mirror descent step with the negative
   entropy be the multiplicative update `x_{t+1} ∝ x_t e^{-η y_t}` and that its iterates stay
   positive. It also asks that from the uniform start with a constant rate the iterates be
