@@ -350,7 +350,11 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
   coordinates). For the negative entropy and the loss `1 - e_{i₀}`, staying is `ε`-approximate as
   soon as `ε ≥ η²min(m, 1 - m)` (`η ≤ 1`, `m = w^{i₀}`), by the closed form
   `log(1 + m(e^η - 1)) - ηm` of the error.
-- **Lean:** blueprint `lem:entropy_stuck`, `lem:barrier_stuck`.
+- **Lean:** `Schlisselberg2026Hidden.isApproxMirrorDescentStep_negEntropy_self` (negative
+  entropy) and `Schlisselberg2026Hidden.isApproxMirrorDescentStep_self_of_isPowerBarrier` (power
+  barriers, from the one-dimensional bound
+  `Schlisselberg2026Hidden.mul_abs_sub_sub_le_of_isPowerBarrier`, which compares with the curvature
+  along the whole step), both in `SSKM2026/Lemma34.lean`.
 - **Kind:** false statement.
 - **Found:** phase-1 statement check, 2026-11-12.
 

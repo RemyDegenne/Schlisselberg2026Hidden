@@ -14,14 +14,14 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
 | R6 | The simplex, the negative entropy, Pinsker's inequality and the Gibbs variational principle | exists | `LMLExplore.negEntropy` | – | |
 | R7 | Hoeffding's inequality for independent bounded variables, and i.i.d. sequences as `Measure.infinitePi` | exists | `ProbabilityTheory.HasSubgaussianMGF.measure_sum_ge_le_of_iIndepFun` | – | |
 | R8 | The descent lemma: quadratic bounds for a function with a Lipschitz derivative on a convex set | target | OnlineLearning 1.3 | proved | `ForLMLExplore/Analysis/Convex/Smooth.lean` |
-| R9 | Multiplicative weights as the mirror descent step of the negative entropy on the simplex | target | OnlineLearning 6.2 | todo | `ForLMLExplore/OnlineLearning/ExponentiatedGradient.lean` |
-| R10 | Derivative and Bregman divergence of the negative entropy on `α → ℝ` | refactor | `LMLExplore.bregDiv_negEntropy` | todo | `ForLMLExplore/Analysis/Convex/NegEntropy.lean` |
+| R9 | Multiplicative weights as the mirror descent step of the negative entropy on the simplex | target | OnlineLearning 6.2 | proved | `ForLMLExplore/OnlineLearning/ExponentiatedGradient.lean` |
+| R10 | Derivative and Bregman divergence of the negative entropy on `α → ℝ` | refactor | `LMLExplore.bregDiv_negEntropy` | proved | `ForLMLExplore/Analysis/Convex/NegEntropy.lean` |
 | R11 | Approximate mirror descent steps: definition and basic API | staged | S1 | proved | `ForLMLExplore/OnlineLearning/ApproxMirrorDescent.lean` |
 | R12 | Regret of approximate mirror descent with a smooth regularizer, with the approximate first-order condition of an ε-minimizer | staged | S1 | proved | `ForLMLExplore/Analysis/Convex/ApproxMinimizer.lean`, `ForLMLExplore/OnlineLearning/ApproxMirrorDescent/Smooth.lean` |
 | R13 | Approximate FTRL plays: definition, basic API and regret bound | staged | S1 | proved | `ForLMLExplore/OnlineLearning/FTRL/Approx.lean`, `ForLMLExplore/Analysis/Real/Sqrt.lean` |
 | R14 | Power barriers and coordinate-separable regularizers: examples, scalar bounds, derivative, Bregman divergence, strong convexity | staged | S2 | todo | `ForLMLExplore/Analysis/Convex/PowerBarrier.lean` |
 | R15 | Polytopes in standard form inside the simplex: convexity, feasible directions, ℓ¹ bounds on differences | staged | S3 | todo | `ForLMLExplore/Analysis/Convex/StandardFormPolytope.lean` |
-| R16 | Stuck trajectories: the error of staying put, for the negative entropy and for power barriers | paper | | todo | |
+| R16 | Stuck trajectories: the error of staying put, for the negative entropy and for power barriers | paper | | proved | `SSKM2026/Lemma34.lean` |
 | R17 | Negative entropy on the simplex: step sizes, balance, lower bounds on the iterates, balance of i.i.d. losses | paper | | todo | |
 | R18 | Power barriers on polytopes: balance, lower bound on the iterates, one-round inequality | paper | | todo | |
 | R19 | The polytope, the losses and the trajectory of Theorem 8 | paper | | todo | |
@@ -56,12 +56,19 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
   the first claim from any point with positive coordinates, for any loss and any `η`, together
   with the minimum value `-log ∑ a, x a * exp (-η y a)` of the objective; both come from the Gibbs
   variational principle of R6. State the step with `IsMirrorDescentStep`, on `α → ℝ`, with the
-  derivative of R10.
+  derivative of R10. The file states the step as `softmax (log w - η ℓ)`
+  (`isMirrorDescentStep_negEntropy_iff`, with its uniqueness), the approximate steps as the points
+  at relative entropy at most `ε` from it, the trajectory from the uniform point as
+  `softmax (-η ∑ s < t, ℓ s)` with its uniqueness, and the invariance under adding a constant to a
+  loss (`isMirrorDescentStep_negEntropy_add_const_iff`).
 - R10: LMLExplore states `hasFDerivAt_negEntropy` and `bregDiv_negEntropy` on `PiLp p`. The
   paper's statements use `negEntropy` on `α → ℝ`, with the derivative
   `∑ a, log (y a) • ContinuousLinearMap.proj a`. The refactor states both on `α → ℝ` and derives
   the `PiLp p` forms from them, since the Bregman divergence only evaluates the linear map. The
-  coordinate-separable lemmas of R14 give the `α → ℝ` forms.
+  coordinate-separable lemmas of R14 give the `α → ℝ` forms. The local file names them
+  `hasFDerivAt_negEntropy_pi`, `bregDiv_negEntropy_pi` and `bregDiv_negEntropy_pi_eq` (the
+  generalized relative entropy off the simplex), beside LMLExplore's `PiLp` forms; the refactor
+  gives the `α → ℝ` forms the plain names.
 - R11: the error `ε` and the learning rate `η` are parameters of a single step, so trajectories
   with per-round errors and rates need no new definition.
 - R12: the library theorem is the paper's Theorem 2 in a real normed space, with the one-step
@@ -78,7 +85,12 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
   them on `(0, 1)` (erratum E1, `notes/modelling.md`). The scalar bounds are the paper's Lemmas 21
   and 41, Lemma 41 in corrected form, with the factor `1 / (ν - 1)` (erratum E26). The strong
   convexity is for the `ℓ¹` norm on the points of the simplex with positive coordinates, with
-  modulus `c₁ / 2`; the paper's proof of Theorem 6 uses modulus `1` (erratum E6).
+  modulus `c₁ / 2`; the paper's proof of Theorem 6 uses modulus `1` (erratum E6). Proved so far:
+  the definition, the Bregman divergence of a coordinate-separable function as a sum
+  (`bregDiv_sum_apply`), Taylor's formula of order two, and all the scalar bounds (strict
+  monotonicity of `r'`, Lemma 41 for `ν > 1` and `ν = 1`, the quadratic bounds on `D_r`). Still to
+  do: the examples, the derivative of the coordinate-separable regularizer and its strong
+  convexity.
 - R15: the paper's Lemma 31 and the facts of the blueprint's `lem:polytope_facts`. Tau Ceti's
   `IsConvexPolyhedron` gives the vocabulary for the sets.
 - R16–R19: the paper's own lemmas, in `SSKM2026/`, one file per result, from the blueprint
@@ -86,7 +98,8 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
   `polytope-lower` (R19). R16 is the paper's Lemma 34 and its power-barrier form. R17 covers
   Lemmas 13, 21–25, 33, 39, 40 in entropy form and the balance of i.i.d. losses in the proof of
   Theorem 7. R18 covers Lemmas 10–12, 22, 26, 27, 42 and the replacement of Lemma 25 on polytopes.
-  R19 covers Lemmas 43–48 and Theorem 49.
+  R19 covers Lemmas 43–48 and Theorem 49. R16 holds Lemma 34 for the negative entropy and for power
+  barriers, and the one-dimensional bound that replaces Lemma 24 for power barriers.
 
 ## Proposed targets
 

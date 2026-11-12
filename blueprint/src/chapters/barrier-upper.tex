@@ -36,16 +36,31 @@ $a_t \in K^+$ for $t \le T$, and $a_{t+1}$ is an $\eps$-approximate step from $a
 
 \begin{lemma}[B3, B4; {\cite[Lemmas 21, 41]{SSKM26}}, corrected]
   \label{lem:barrier_scalar}
-  $r'$ is monotone on $(0, 1)$, and for $0 < x \le y < 1$,
-  $r'(y) - r'(x) \ge \frac{c_1}{\nu - 1}(x^{1-\nu} - y^{1-\nu})$. For $x, y \in (0, 1)$ and $I$ the
-  interval between them: if $r'' \le M$ on $I$ then $D_r(y, x) \le M(y - x)^2/2$; $D_r(y, x) \ge 0$;
-  and $D_r(y, x) \ge c_1(y - x)^2/(2\max(x, y))$.
+  \lean{LMLExplore.IsPowerBarrier.strictMonoOn_deriv,
+    LMLExplore.IsPowerBarrier.mul_rpow_sub_rpow_le_deriv_sub,
+    LMLExplore.IsPowerBarrier.mul_log_div_le_deriv_sub,
+    LMLExplore.IsPowerBarrier.mul_sub_le_deriv_sub,
+    LMLExplore.IsPowerBarrier.exists_mem_uIcc_sub_sub_eq,
+    LMLExplore.IsPowerBarrier.sub_sub_le_mul_sq, LMLExplore.IsPowerBarrier.mul_sq_le_sub_sub,
+    LMLExplore.IsPowerBarrier.sub_sub_nonneg,
+    LMLExplore.IsPowerBarrier.mul_sq_div_max_le_sub_sub,
+    Convex.exists_mem_segment_sub_sub_mul_eq, LMLExplore.bregDiv_sum_apply}
+  \leanok
+  $r'$ is strictly monotone on $(0, 1)$, and for $0 < x \le y < 1$,
+  $r'(y) - r'(x) \ge \frac{c_1}{\nu - 1}(x^{1-\nu} - y^{1-\nu})$ if $\nu > 1$, and
+  $r'(y) - r'(x) \ge c_1\log(y/x)$ if $\nu = 1$. For $x, y \in (0, 1)$ and $I$ the interval between
+  them: if $r'' \le M$ on $I$ then $D_r(y, x) \le M(y - x)^2/2$; if $r'' \ge \kappa$ on $I$ then
+  $D_r(y, x) \ge \kappa(y - x)^2/2$; $D_r(y, x) \ge 0$; and
+  $D_r(y, x) \ge c_1(y - x)^2/(2\max(x, y))$. The Bregman divergence of $w \mapsto \sum_i r(w_i)$
+  is the sum of the scalar divergences of the coordinates.
 \end{lemma}
 
 \begin{proof}
-  $s \mapsto r'(s) + c_1 s^{1-\nu}/(\nu - 1)$ has nonnegative derivative; Taylor bounds by
-  monotonicity of $g'$. The paper's Lemma 41 drops the factor $1/(\nu - 1)$, which makes it false
-  for $\nu > 2$.
+  \leanok
+  $s \mapsto r'(s) + c_1 s^{1-\nu}/(\nu - 1)$ (and $s \mapsto r'(s) - c_1\log s$ for $\nu = 1$) has
+  nonnegative derivative. The bounds on $D_r$ are Taylor's formula with Lagrange remainder of order
+  two, $D_r(y, x) = r''(z)(y - x)^2/2$ for some $z \in I$, which needs no continuity of $r''$. The
+  paper's Lemma 41 drops the factor $1/(\nu - 1)$, which makes it false for $\nu > 2$.
 \end{proof}
 
 \begin{lemma}[B6, B7; {\cite[Lemmas 11, 22]{SSKM26}}, corrected and localized]
