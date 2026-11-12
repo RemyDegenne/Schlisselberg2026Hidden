@@ -488,7 +488,8 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
   part of `E` only up to probability `1/2 > P(G ≤ 0)`, so `P(E) = Ω(1)` does not follow.
 - **Correction:** the median event `{G_τ ≤ E G_τ}` (probability at least `1/2` by symmetry), with
   the sharpened Lemma 47 (E32), which tolerates `ηG_τ ≤ 3.02`.
-- **Lean:** `Schlisselberg2026Hidden.exists_approxMirrorDescent_le_integral_regret_polytope`.
+- **Lean:** `Schlisselberg2026Hidden.PolytopeLower.half_le_measureReal_sum_le_zero` (the median
+  event), used by `Schlisselberg2026Hidden.exists_approxMirrorDescent_le_integral_regret_polytope`.
 - **Kind:** gap in the proof; wrong constant.
 - **Found:** phase-1 statement check, 2026-11-12.
 
@@ -499,7 +500,7 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
   "`w_t^{m+i} = w_t^{2m+i} = w_t^{m+i}`" should end with `w_t^{3m+i}`; Lemma 10 is applied with
   `τ` losses to `w_τ` (E9).
 - **Correction:** the statement is true; in fact `w_τ^i = e^{η(τ-1)}w_τ^{m+i}`.
-- **Lean:** part of the proof of Theorem 8.
+- **Lean:** `Schlisselberg2026Hidden.PolytopeLower.curveY_ge`, in the proof of Theorem 8.
 - **Kind:** typo.
 - **Found:** phase-1 statement check, 2026-11-12.
 
@@ -511,7 +512,8 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
   written the derivation yields the useless `w_τ^{5m+2} ≤ e^{m/8}`.
 - **Correction:** with the signs fixed it gives `e^{-m/8}/d`; a sharpened form,
   `w_τ^{5m+2} ≤ (2/d)(2/ρ_τ)^m e^{ηG_τ}`, needs only `ηG_τ ≤ 3.02` instead of `G_τ ≤ 0`.
-- **Lean:** part of the proof of Theorem 8.
+- **Lean:** `Schlisselberg2026Hidden.PolytopeLower.levelInv_le` (the sharpened form), in the proof
+  of Theorem 8.
 - **Kind:** typo.
 - **Found:** phase-1 statement check, 2026-11-12.
 
@@ -524,7 +526,8 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
   of the modified point in `K` is not checked.
 - **Correction:** an explicit "frozen" step that keeps the last coordinate, whose suboptimality is
   at most `q h(r)` in closed form (`h(r) = e^{-r} - 1 + r`); no comparison with the exact step.
-- **Lean:** part of the proof of Theorem 8.
+- **Lean:** `Schlisselberg2026Hidden.PolytopeLower.isApproxMirrorDescentStep_curve` (the exact and
+  frozen steps), in the proof of Theorem 8.
 - **Kind:** gap in the proof.
 - **Found:** phase-1 statement check, 2026-11-12.
 
@@ -538,7 +541,8 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
 - **Correction:** each play depends on the past losses only, so it is independent of the loss of
   its round and `E⟨ℓ_t, w_t⟩ = ⟨E ℓ_t, E w_t⟩`: the expected regret is computed exactly, and the
   median event bounds it below at every round.
-- **Lean:** `Schlisselberg2026Hidden.exists_approxMirrorDescent_le_integral_regret_polytope`.
+- **Lean:** `Schlisselberg2026Hidden.PolytopeLower.integral_regret_eq` (the exact expectation), used
+  by `Schlisselberg2026Hidden.exists_approxMirrorDescent_le_integral_regret_polytope`.
 - **Kind:** gap in the proof.
 - **Found:** phase-1 statement check, 2026-11-12.
 

@@ -24,7 +24,7 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
 | R16 | Stuck trajectories: the error of staying put, for the negative entropy and for power barriers | paper | | proved | `SSKM2026/Lemma34.lean` |
 | R17 | Negative entropy on the simplex: step sizes, balance, lower bounds on the iterates, balance of i.i.d. losses | paper | | todo | |
 | R18 | Power barriers on polytopes: balance, lower bound on the iterates, one-round inequality | paper | | todo | |
-| R19 | The polytope, the losses and the trajectory of Theorem 8 | paper | | todo | |
+| R19 | The polytope, the losses and the trajectory of Theorem 8 | paper | | proved | `SSKM2026/Lemma44.lean`, `SSKM2026/Lemma48.lean`, `SSKM2026/Lemma47.lean`, `SSKM2026/Theorem49.lean` |
 
 ## Notes
 
