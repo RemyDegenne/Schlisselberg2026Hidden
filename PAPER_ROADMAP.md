@@ -22,7 +22,7 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
 | R14 | Power barriers and coordinate-separable regularizers: examples, scalar bounds, derivative, Bregman divergence, strong convexity | staged | S2 | todo | `ForLMLExplore/Analysis/Convex/PowerBarrier.lean` |
 | R15 | Polytopes in standard form inside the simplex: convexity, feasible directions, ℓ¹ bounds on differences | staged | S3 | todo | `ForLMLExplore/Analysis/Convex/StandardFormPolytope.lean` |
 | R16 | Stuck trajectories: the error of staying put, for the negative entropy and for power barriers | paper | | proved | `SSKM2026/Lemma34.lean` |
-| R17 | Negative entropy on the simplex: step sizes, balance, lower bounds on the iterates, balance of i.i.d. losses | paper | | todo | |
+| R17 | Negative entropy on the simplex: step sizes, balance, lower bounds on the iterates, balance of i.i.d. losses | paper | | proved | `SSKM2026/EntropyUpper/Lemma13.lean`, `SSKM2026/EntropyUpper/Lemma21.lean`, `SSKM2026/EntropyUpper/Lemma22.lean`, `SSKM2026/EntropyUpper/Lemma24.lean`, `SSKM2026/EntropyUpper/Lemma33.lean`, `SSKM2026/EntropyUpper/Lemma39.lean`, `SSKM2026/EntropyUpper/Lemma40.lean`, `SSKM2026/EntropyUpper/IidBalanced.lean` |
 | R18 | Power barriers on polytopes: balance, lower bound on the iterates, one-round inequality | paper | | todo | |
 | R19 | The polytope, the losses and the trajectory of Theorem 8 | paper | | proved | `SSKM2026/Lemma44.lean`, `SSKM2026/Lemma48.lean`, `SSKM2026/Lemma47.lean`, `SSKM2026/Theorem49.lean` |
 
@@ -101,7 +101,8 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
   Lemmas 13, 21–25, 33, 39, 40 in entropy form and the balance of i.i.d. losses in the proof of
   Theorem 7. R18 covers Lemmas 10–12, 22, 26, 27, 42 and the replacement of Lemma 25 on polytopes.
   R19 covers Lemmas 43–48 and Theorem 49. R16 holds Lemma 34 for the negative entropy and for power
-  barriers, and the one-dimensional bound that replaces Lemma 24 for power barriers.
+  barriers, and the one-dimensional bound that replaces Lemma 24 for power barriers. R17 takes the
+  Bregman divergence of the negative entropy on `α → ℝ` from R10 (`bregDiv_negEntropy_pi_eq`).
 
 ## Proposed targets
 

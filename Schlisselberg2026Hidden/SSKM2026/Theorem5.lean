@@ -6,6 +6,7 @@ Authors: Remy Degenne
 module
 
 public import Schlisselberg2026Hidden.ForLMLExplore.OnlineLearning.ApproxMirrorDescent
+public import Schlisselberg2026Hidden.SSKM2026.Lemma15
 public import LMLExplore.Analysis.Convex.NegEntropy
 
 /-!
@@ -40,7 +41,47 @@ open LMLExplore LMLExplore.OnlineLearning Finset Real
 
 namespace Schlisselberg2026Hidden
 
-variable {α : Type*} [Fintype α]
+variable {α : Type*}
+
+/-- **Losses in `[0, 1]^d` are `T / 2`-balanced** [SSKM26, proof of Theorem 5]. For losses with
+coordinates in `[0, 1]` over `T` rounds and a best arm `i*`, the cumulative loss of `i*` over the
+rounds `s ≤ r < t` exceeds that of any arm `i` by at most `T / 2`: by at most `t - s`, and by at
+most `s + (T - t)` since `i*` is a best arm over the whole horizon. For losses in `[-1, 1]^d` the
+best bound is `T`. -/
+lemma sum_Ico_sub_le_half_of_mem_Icc {T : ℕ} {ℓ : ℕ → α → ℝ}
+    (hℓ : ∀ t < T, ∀ i, ℓ t i ∈ Set.Icc 0 1) {iStar : α}
+    (hbest : ∀ i, ∑ t ∈ range T, ℓ t iStar ≤ ∑ t ∈ range T, ℓ t i) {s t : ℕ}
+    (hst : s ≤ t) (htT : t ≤ T) (i : α) :
+    ∑ r ∈ Ico s t, (ℓ r iStar - ℓ r i) ≤ T / 2 := by
+  have h_le (r : ℕ) (hr : r < T) : ℓ r iStar - ℓ r i ≤ 1 := by
+    linarith [(hℓ r hr iStar).2, (hℓ r hr i).1]
+  have h_ge (r : ℕ) (hr : r < T) : -1 ≤ ℓ r iStar - ℓ r i := by
+    linarith [(hℓ r hr i).2, (hℓ r hr iStar).1]
+  -- at most the length `t - s` of the interval
+  have h1 : ∑ r ∈ Ico s t, (ℓ r iStar - ℓ r i) ≤ (t : ℝ) - s := by
+    calc ∑ r ∈ Ico s t, (ℓ r iStar - ℓ r i) ≤ ∑ r ∈ Ico s t, (1 : ℝ) :=
+          sum_le_sum fun r hr ↦ h_le r ((mem_Ico.1 hr).2.trans_le htT)
+      _ = (t : ℝ) - s := by rw [sum_const, Nat.card_Ico, nsmul_one, Nat.cast_sub hst]
+  -- at most the length `s + (T - t)` of the complement
+  have h2 : ∑ r ∈ Ico s t, (ℓ r iStar - ℓ r i) ≤ s + ((T : ℝ) - t) := by
+    have h_split : ∑ r ∈ range T, (ℓ r iStar - ℓ r i) = ∑ r ∈ range s, (ℓ r iStar - ℓ r i) +
+        ∑ r ∈ Ico s t, (ℓ r iStar - ℓ r i) + ∑ r ∈ Ico t T, (ℓ r iStar - ℓ r i) := by
+      rw [sum_range_add_sum_Ico _ hst, sum_range_add_sum_Ico _ htT]
+    have h_tot : ∑ r ∈ range T, (ℓ r iStar - ℓ r i) ≤ 0 := by
+      rw [sum_sub_distrib]
+      linarith [hbest i]
+    have h_pre : -(s : ℝ) ≤ ∑ r ∈ range s, (ℓ r iStar - ℓ r i) := by
+      calc -(s : ℝ) = ∑ r ∈ range s, (-1 : ℝ) := by simp
+        _ ≤ _ := sum_le_sum fun r hr ↦ h_ge r ((mem_range.1 hr).trans_le (hst.trans htT))
+    have h_post : -((T : ℝ) - t) ≤ ∑ r ∈ Ico t T, (ℓ r iStar - ℓ r i) := by
+      calc -((T : ℝ) - t) = ∑ r ∈ Ico t T, (-1 : ℝ) := by
+            rw [sum_const, Nat.card_Ico, nsmul_eq_mul, Nat.cast_sub htT]
+            ring
+        _ ≤ _ := sum_le_sum fun r hr ↦ h_ge r (mem_Ico.1 hr).2
+    linarith
+  linarith
+
+variable [Fintype α]
 
 /-- **Exponentially small errors suffice for the negative entropy** [SSKM26, Theorem 5], for
 losses in `[0, 1]^d` and with corrected constants. Let `0 < η ≤ 1/16`, let the losses `ℓ t` have
@@ -58,6 +99,14 @@ theorem approxMirrorDescent_regret_le_negEntropy {η ε : ℝ} (hη : 0 < η) (h
       (∑ i, log (a t i) • ContinuousLinearMap.proj i) ε (a (t + 1)))
     {u : α → ℝ} (hu : u ∈ simplex α) :
     regret (fun t w ↦ ∑ i, ℓ t i * w i) a u T ≤ log (Fintype.card α) / η + η * T := by
-  sorry
+  have : Nonempty α := nonempty_of_mem_simplex hu
+  obtain ⟨iStar, -, hbest⟩ :=
+    exists_min_image univ (fun i ↦ ∑ t ∈ range T, ℓ t i) univ_nonempty
+  refine approxMirrorDescent_regret_le_negEntropy_of_balanced hη hη' ℓ
+    (fun t ht i ↦ abs_le.2 ⟨by linarith [(hℓ t ht i).1], (hℓ t ht i).2⟩) iStar
+    (fun i ↦ hbest i (mem_univ i))
+    (fun s t hst htT i ↦ sum_Ico_sub_le_half_of_mem_Icc hℓ (fun i ↦ hbest i (mem_univ i)) hst htT i)
+    ?_ a ha0 hpos ha hu
+  rwa [← mul_div_assoc]
 
 end Schlisselberg2026Hidden

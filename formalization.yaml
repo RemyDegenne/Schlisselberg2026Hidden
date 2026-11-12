@@ -73,8 +73,11 @@ status:
     Lemma 14 and Theorems 4, 35, 36 proved (2026-11-12, blueprint chapter entropy-lower), with multiplicative weights as mirror descent with the negative entropy, the negative entropy
     on α → ℝ and the scalar bounds of power barriers in ForLMLExplore/. Theorem 8 proved
     (2026-11-12, blueprint chapter polytope-lower), with Lemmas 43-48 and Theorem 49 in corrected
-    form (E28-E34).
-  sorry_count: 4
+    form (E28-E34). Lemma 15 and Theorems 5, 7 proved (2026-11-12, blueprint chapter
+    entropy-upper), with Lemmas 13, 21, 22, 24, 25, 26, 33, 39, 40 for the negative entropy and
+    the balance of i.i.d. losses in SSKM2026/EntropyUpper/, in corrected form (E3, E4, E7, E13,
+    E15-E17, E19, E24, E25).
+  sorry_count: 1
   sorry_in_definitions: 0
 
 automation:
@@ -132,7 +135,7 @@ alignment:
     - source: "thm:up_barrier_adversarial — Theorem 5"
       lean: "Schlisselberg2026Hidden.approxMirrorDescent_regret_le_negEntropy"
       module: "Schlisselberg2026Hidden.SSKM2026.Theorem5"
-      status: "stated"
+      status: "proved"
       relation: "narrowMatch"
       erratum: "E3"
       note: "Losses in [0,1]^d (false for [-1,1]^d, E3); threshold exp(-eta T/2) min(eta^4, T^-2)/(100 d); uniform start; bound log d/eta + eta T against every point of the simplex instead of D_R(w,w_1)/eta + O(eta T) (E4)."
@@ -146,7 +149,7 @@ alignment:
     - source: "thm:ub_barrier_stochastic — Theorem 7"
       lean: "Schlisselberg2026Hidden.approxMirrorDescent_regret_le_negEntropy_iid"
       module: "Schlisselberg2026Hidden.SSKM2026.Theorem7"
-      status: "stated"
+      status: "proved"
       relation: "closeMatch"
       erratum: "E7"
       note: "T >= 256 log d instead of T >= 256, eps <= delta/(6 d^3 T^4) instead of delta/(6 d^2 T^4), regret 2 sqrt(T log d) on an event of probability 1 - delta, for every trajectory (E7)."
@@ -167,7 +170,7 @@ alignment:
     - source: "lem:balance_upper_bound — Lemma 15"
       lean: "Schlisselberg2026Hidden.approxMirrorDescent_regret_le_negEntropy_of_balanced"
       module: "Schlisselberg2026Hidden.SSKM2026.Lemma15"
-      status: "stated"
+      status: "proved"
       relation: "narrowMatch"
       erratum: "E4"
       note: "Threshold exp(-eta A) min(eta^4, T^-2)/(100 d), uniform start, balance with respect to a best arm (E13), bound log d/eta + eta T against every point of the simplex (E4)."

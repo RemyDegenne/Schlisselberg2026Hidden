@@ -14,18 +14,23 @@ $B_{ji}(s, t) = \log(a_s(j)/a_t(j)) + \log(a_t(i)/a_s(i))$ for the balance.
 
 \begin{lemma}[L21; {\cite[Lemma 21]{SSKM26}}, entropy form]
   \label{lem:entropy_scalar}
+  \lean{Schlisselberg2026Hidden.mul_log_div_sub_add_nonneg, Schlisselberg2026Hidden.mul_log_div_sub_add_le_sq_div, Schlisselberg2026Hidden.sq_one_sub_div_two_le_mul_log_sub_add_one, Schlisselberg2026Hidden.sq_div_two_mul_le_mul_log_div_sub_add, Schlisselberg2026Hidden.mul_log_div_sub_add_le_of_le}
+  \leanok
   Let $D_1(x, y) = x\log(x/y) - x + y$. For $x \ge 0$, $y > 0$: $0 \le D_1(x, y) \le (x - y)^2/y$;
-  for $0 \le x \le y$: $D_1(x, y) \ge (y - x)^2/(2y)$; and $x \mapsto D_1(x, y)$ is antitone on
-  $[0, y]$ and monotone on $[y, \infty)$.
+  for $0 \le x \le y$: $D_1(x, y) \ge (y - x)^2/(2y)$; and $x \mapsto D_1(x, y)$ is monotone on
+  $[y, \infty)$.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   $\log z \le z - 1$; $s \log s - s + 1 - (1 - s)^2/2$ is nonincreasing to $0$ on $[0, 1]$; the
   derivative in $x$ is $\log(x/y)$.
 \end{proof}
 
 \begin{lemma}[L26$'$, L22; {\cite[Lemmas 22, 26]{SSKM26}}]
   \label{lem:entropy_approx_first_order}
+  \lean{LMLExplore.bregDiv_negEntropy_pi_eq, Schlisselberg2026Hidden.neg_le_of_isApproxMirrorDescentStep_negEntropy, Schlisselberg2026Hidden.neg_div_sub_le_of_isApproxMirrorDescentStep_negEntropy}
+  \leanok
   \uses{lem:entropy_scalar}
   Under (T2), (T3), for $t < T$ and $x \in \Delta$:
   $\phi_t(x) - \phi_t(a_{t+1}) = \ip{g_t}{x - a_{t+1}} + D(x, a_{t+1})$. Consequently, for $h$ with
@@ -34,12 +39,15 @@ $B_{ji}(s, t) = \log(a_s(j)/a_t(j)) + \log(a_t(i)/a_s(i))$ for the balance.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   The three-point identity, then the step condition at $a_{t+1} + uh$ and the $\chi^2$ bound of
   Lemma~\ref{lem:entropy_scalar}. The paper's Lemma 22 has the sign of its second case wrong.
 \end{proof}
 
 \begin{lemma}[L24, L25; {\cite[Lemmas 24, 25]{SSKM26}}, corrected]
   \label{lem:entropy_step_size}
+  \lean{Schlisselberg2026Hidden.sub_le_of_isApproxMirrorDescentStep_negEntropy, Schlisselberg2026Hidden.div_two_le_of_isApproxMirrorDescentStep_negEntropy}
+  \leanok
   \uses{lem:entropy_scalar, lem:solve_quadratic}
   Under (T2), (T3) and $\abs{\ell_t(k)} \le 1$, if $a_{t+1}(i) \le a_t(i)$ then
   $a_t(i) - a_{t+1}(i) \le 4\eta a_t(i) + \sqrt{2\eps a_t(i)}$. Hence, if $\eta \le 1/16$ and
@@ -47,6 +55,7 @@ $B_{ji}(s, t) = \log(a_s(j)/a_t(j)) + \log(a_t(i)/a_s(i))$ for the balance.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   Compare $a_{t+1}$ with the point $\tilde w$ that restores coordinate $i$ to $a_t(i)$ and moves
   each increased coordinate back proportionally (L24). The paper's $\sqrt{\eps/h}$ is false; the
   constant is $\sqrt{2\eps/h}$.
@@ -54,6 +63,8 @@ $B_{ji}(s, t) = \log(a_s(j)/a_t(j)) + \log(a_t(i)/a_s(i))$ for the balance.
 
 \begin{lemma}[L33a, L33, L29; {\cite[Lemmas 11, 29, 33]{SSKM26}}, corrected]
   \label{lem:entropy_balance}
+  \lean{Schlisselberg2026Hidden.log_sub_log_add_le_of_isApproxMirrorDescentStep_negEntropy, Schlisselberg2026Hidden.log_sub_log_add_le_sum_add_one}
+  \leanok
   \uses{lem:entropy_approx_first_order}
   Under (T2), (T3), if $1 \le T$, $0 < \psi$, $\eps \le \psi/(8T^2)$, $s \le t \le T$, and
   $a_r(i), a_r(j) \ge \psi$ for $s < r \le t$, then
@@ -61,6 +72,7 @@ $B_{ji}(s, t) = \log(a_s(j)/a_t(j)) + \log(a_t(i)/a_s(i))$ for the balance.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   Telescoping; each round, Lemma~\ref{lem:entropy_approx_first_order} with
   $h = a_{r+1}(i)(e_j - e_i)$ and $u = \psi/(4T a_{r+1}(i))$ costs at most $1/T$. The paper's
   Lemma 33 forgets that $\norm{e_{i^*} - e_i}_1 = 2$ and is false as stated; Lemma 11 drops a
@@ -69,16 +81,21 @@ $B_{ji}(s, t) = \log(a_s(j)/a_t(j)) + \log(a_t(i)/a_s(i))$ for the balance.
 
 \begin{lemma}[L13; {\cite[Lemma 13]{SSKM26}}]
   \label{lem:entropy_coordinate_bounds}
+  \lean{Schlisselberg2026Hidden.le_exp_mul_of_log_sub_log_add_le, Schlisselberg2026Hidden.le_exp_mul_of_log_sub_log_add_le'}
+  \leanok
   If $a_s(i) \le a_t(i)$ and $B_{ji}(s, t) \le K$, then $a_s(j) \le e^K a_t(j)$; if
   $a_t(j) \le a_s(j)$ and $B_{ji}(s, t) \le K$, then $a_t(i) \le e^K a_s(i)$.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   The other logarithm in $B_{ji}$ has a sign.
 \end{proof}
 
 \begin{lemma}[L40; {\cite[Lemma 40]{SSKM26}}, corrected]
   \label{lem:entropy_best_arm_lower}
+  \lean{Schlisselberg2026Hidden.mem_simplex_of_isApproxMirrorDescentStep, Schlisselberg2026Hidden.exp_neg_div_card_le_apply_of_balanced}
+  \leanok
   \uses{lem:entropy_step_size, lem:entropy_balance, lem:entropy_coordinate_bounds}
   Under (T1)--(T3), $1 \le T$, $0 \le \eta \le 1/16$, $\abs{\ell_t(k)} \le 1$, if
   $L_{[s,t)}(j) - L_{[s,t)}(i) \le A$ for all $s \le t \le T$ and $i$, and
@@ -86,12 +103,15 @@ $B_{ji}(s, t) = \log(a_s(j)/a_t(j)) + \log(a_t(i)/a_s(i))$ for the balance.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   Strong induction on $t$, with the three cases of L40; the paper's $\eps \le \xi/(2T^2)$ is not
   enough for its own argument.
 \end{proof}
 
 \begin{lemma}[L27, L39; {\cite[Lemmas 27, 39]{SSKM26}}, new proof]
   \label{lem:entropy_regret_best_arm}
+  \lean{Schlisselberg2026Hidden.mul_sum_mul_sub_le_of_isApproxMirrorDescentStep_negEntropy, Schlisselberg2026Hidden.sum_sum_mul_sub_le_of_le_apply, Schlisselberg2026Hidden.regret_le_of_le_apply}
+  \leanok
   \uses{lem:entropy_approx_first_order}
   Under (T2), (T3), $0 < \eta \le 1$, $\abs{\ell_t(k)} \le 1$, if $a_t(j) \ge \xi > 0$ for
   $1 \le t \le T$ and $\eps \le \eta^4\xi/16$, then
@@ -100,6 +120,7 @@ $B_{ji}(s, t) = \log(a_s(j)/a_t(j)) + \log(a_t(i)/a_s(i))$ for the balance.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   Lemma~\ref{lem:entropy_approx_first_order} in the direction of the vertex, $h = e_j - a_{t+1}$,
   $u = \eta^2\xi/4$: since $\sum_k h_k^2/a_{t+1}(k) = (1 - a_{t+1}(j))/a_{t+1}(j) \le 1/\xi$, the
   error is $\eta^2/2$ per round. Then the three-point identity, telescoping, and Pinsker's
@@ -120,6 +141,7 @@ $B_{ji}(s, t) = \log(a_s(j)/a_t(j)) + \log(a_t(i)/a_s(i))$ for the balance.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   \uses{lem:entropy_best_arm_lower, lem:entropy_regret_best_arm}
   With $\xi = e^{-(\eta A + 1)}/d$: $32e \le 100$ gives the hypothesis of
   Lemma~\ref{lem:entropy_best_arm_lower} and $16e \le 100$ that of
@@ -128,11 +150,14 @@ $B_{ji}(s, t) = \log(a_s(j)/a_t(j)) + \log(a_t(i)/a_s(i))$ for the balance.
 
 \begin{lemma}[L5a; {\cite[proof of Theorem 5]{SSKM26}}]
   \label{lem:unit_losses_balanced}
+  \lean{Schlisselberg2026Hidden.sum_Ico_sub_le_half_of_mem_Icc}
+  \leanok
   For losses in $[0, 1]^d$ and a best arm $i^*$,
   $L_{[s,t)}(i^*) - L_{[s,t)}(i) \le \min(t - s, T - (t - s)) \le T/2$.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   Bound the interval by its length, and by the complement using the optimality of $i^*$. For
   losses in $[-1, 1]^d$ the bound is $T$, attained.
 \end{proof}
@@ -148,6 +173,7 @@ $B_{ji}(s, t) = \log(a_s(j)/a_t(j)) + \log(a_t(i)/a_s(i))$ for the balance.
 \end{theorem}
 
 \begin{proof}
+  \leanok
   \uses{lem:balance_upper_bound, lem:unit_losses_balanced}
   Lemma~\ref{lem:balance_upper_bound} with $A = T/2$ (Lemma~\ref{lem:unit_losses_balanced}). The
   paper's version for losses in $[-1, 1]^d$ is false (erratum).
@@ -155,6 +181,8 @@ $B_{ji}(s, t) = \log(a_s(j)/a_t(j)) + \log(a_t(i)/a_s(i))$ for the balance.
 
 \begin{lemma}[L7a; {\cite[proof of Theorem 7]{SSKM26}}, corrected]
   \label{lem:iid_balanced}
+  \lean{Schlisselberg2026Hidden.measureReal_le_sum_Ico_sub_sub_le, Schlisselberg2026Hidden.exists_measurableSet_sum_Ico_sub_le_of_iid}
+  \leanok
   For losses i.i.d.\ over the rounds with coordinates in $[-1, 1]$, $0 < \delta \le 1$, $1 \le T$
   and $A = \sqrt{2T\log(d^2(T+1)^2/\delta)}$, there is a measurable event of probability at least
   $1 - \delta$ on which, for every best arm $i^*$, $L_{[s,t)}(i^*) - L_{[s,t)}(i) \le A$ for all
@@ -162,17 +190,34 @@ $B_{ji}(s, t) = \log(a_s(j)/a_t(j)) + \log(a_t(i)/a_s(i))$ for the balance.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   Hoeffding's inequality (Mathlib's \texttt{measure\_sum\_ge\_le\_of\_iIndepFun}) for the bridges
   $Z_{ij}(s, t) = (L_{[s,t)}(i) - L_{[s,t)}(j)) - \frac{t - s}{T}(L_{[0,T)}(i) - L_{[0,T)}(j))$,
   which have mean $0$ and sub-Gaussian parameter at most $T$, and a union bound over the
   $d^2(T+1)^2$ tuples; on the event, the optimality of $i^*$ removes the drift.
 \end{proof}
 
+\begin{lemma}[L7b; {\cite[proof of Theorem 7]{SSKM26}}, corrected]
+  \label{lem:iid_threshold}
+  \lean{Schlisselberg2026Hidden.div_le_exp_neg_mul_min_div}
+  \leanok
+  For $d \ge 2$, $T \ge 256\log d$, $0 < \delta \le 1$, $\eta = \sqrt{\log d / T}$ and
+  $A = \sqrt{2T\log(d^2(T+1)^2/\delta)}$:
+  $\delta/(6d^3T^4) \le e^{-\eta A}\min(\eta^4, T^{-2})/(100d)$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  By AM--GM, $\eta A = \sqrt{2\log d\log(d^2(T+1)^2/\delta)}
+  \le \log d + \log(d^2(T+1)^2/\delta)/2$, so $W = e^{-\eta A}d^2(T+1)$ has $W^2 \ge \delta$, hence $W \ge \delta$. Also
+  $\min(\eta^4, T^{-2}) \ge (\log 2)^2/T^2 \ge 0.48/T^2$ and $T > 177$, which gives the bound.
+\end{proof}
+
 \begin{theorem}[{\cite[Theorem 7]{SSKM26}}, corrected]
   \label{thm:ub_barrier_stochastic}
   \lean{Schlisselberg2026Hidden.approxMirrorDescent_regret_le_negEntropy_iid}
   \leanok
-  \uses{lem:balance_upper_bound, lem:iid_balanced}
+  \uses{lem:balance_upper_bound, lem:iid_balanced, lem:iid_threshold}
   For losses i.i.d.\ over the rounds with coordinates in $[-1, 1]$, $0 < \delta \le 1$,
   $T \ge 256 \log d$, $\eta = \sqrt{\log d / T}$ and $\eps \le \delta/(6d^3T^4)$, there is a
   measurable event of probability at least $1 - \delta$ on which every trajectory satisfying
@@ -180,8 +225,10 @@ $B_{ji}(s, t) = \log(a_s(j)/a_t(j)) + \log(a_t(i)/a_s(i))$ for the balance.
 \end{theorem}
 
 \begin{proof}
-  \uses{lem:balance_upper_bound, lem:iid_balanced}
+  \leanok
+  \uses{lem:balance_upper_bound, lem:iid_balanced, lem:iid_threshold}
   For $d = 1$ the regret is $0$. Otherwise $\eta \le 1/16$, and $\eta A \le \log(d^2(T+1)/\sqrt\delta)$
-  by AM--GM, so the threshold implies that of Lemma~\ref{lem:balance_upper_bound}, which gives
+  by AM--GM, so the threshold implies that of Lemma~\ref{lem:balance_upper_bound}
+  (Lemma~\ref{lem:iid_threshold}), which gives
   $\log d/\eta + \eta T = 2\sqrt{T\log d}$ (L7b).
 \end{proof}

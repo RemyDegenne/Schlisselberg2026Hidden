@@ -6,7 +6,10 @@ Authors: Remy Degenne
 module
 
 public import Schlisselberg2026Hidden.ForLMLExplore.OnlineLearning.ApproxMirrorDescent
+public import Schlisselberg2026Hidden.SSKM2026.EntropyUpper.Lemma39
+public import Schlisselberg2026Hidden.SSKM2026.EntropyUpper.Lemma40
 public import LMLExplore.Analysis.Convex.NegEntropy
+public import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-!
 # Lemma 15 of [SSKM26]: balanced losses and the negative entropy
@@ -65,6 +68,54 @@ theorem approxMirrorDescent_regret_le_negEntropy_of_balanced {η ε A : ℝ} (h�
       (∑ i, log (a t i) • ContinuousLinearMap.proj i) ε (a (t + 1)))
     {u : α → ℝ} (hu : u ∈ simplex α) :
     regret (fun t w ↦ ∑ i, ℓ t i * w i) a u T ≤ log (Fintype.card α) / η + η * T := by
-  sorry
+  have : Nonempty α := nonempty_of_mem_simplex hu
+  set d : ℝ := (Fintype.card α : ℝ) with hd_def
+  have hd : 0 < d := Nat.cast_pos.2 Fintype.card_pos
+  have hd1 : 1 ≤ d := Nat.one_le_cast.2 Fintype.card_pos
+  rcases Nat.eq_zero_or_pos T with rfl | hT
+  · simp only [regret_zero, CharP.cast_eq_zero, mul_zero, add_zero]
+    exact div_nonneg (log_nonneg hd1) hη.le
+  have hT1 : (1 : ℝ) ≤ T := by exact_mod_cast hT
+  -- `ξ = e^{-(η A + 1)} / d`, with `32 e ≤ 100` and `16 e ≤ 100`
+  set X := exp (-(η * A)) with hX
+  have hX0 : 0 < X := exp_pos _
+  have he : 32 / 100 ≤ exp (-1) := by
+    have h1 : exp (-1) * exp 1 = 1 := by rw [← exp_add]; simp
+    nlinarith [exp_one_lt_d9, exp_pos (-1), exp_pos 1]
+  set ξ := exp (-(η * A + 1)) / d with hξ_def
+  have hξ : ξ = X * exp (-1) / d := by
+    rw [hξ_def, hX, ← exp_add]
+    congr 2
+    ring
+  have hξ0 : 0 < ξ := by positivity
+  have hthr : ε ≤ X * min (η ^ 4) (1 / (T : ℝ) ^ 2) / (100 * d) := hε
+  have hmin0 : 0 ≤ min (η ^ 4) (1 / (T : ℝ) ^ 2) := le_min (by positivity) (by positivity)
+  -- the threshold of Lemma 40
+  have hε40 : ε ≤ ξ / (32 * T ^ 2) := by
+    refine hthr.trans ?_
+    calc X * min (η ^ 4) (1 / (T : ℝ) ^ 2) / (100 * d) ≤ X * (1 / (T : ℝ) ^ 2) / (100 * d) := by
+          gcongr
+          exact min_le_right _ _
+      _ = X / (d * T ^ 2) * (32 / 100) / 32 := by ring
+      _ ≤ X / (d * T ^ 2) * exp (-1) / 32 := by gcongr
+      _ = ξ / (32 * T ^ 2) := by rw [hξ]; ring
+  -- the threshold of Lemma 39
+  have hε39 : ε ≤ η ^ 4 * ξ / 16 := by
+    refine hthr.trans ?_
+    calc X * min (η ^ 4) (1 / (T : ℝ) ^ 2) / (100 * d) ≤ X * η ^ 4 / (100 * d) := by
+          gcongr
+          exact min_le_left _ _
+      _ ≤ X * η ^ 4 / d * (32 / 100) / 16 := by
+          have : 0 ≤ X * η ^ 4 / d := by positivity
+          rw [show X * η ^ 4 / (100 * d) = X * η ^ 4 / d * (16 / 100) / 16 by ring]
+          gcongr
+          norm_num
+      _ ≤ X * η ^ 4 / d * exp (-1) / 16 := by gcongr
+      _ = η ^ 4 * ξ / 16 := by rw [hξ]; ring
+  -- the weight of the best arm stays at least `ξ` (Lemma 40), and Lemma 39 concludes
+  have hξa := exp_neg_div_card_le_apply_of_balanced ha0 hpos ha hT hη.le hη' hℓ hbal hε40
+  have h := regret_le_of_le_apply (ha0 ▸ uniform_mem_simplex α) hpos ha hη (by linarith) hℓ hbest
+    hξ0 (fun t _ ht ↦ hξa t ht) hε39 hu
+  rwa [ha0, log_inv, neg_neg] at h
 
 end Schlisselberg2026Hidden

@@ -9,6 +9,14 @@ public import Schlisselberg2026Hidden.ForLMLExplore.OnlineLearning.ApproxMirrorD
 public import Schlisselberg2026Hidden.ForLMLExplore.OnlineLearning.ApproxMirrorDescent.Smooth
 public import Schlisselberg2026Hidden.ForLMLExplore.OnlineLearning.ExponentiatedGradient
 public import Schlisselberg2026Hidden.ForLMLExplore.OnlineLearning.FTRL.Approx
+public import Schlisselberg2026Hidden.SSKM2026.EntropyUpper.IidBalanced
+public import Schlisselberg2026Hidden.SSKM2026.EntropyUpper.Lemma13
+public import Schlisselberg2026Hidden.SSKM2026.EntropyUpper.Lemma21
+public import Schlisselberg2026Hidden.SSKM2026.EntropyUpper.Lemma22
+public import Schlisselberg2026Hidden.SSKM2026.EntropyUpper.Lemma24
+public import Schlisselberg2026Hidden.SSKM2026.EntropyUpper.Lemma33
+public import Schlisselberg2026Hidden.SSKM2026.EntropyUpper.Lemma39
+public import Schlisselberg2026Hidden.SSKM2026.EntropyUpper.Lemma40
 public import Schlisselberg2026Hidden.SSKM2026.Lemma14
 public import Schlisselberg2026Hidden.SSKM2026.Lemma15
 public import Schlisselberg2026Hidden.SSKM2026.Lemma34

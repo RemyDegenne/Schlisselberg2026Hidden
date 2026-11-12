@@ -234,7 +234,9 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
 - **Correction:** for `‖v‖₁ = 1`,
   `B̂^v(t₁, t₂) ≤ η⟨ℓ_{t₁:t₂-1}, v⟩ + (t₂ - t₁)(√(2^ν c₂ε/ψ^ν) + 2ε/ψ)` when the approximate iterates
   stay above `ψ` on the support of `v`.
-- **Lean:** blueprint `lem:bar_one_step_balance`, `lem:entropy_balance`.
+- **Lean:** blueprint `lem:bar_one_step_balance`, `lem:entropy_balance`; for the negative
+  entropy, `Schlisselberg2026Hidden.log_sub_log_add_le_of_isApproxMirrorDescentStep_negEntropy` compares
+  directly with `η (ℓ j - ℓ i)`.
 - **Kind:** wrong constant.
 - **Found:** phase-1 statement check, 2026-11-12.
 
@@ -244,7 +246,9 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
 - **Error:** "Since `w_{t₂}^i ≥ w_{t₂}^i`" should be `w_{t₂}^i ≥ w_{t₁}^i`; the contradiction
   hypothesis `e^k w_{t₂}^{i*} < w_{t₁}^{i*}` should have `e^{k/c₁}`.
 - **Correction:** as indicated; the statement is correct.
-- **Lean:** blueprint `lem:entropy_coordinate_bounds`.
+- **Lean:** `Schlisselberg2026Hidden.le_exp_mul_of_log_sub_log_add_le` and
+  `Schlisselberg2026Hidden.le_exp_mul_of_log_sub_log_add_le'` (blueprint
+  `lem:entropy_coordinate_bounds`).
 - **Kind:** typo.
 - **Found:** phase-1 statement check, 2026-11-12.
 
@@ -294,7 +298,8 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
     (Definition 18, not Definition 1); for a `ν`-barrier take `h = c₁/max{w_t^i, w_{t+1}^i}^ν`.
 - **Correction:** `|w_t^i - w_{t+1}^i| ≤ 4η/h + √(2ε/h)` with `h` a lower bound of `r''` on the
   segment.
-- **Lean:** blueprint `lem:entropy_step_size`.
+- **Lean:** `Schlisselberg2026Hidden.sub_le_of_isApproxMirrorDescentStep_negEntropy` (blueprint
+  `lem:entropy_step_size`) states the corrected form, for the negative entropy.
 - **Kind:** wrong constant (false statement); gap in the proof.
 - **Found:** phase-1 statement check, 2026-11-12.
 
@@ -309,7 +314,8 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
   `≥ c₁/w_t^i`.
 - **Correction:** `η ≤ c₁/16`, `ε ≤ c₁w_t^i/32` (for the negative entropy the stated conclusion
   holds numerically, with exact thresholds `0.098 w_t^i` and `0.135 w_t^i`).
-- **Lean:** blueprint `lem:entropy_step_size`.
+- **Lean:** `Schlisselberg2026Hidden.div_two_le_of_isApproxMirrorDescentStep_negEntropy` (blueprint
+  `lem:entropy_step_size`) states the corrected form, for the negative entropy.
 - **Kind:** wrong constant.
 - **Found:** phase-1 statement check, 2026-11-12.
 
@@ -331,7 +337,8 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
   hypotheses.
 - **Correction:** `B̂^i(t₁, t₂) ≤ B^i(t₁, t₂) + (t₂ - t₁)√(8ε/ψ)` for `ε ≤ 2ψ`, with the lower
   bound `ψ` needed only for `t₁ < t ≤ t₂`.
-- **Lean:** blueprint `lem:entropy_balance`.
+- **Lean:** `Schlisselberg2026Hidden.log_sub_log_add_le_sum_add_one` (blueprint `lem:entropy_balance`)
+  states the corrected form, for the negative entropy.
 - **Kind:** false statement.
 - **Found:** phase-1 statement check, 2026-11-12.
 
@@ -417,7 +424,9 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
   `u = η²ξ/4` when `ŵ_t^{i*} ≥ ξ` and `ε ≤ η⁴ξ/16`; with the three-point identity and Pinsker's
   inequality, the regret against `e_{i*}` is at most `log d/η + ηT`. The sets `S_t` and Lemmas 37,
   38 are not needed.
-- **Lean:** blueprint `lem:entropy_regret_best_arm`.
+- **Lean:** `Schlisselberg2026Hidden.sum_sum_mul_sub_le_of_le_apply` and
+  `Schlisselberg2026Hidden.regret_le_of_le_apply` (blueprint `lem:entropy_regret_best_arm`), with the
+  new proof.
 - **Kind:** gap in the proof.
 - **Found:** phase-1 statement check, 2026-11-12.
 
@@ -429,7 +438,8 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
   `ε ≤ ξ/(16T²)` (balance at most `k + 1`); "`1/(16 r''(ŵ_{t-1}^i))`" should have `ŵ_{t-1}^{i*}`;
   "some `i ∈ [d]`" should be `i ≠ i*`.
 - **Correction:** `ε ≤ ξ/(32T²)`, any `T ≥ 1`.
-- **Lean:** blueprint `lem:entropy_best_arm_lower`.
+- **Lean:** `Schlisselberg2026Hidden.exp_neg_div_card_le_apply_of_balanced` (blueprint
+  `lem:entropy_best_arm_lower`) states the corrected form.
 - **Kind:** wrong constant.
 - **Found:** phase-1 statement check, 2026-11-12.
 
