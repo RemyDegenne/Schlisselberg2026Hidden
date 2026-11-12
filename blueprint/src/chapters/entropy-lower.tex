@@ -1,0 +1,114 @@
+\chapter{Lower bounds by stuck trajectories}
+\label{chap:entropy_lower}
+
+Sections 4.1, 5.3 and Appendix D of \cite{SSKM26}, with the corrected statements of
+\texttt{notes/constants-lower-bounds.md} (area C), which gives every computation in full. On the
+simplex $\Delta$ of $d \ge 2$ arms, $u_0$ is the uniform point, $e_i$ the vertices, $\mathbf{1}$ the
+all-ones vector, and $\mathrm{MW}(w, \ell) = (w_i e^{-\eta\ell_i}/Z)_i$ with
+$Z = \sum_j w_j e^{-\eta\ell_j}$ the exact step of mirror descent with the negative entropy.
+
+\begin{lemma}[34.NE; {\cite[Lemma 34]{SSKM26}} for the negative entropy, corrected]
+  \label{lem:entropy_stuck}
+  Let $w \in \Delta$ have positive coordinates. For every $b \in \Delta$,
+  $\phi(b) \ge -\log Z$ with equality at $b = \mathrm{MW}(w, \ell)$ (the Gibbs variational principle,
+  in LMLExplore); hence $\mathrm{MW}(w, \ell)$ is an $\eps$-approximate step for every $\eps \ge 0$,
+  and staying at $w$ is one as soon as $\eta\ip{\ell}{w} + \log Z \le \eps$. For $\ell = \mathbf 1 -
+  e_{i_0}$ and $m = w_{i_0}$ this error is $\log(1 + m(e^\eta - 1)) - \eta m$, at most
+  $\eta^2\min(m, 1 - m)$ when $\eta \le 1$.
+\end{lemma}
+
+\begin{proof}
+  \texttt{bregDiv\_negEntropy} and LMLExplore's Gibbs inequality; $\log y \le y - 1$ and
+  $\abs{e^x - 1 - x} \le x^2$ for $\abs x \le 1$. The paper's Lemma 34 is false for large $\eta$.
+\end{proof}
+
+\begin{lemma}[35.A, 34$'$; {\cite[Lemmas 24, 34]{SSKM26}} for power barriers, corrected]
+  \label{lem:barrier_stuck}
+  \uses{lem:barrier_scalar}
+  Let $r$ be a $\nu$-barrier with lower constant $c_1$, $x \in (0, 1)$ and
+  $0 \le \eta \le c_1 x^{1-\nu}/(3\nu)$. Then $\eta\abs{y - x} - D_r(y, x) \le (e/2)\eta^2x^\nu/c_1$
+  for every $y \in (0, 1)$. Consequently, for $w$ positive on the simplex, a loss in $[0, 1]^d$
+  constant off a coordinate $i_0$ with $m = w_{i_0}$, $\eta \le c_1m^{1-\nu}/(3\nu)$ and
+  $\eps \ge 2\eta^2m^\nu/c_1$, staying at $w$ is an $\eps$-approximate step on the open simplex.
+\end{lemma}
+
+\begin{proof}
+  $r'' \ge c_1/(e x^\nu)$ on $(0, x(1 + 1/\nu)]$, and beyond that point the slope of $D_r(\cdot, x)$
+  exceeds $\eta$. The paper bounds the curvature at the wrong end of the step.
+\end{proof}
+
+\begin{lemma}[{\cite[Lemma 14]{SSKM26}}, corrected]
+  \label{lem:balance_lower_bound}
+  \lean{Schlisselberg2026Hidden.exists_approxMirrorDescent_le_regret_of_balanced}
+  \leanok
+  \uses{lem:entropy_stuck}
+  Let $d \ge 2$, $i_1$ an arm, $0 < \eta \le 1$, $0 \le \alpha$ with $2\alpha \le T$, and
+  $\tau = \lfloor\alpha\rfloor$. The losses $e_{i_1}$ for $t < \tau$ and $\mathbf 1 - e_{i_1}$ for
+  $t \ge \tau$ lie in $[0, 1]^d$, have $i_1$ as a best arm and are $\alpha$-balanced. The trajectory of
+  $\tau$ exact steps from $u_0$ followed by staying put is $\eps$-approximate for every
+  $\eps \ge 4\eta e^{-\eta\alpha}$, and its regret against $e_{i_1}$ is at least $(T - 2\alpha)/2$.
+\end{lemma}
+
+\begin{proof}
+  \uses{lem:entropy_stuck}
+  The weight of $i_1$ after $\tau$ steps is $p_\tau = 1/(1 + (d-1)e^{\eta\tau}) \le e^{-\eta\tau}$, so
+  the error of staying is at most $\eta^2 p_\tau \le e\eta^2e^{-\eta\alpha} \le 4\eta e^{-\eta\alpha}$.
+  The learner pays at least $p_\tau$ per round in the first phase and $1 - p_\tau$ in the second:
+  the regret is at least $(1 - p_\tau)(T - 2\tau) \ge (1 - 1/d)(T - 2\alpha)$.
+\end{proof}
+
+\begin{theorem}[{\cite[Theorem 4]{SSKM26}}, with explicit constants]
+  \label{thm:lb_barrier_adversarial}
+  \lean{Schlisselberg2026Hidden.exists_approxMirrorDescent_le_regret_negEntropy}
+  \leanok
+  \uses{lem:balance_lower_bound, lem:entropy_stuck}
+  Let $d \ge 2$, $\eta > 0$ and $\eps \ge 4\eta e^{-\eta T/3}$. There are losses in $[0, 1]^d$ and an
+  $\eps$-approximate trajectory from $u_0$ with positive coordinates whose regret against the best
+  point in hindsight is at least $T/10$.
+\end{theorem}
+
+\begin{proof}
+  \uses{lem:balance_lower_bound, lem:entropy_stuck}
+  For $\eta \le 1$, Lemma~\ref{lem:balance_lower_bound} with $\alpha = T/3$ gives $T/6$. For
+  $\eta > 1$, exact steps on the alternating losses $\mathbf 1 - e_{i_2}$ ($t$ even),
+  $\mathbf 1 - e_{i_1}$ ($t$ odd) pay at least $1/2$ at even rounds and $1 - 1/(1 + e^\eta)$ at odd
+  rounds, so the regret against $e_{i_2}$ is at least
+  $\lceil T/2\rceil/2 - \lfloor T/2\rfloor/(1 + e^\eta) \ge T/10$.
+\end{proof}
+
+\begin{theorem}[{\cite[Theorem 35]{SSKM26}}, corrected]
+  \label{thm:dimension_lower_bound}
+  \lean{Schlisselberg2026Hidden.exists_approxMirrorDescent_le_regret_of_isPowerBarrier}
+  \leanok
+  \uses{lem:barrier_stuck}
+  Let $d \ge 2$, $r$ a $\nu$-barrier with constants $c_1, c_2$, $0 < \eta \le c_1d^{\nu-1}/(3\nu)$ and
+  $\eps \ge 4\eta^2/(c_1d^\nu)$. For the constant losses $\mathbf 1 - e_{i_0}$, staying at $u_0$ is an
+  $\eps$-approximate trajectory on the open simplex, with regret $T(1 - 1/d) \ge T/2$ against
+  $e_{i_0}$, the best point.
+\end{theorem}
+
+\begin{proof}
+  \uses{lem:barrier_stuck}
+  Lemma~\ref{lem:barrier_stuck} with $w = u_0$, $m = 1/d$.
+\end{proof}
+
+\begin{theorem}[{\cite[Theorem 36]{SSKM26}}, corrected]
+  \label{thm:three_phase_lower_bound}
+  \lean{Schlisselberg2026Hidden.exists_approxMirrorDescent_le_regret_negEntropy_threePhase}
+  \leanok
+  \uses{lem:entropy_stuck}
+  Let $d = 2$ with arms $i_1 \ne i_2$, $0 < \eta \le 1$, $\tau \in \N$ and $T \ge 40\tau$. The losses
+  $e_{i_2}$ for $t < 3\tau$, $e_{i_1}$ for $3\tau \le t < 5\tau$ and $e_{i_2}$ afterwards have best
+  arm $i_1$ and are $2\tau$-balanced; every exact trajectory from $u_0$ keeps weight at least $1/2$
+  on $i_1$; and the trajectory that takes exact steps for $t < \tau$ and $3\tau \le t < 5\tau$ and
+  stays put otherwise is $\eps$-approximate for every $\eps \ge 4\eta e^{-\eta\tau}$, with regret
+  at least $T/3$ against $e_{i_1}$.
+\end{theorem}
+
+\begin{proof}
+  \uses{lem:entropy_stuck}
+  The cumulative difference $L^{i_1}_{[0,t)} - L^{i_2}_{[0,t)}$ is never positive, so exact steps
+  (which are multiplicative weights, by the equality case of Gibbs) keep $i_1$ at weight at least
+  $1/2$. The stuck phases have error at most $\eta^2e^{-\eta\tau}$ by Lemma~\ref{lem:entropy_stuck},
+  $w_{4\tau} = u_0$, and the regret is at least $(T - 5\tau)/2 - 2\tau \ge T/3$.
+\end{proof}

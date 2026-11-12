@@ -1,0 +1,236 @@
+\usepackage{makecell}
+\usepackage{ifthen}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{mathrsfs}
+\usepackage{dsfont} % For blackboard bold
+
+% \usepackage{minitoc}
+% \setcounter{parttocdepth}{1}
+% \renewcommand \thepart{}
+% \renewcommand \partname{}
+
+\usepackage{booktabs, multirow, makecell, array, xspace}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+
+% Slightly slimmer horizontal cell padding
+\setlength{\tabcolsep}{5.5pt}
+
+% Roomier rows
+\renewcommand{\arraystretch}{1.2}
+
+\usepackage{pifont}
+
+\definecolor{mydarkgreen}{RGB}{39,130,67}
+\newcommand{\green}{\color{mydarkgreen}}
+\definecolor{mydarkred}{RGB}{192,47,25}
+\definecolor{bluegreen}{rgb}{0.0, 0.5, 0.5}
+\newcommand{\red}{\color{mydarkred}}
+\newcommand{\cmark}{{\large \ding{51}}}%
+% \newcommand{\gcmark}{{\color{gray}\large \ding{51}}}%
+\newcommand{\xmark}{{\large  \ding{55}}}%
+\newcommand{\cxmark}{\ooalign{\hfil\xmark\hfil\cr\cmark}}
+
+\usepackage[font=small]{caption}
+\usepackage{threeparttable}  
+
+%%%%%%%%%%%%%%
+%% COMMANDS %%
+%%%%%%%%%%%%%%
+
+\newcommand{\N}{\mathbb{N}}
+
+\newcommand{\KL}{\mathrm{D}_{\mathrm{KL}}}
+
+\newcommand{\brackets}[4][a]{%
+  \ifx a#1\left#2 #3 \right#4\else
+  \ifx s#1#2 #3 #4\else
+  \ifx b#1\big#2 #3 \big#4\else
+  \ifthenelse{\equal{#1}{B}} {\Big#2 #3 \Big#4} {}
+  \ifthenelse{\equal{#1}{Bg}} {\Bigg#2 #3 \Bigg#4} {}
+  \fi\fi\fi
+}
+
+\newcommand{\br}[2][a]{\brackets[#1]{(}{#2}{)}}
+\newcommand{\cbr}[2][a]{\brackets[#1]{\{}{#2}{\}}}
+\newcommand{\sbr}[2][a]{\brackets[#1]{[}{#2}{]}}
+\newcommand{\abr}[2][a]{\brackets[#1]{\langle}{#2}{\rangle}}
+\newcommand{\av}[2][a]{\brackets[#1]{|}{#2}{|}}
+\newcommand{\norm}[2][a]{\brackets[#1]{\|}{#2}{\|}}
+
+
+\newcommand{\ifrac}[2]{#1 / #2}
+
+
+% \newcommand{}{}
+% \def\rc{{\textnormal{c}}}
+\def\va{{\mathbf{a}}}
+\def\vb{{\mathbf{b}}}
+\def\vc{{\mathbf{c}}}
+\def\vq{{\mathbf{q}}}
+\def\vx{{\mathbf{x}}}
+\def\vy{{\mathbf{y}}}
+\def\vu{{\mathbf{u}}}
+\def\vv{{\mathbf{v}}}
+\def\vw{{\mathbf{w}}}
+\def\ve{{\mathbf{e}}}
+\def\vg{{\mathbf{g}}}
+
+\newcommand{\tr}{\mathrm{Tr}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\T}{^\top}
+\newcommand{\eqq}{\coloneqq}
+\newcommand{\diag}{\mathrm{diag}}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\newcommand{\regret}{\mathrm{regret}}
+
+\renewcommand{\l}{\ell}
+
+\renewcommand{\P}{\mathbb P}
+\newcommand{\cL}{\mathcal L}
+\newcommand{\cM}{\mathcal M}
+\newcommand{\cS}{\mathcal S}
+\newcommand{\cA}{\mathcal A}
+\newcommand{\cF}{\mathcal F}
+\newcommand{\cX}{\mathcal X}
+\newcommand{\cY}{\mathcal Y}
+\newcommand{\cZ}{\mathcal Z}
+\newcommand{\cD}{\mathcal D}
+\newcommand{\cK}{\mathcal K}
+\newcommand{\cV}{\mathcal V}
+\newcommand{\cQ}{\mathcal Q}
+\newcommand{\cB}{\mathcal B}
+\newcommand{\cN}{\mathcal N}
+\newcommand{\cP}{\mathcal P}
+\newcommand{\cT}{\mathcal T}
+\newcommand{\cO}{\mathcal O}
+\newcommand{\cE}{\mathcal E}
+
+\newcommand{\cC}{\mathcal C}
+\newcommand{\cU}{\mathcal U}
+
+
+\newcommand{\bS}{\boldsymbol{ \mathrm S}}
+
+\newcommand{\bJ}{\boldsymbol{ \mathrm J}}
+
+
+% \renewcommand{\arraystretch}{1.5}
+
+
+\newenvironment{aligni*}{\begin{math}}{\end{math}}
+\newenvironment{equationi*}{\begin{math}}{\end{math}}
+\newcommand{\fraci}[2]{{#1}/{#2}}
+
+\definecolor{plum}{rgb}{.6,0,.6}
+
+
+\newcounter{protocol}
+\makeatletter
+\newenvironment{protocol}[1][htb]{%
+  \let\c@algorithm\c@protocol
+  \renewcommand{\ALG@name}{Protocol}
+  \begin{algorithm}[#1]%
+  }{\end{algorithm}
+}
+\makeatother
+
+%%%%
+% https://tex.stackexchange.com/questions/3964/mathematical-symbol-for-disjoint-set-union
+\makeatletter
+\def\moverlay{\mathpalette\mov@rlay}
+\def\mov@rlay#1#2{\leavevmode\vtop{%
+   \baselineskip\z@skip \lineskiplimit-\maxdimen
+   \ialign{\hfil$\m@th#1##$\hfil\cr#2\crcr}}}
+\newcommand{\charfusion}[3][\mathord]{
+    #1{\ifx#1\mathop\vphantom{#2}\fi
+        \mathpalette\mov@rlay{#2\cr#3}
+      }
+    \ifx#1\mathop\expandafter\displaylimits\fi}
+\makeatother
+
+\newcommand{\cupdot}{\charfusion[\mathbin]{\cup}{\cdot}}
+
+%%%%
+
+\newcommand{\dom}{\textbf{dom}\,}
+
+\newcommand{\rmd}{{\rm d}}
+\newcommand{\bigO}{\mathcal O}
+
+
+\opt{
+\declaretheoremstyle[
+	    spaceabove=\topsep, 
+	    spacebelow=\topsep, 
+	    headfont=\normalfont\bfseries,
+	    bodyfont=\normalfont\itshape,
+	    notefont=\normalfont\bfseries,
+	    notebraces={(}{)},
+	    postheadspace=0.33em, 
+	    headpunct={.},
+	   % postfoothook=\noindent\ignorespaces
+    ]{theorem}
+% \declaretheorem[style=theorem,numberwithin=section]{theorem}
+\declaretheorem[style=theorem]{theorem}
+
+\declaretheoremstyle[
+	    spaceabove=\topsep, 
+	    spacebelow=\topsep, 
+	    headfont=\normalfont\bfseries,
+	    bodyfont=\normalfont,
+	    notefont=\normalfont\bfseries,
+	    notebraces={(}{)},
+	    postheadspace=0.33em, 
+	    headpunct={.},
+	   % postfoothook=\noindent\ignorespaces
+    ]{definition}
+
+\let\proof\undefined
+\declaretheoremstyle[
+        spaceabove=\topsep, 
+        spacebelow=\topsep, 
+        headfont=\normalfont\bfseries,
+        bodyfont=\normalfont,
+        notefont=\normalfont\bfseries,
+        % notebraces={(}{)},
+        notebraces={}{},
+        postheadspace=0.33em, 
+        qed=$\blacksquare$, 
+        headpunct={.},
+        % postfoothook=\noindent\ignorespaces
+    ]{proofstyle}
+\declaretheorem[style=proofstyle,numbered=no,name=Proof]{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% THEOREMS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		
+\declaretheorem[style=theorem,sibling=theorem,name=Lemma]{lemma}
+\declaretheorem[style=theorem,sibling=theorem,name=Corollary]{corollary}
+\declaretheorem[style=theorem,sibling=theorem,name=Claim]{claim}
+\declaretheorem[style=theorem,sibling=theorem,name=Proposition]{proposition}
+\declaretheorem[style=theorem,sibling=theorem,name=Fact]{fact}
+\declaretheorem[style=theorem,sibling=theorem,name=Observation]{observation}
+\declaretheorem[style=theorem,sibling=theorem,name=Conjecture]{conjecture}
+
+\declaretheorem[style=theorem,numbered=no,name=Theorem]{theorem*}
+\declaretheorem[style=theorem,numbered=no,name=Lemma]{lemma*}
+\declaretheorem[style=theorem,numbered=no,name=Corollary]{corollary*}
+\declaretheorem[style=theorem,numbered=no,name=Proposition]{proposition*}
+\declaretheorem[style=theorem,numbered=no,name=Claim]{claim*}
+\declaretheorem[style=theorem,numbered=no,name=Fact]{fact*}
+\declaretheorem[style=theorem,numbered=no,name=Observation]{observation*}
+\declaretheorem[style=theorem,numbered=no,name=Conjecture]{conjecture*}
+
+\declaretheorem[style=definition,sibling=theorem,name=Definition]{definition}
+\declaretheorem[style=definition,sibling=theorem,name=Remark]{remark}
+\declaretheorem[style=definition,sibling=theorem,name=Example]{example}
+\declaretheorem[style=definition,sibling=theorem,name=Question]{question}
+
+\declaretheorem[style=definition,numbered=no,name=Definition]{definition*}
+\declaretheorem[style=definition,numbered=no,name=Remark]{remark*}
+\declaretheorem[style=definition,numbered=no,name=Example]{example*}
+\declaretheorem[style=definition,numbered=no,name=Question]{question*}
+}

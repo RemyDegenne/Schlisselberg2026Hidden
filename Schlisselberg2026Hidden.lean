@@ -1,3 +1,17 @@
 module  -- shake: keep-all --deprecated_module: ignore
 
-public import Schlisselberg2026Hidden.SSKM2026.Basic
+public import Schlisselberg2026Hidden.ForLMLExplore.Analysis.Convex.PowerBarrier
+public import Schlisselberg2026Hidden.ForLMLExplore.OnlineLearning.ApproxMirrorDescent
+public import Schlisselberg2026Hidden.ForLMLExplore.OnlineLearning.FTRL.Approx
+public import Schlisselberg2026Hidden.SSKM2026.Lemma14
+public import Schlisselberg2026Hidden.SSKM2026.Lemma15
+public import Schlisselberg2026Hidden.SSKM2026.Theorem2
+public import Schlisselberg2026Hidden.SSKM2026.Theorem3
+public import Schlisselberg2026Hidden.SSKM2026.Theorem35
+public import Schlisselberg2026Hidden.SSKM2026.Theorem36
+public import Schlisselberg2026Hidden.SSKM2026.Theorem4
+public import Schlisselberg2026Hidden.SSKM2026.Theorem5
+public import Schlisselberg2026Hidden.SSKM2026.Theorem52
+public import Schlisselberg2026Hidden.SSKM2026.Theorem6
+public import Schlisselberg2026Hidden.SSKM2026.Theorem7
+public import Schlisselberg2026Hidden.SSKM2026.Theorem8

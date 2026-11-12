@@ -1,14 +1,39 @@
 {
   "SSKM26": {
-    "uri": "",
+    "uri": "https://arxiv.org/abs/2511.22283",
     "citation": {
       "id": "SSKM26",
       "type": "article",
-      "title": "<title of the paper>",
-      "author": [{"family": "<family name>", "given": "<given name>"}],
-      "issued": {"date-parts": [[2026]]}
+      "title": "The Hidden Cost of Approximation in Online Mirror Descent",
+      "author": [
+        {
+          "family": "Schlisselberg",
+          "given": "Ofir"
+        },
+        {
+          "family": "Sherman",
+          "given": "Uri"
+        },
+        {
+          "family": "Koren",
+          "given": "Tomer"
+        },
+        {
+          "family": "Mansour",
+          "given": "Yishay"
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            2026
+          ]
+        ]
+      }
     },
-    "identifiers": {},
-    "version": ""
+    "identifiers": {
+      "arxiv": "2511.22283"
+    },
+    "version": "v2"
   }
 }

@@ -7,9 +7,19 @@ version: "v0.4"
 project:
   name: "Schlisselberg2026Hidden"
   description: >-
-    <One paragraph: which paper, which results, on which libraries (LMLExplore, and through it
-    LML, Tau Ceti and Mathlib), in which generality, and the two-phase plan (phase 1 sorry-ed
-    headline statements with comparator challenges, phase 2 proofs).>
+    A Lean 4 formalization of "The Hidden Cost of Approximation in Online Mirror Descent"
+    (Schlisselberg, Sherman, Koren, Mansour, arXiv:2511.22283v2), on top of LMLExplore, and
+    through it LML, Tau Ceti and Mathlib. The paper studies online mirror descent whose steps are
+    only epsilon-minimizers of their subproblems: for smooth regularizers the excess regret is
+    T D sqrt(beta eps) / eta, tightly; on the simplex, the negative entropy needs exponentially
+    small errors to avoid linear regret while power barriers with nu > 1 (Tsallis, log barrier)
+    tolerate polynomial ones; with i.i.d. losses the negative entropy is robust on the simplex but
+    not on its polyhedral subsets; approximate FTRL loses only (2 eta + sqrt(2 eps)) T. The
+    statements use LMLExplore's mirror descent, FTRL, regret, simplex and negative entropy, and
+    new library-shaped notions (approximate mirror descent steps and FTRL plays, power barriers)
+    to be ported to LMLExplore. Every O and Omega of the paper is made explicit, with the
+    constants corrected where the paper's are wrong (notes/paper-errata.md). Phase 1 states the
+    headline results with sorry and freezes them as comparator challenges; phase 2 proves them.
   authors:
     - "Remy Degenne"
   responsible_maintainers:
@@ -22,38 +32,50 @@ repository:
   role: "substantive-development"
 
 sources:
-  - title: "<Paper title>"
+  - title: "The Hidden Cost of Approximation in Online Mirror Descent"
     authors:
-      - "<Paper author>"
-    id: "<Venue year, paper number or arXiv id, with the revision whose numbering the citations use>"
-    type: "conference-paper"
-    location: "<Which results of the paper are formalized; see status.scope>"
+      - "Ofir Schlisselberg"
+      - "Uri Sherman"
+      - "Tomer Koren"
+      - "Yishay Mansour"
+    id: "arXiv:2511.22283v2 (18 June 2026; the numbering of the citations)"
+    type: "preprint"
+    location: "Theorems 2-8, Lemmas 14, 15, Theorems 35, 36, 52, with the lemmas of their proofs as blueprint items; see status.scope"
     relationship: "formalizes"
     license: ""
     author_endorsement: "not-contacted"
     note: >-
-      <Where the paper source lives (source/), that the blueprint is a derived artifact of this
-      project, and whether the formalizer is an author. Errors found in the paper are in
-      notes/paper-errata.md.>
+      The arXiv sources and PDF of revision v2 are in source/. The blueprint (blueprint/src/) is
+      a derived artifact of this project. The formalizer is not an author of the paper. Errors
+      found in the paper are in notes/paper-errata.md.
 
 related_formalizations: []   # earlier or parallel formalizations of this paper, if any
 
 classification:
-  arxiv: ["<primary arXiv category>"]
+  arxiv: ["cs.LG"]
   msc2020:
-    - "<MSC code>"   # <meaning>
+    - "68Q32"   # computational learning theory
+    - "90C25"   # convex programming
+    - "68W27"   # online algorithms
 
 status:
   scope: >-
-    <Phase 1: list every headline result with its Lean name and blueprint label.
-    Phase 2: what is proved, what is not, and the dated history of major changes.>
-  sorry_count: 0
+    Phase 1 (2026-11-12): the 12 headline statements below are stated with sorry in
+    Schlisselberg2026Hidden/SSKM2026/ (namespace Schlisselberg2026Hidden, one file per result),
+    over the library-shaped definitions of Schlisselberg2026Hidden/ForLMLExplore/
+    (OnlineLearning/ApproxMirrorDescent.lean: IsApproxMirrorDescentStep; OnlineLearning/FTRL/Approx.lean:
+    IsApproxFTRLPlay; Analysis/Convex/PowerBarrier.lean: IsPowerBarrier). Every O and Omega of the
+    paper is an explicit constant, and the constants and hypotheses are corrected where the
+    paper's proofs do not support them (notes/paper-errata.md, E1-E35; the corrected proofs, with
+    every constant derived, are notes/constants-*.md). The outline is notes/blueprint-outline.md,
+    the modelling notes/modelling.md.
+  sorry_count: 12
   sorry_in_definitions: 0
 
 automation:
   methods:
     - method: "agent"
-      models: ["<the Claude models that wrote the code, e.g. claude-opus-5-5>"]
+      models: ["claude-opus-5-5"]
       framework: "Claude Code"
       tool_setup: >-
         The formalize-paper skill of the lml plugin
@@ -65,11 +87,14 @@ review:
   # unchecked until the phase-1 statement check; then self-assessed once the user has checked the
   # statements (author-verified when the user is an author of the paper), agent-reviewed while only
   # an agent has.
-  status: "unchecked"
-  reviewers: []
+  status: "self-assessed"
+  reviewers:
+    - "Remy Degenne"
   notes: >-
-    <Who checked the headline statements against the paper, and when. Comparator checks that the
-    project proves exactly them.>
+    The 12 headline statements were checked against arXiv:2511.22283v2 by Remy Degenne (not an
+    author of the paper) on 2026-11-12, after an agent review of the constants and hypotheses of
+    every result (notes/constants-*.md, notes/paper-errata.md). Comparator checks that the project
+    proves exactly them.
 
 alignment:
   namespace: "Schlisselberg2026Hidden"
@@ -80,9 +105,84 @@ alignment:
     statement is more general), narrowMatch (the paper's is) or hasPart; and its entry in
     notes/paper-errata.md when the paper had to be corrected.
   statements:
-    - source: "<blueprint label> — <Theorem 1 of the paper>"
-      lean: "Schlisselberg2026Hidden.<name>"
-      module: "Schlisselberg2026Hidden.SSKM2026.<File>"
+    - source: "thm:ub_smooth — Theorem 2"
+      lean: "Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_smooth"
+      module: "Schlisselberg2026Hidden.SSKM2026.Theorem2"
+      status: "stated"
+      relation: "broadMatch"
+      note: "Any real normed space and any upper bound D on the diameter; the O(...) is made explicit with the constants of the paper's proof: D_R(u,w_1)/eta + eta T/2 + T D sqrt(2 beta eps)/eta."
+    - source: "thm:lb_smooth — Theorem 3"
+      lean: "Schlisselberg2026Hidden.exists_approxMirrorDescent_le_regret_euclidean"
+      module: "Schlisselberg2026Hidden.SSKM2026.Theorem3"
       status: "stated"
       relation: "exactMatch"
-      # erratum: "E1"
+      note: "The Omega(...) is made explicit, min(T D sqrt(beta eps)/eta, D T)/2, with losses and trajectory independent of T."
+    - source: "thm:lb_barrier_adversarial — Theorem 4"
+      lean: "Schlisselberg2026Hidden.exists_approxMirrorDescent_le_regret_negEntropy"
+      module: "Schlisselberg2026Hidden.SSKM2026.Theorem4"
+      status: "stated"
+      relation: "exactMatch"
+      erratum: "E2"
+      note: "Omega(T) is T/10, for every eta > 0, with the uniform start; the paper's proof covers only d = 2 and eta <= 1 (E2, E10)."
+    - source: "thm:up_barrier_adversarial — Theorem 5"
+      lean: "Schlisselberg2026Hidden.approxMirrorDescent_regret_le_negEntropy"
+      module: "Schlisselberg2026Hidden.SSKM2026.Theorem5"
+      status: "stated"
+      relation: "narrowMatch"
+      erratum: "E3"
+      note: "Losses in [0,1]^d (false for [-1,1]^d, E3); threshold exp(-eta T/2) min(eta^4, T^-2)/(100 d); uniform start; bound log d/eta + eta T against every point of the simplex instead of D_R(w,w_1)/eta + O(eta T) (E4)."
+    - source: "thm:ub_nonentropy — Theorem 6"
+      lean: "Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier"
+      module: "Schlisselberg2026Hidden.SSKM2026.Theorem6"
+      status: "stated"
+      relation: "closeMatch"
+      erratum: "E6"
+      note: "Corrected threshold eta^4 Psi^(-nu/(nu-1))/(4^(nu+2) max(1,c2)) with Psi = (2d)^(nu-1) + 8(nu-1) eta T d/c1, no condition on eta, constant (1 + 1/c1); steps on the points of K with positive coordinates; comparators with positive coordinates, or all of K when r is right-continuous at 0 (E1, E5, E6)."
+    - source: "thm:ub_barrier_stochastic — Theorem 7"
+      lean: "Schlisselberg2026Hidden.approxMirrorDescent_regret_le_negEntropy_iid"
+      module: "Schlisselberg2026Hidden.SSKM2026.Theorem7"
+      status: "stated"
+      relation: "closeMatch"
+      erratum: "E7"
+      note: "T >= 256 log d instead of T >= 256, eps <= delta/(6 d^3 T^4) instead of delta/(6 d^2 T^4), regret 2 sqrt(T log d) on an event of probability 1 - delta, for every trajectory (E7)."
+    - source: "thm:lb_nonsimplex — Theorem 8"
+      lean: "Schlisselberg2026Hidden.exists_approxMirrorDescent_le_integral_regret_polytope"
+      module: "Schlisselberg2026Hidden.SSKM2026.Theorem8"
+      status: "stated"
+      relation: "closeMatch"
+      erratum: "E8"
+      note: "Quantifiers corrected (the polytope and the law depend on eps and eta), dimension d <= 100 log(1/eps), eps <= 1/3 and 100 eta log(1/eps) <= 1, bounded (Rademacher) instead of Gaussian losses, expected regret >= T sqrt(eta/log(1/eps))/20, plus D_R(w*,w_1)/(6 eta) when eta T >= 1 (E8)."
+    - source: "lem:balance_lower_bound — Lemma 14"
+      lean: "Schlisselberg2026Hidden.exists_approxMirrorDescent_le_regret_of_balanced"
+      module: "Schlisselberg2026Hidden.SSKM2026.Lemma14"
+      status: "stated"
+      relation: "closeMatch"
+      erratum: "E10"
+      note: "Any d >= 2, eta <= 1, losses and trajectory chosen before eps, regret (T - 2 alpha)/2 against the best arm, uniform start (E10)."
+    - source: "lem:balance_upper_bound — Lemma 15"
+      lean: "Schlisselberg2026Hidden.approxMirrorDescent_regret_le_negEntropy_of_balanced"
+      module: "Schlisselberg2026Hidden.SSKM2026.Lemma15"
+      status: "stated"
+      relation: "narrowMatch"
+      erratum: "E4"
+      note: "Threshold exp(-eta A) min(eta^4, T^-2)/(100 d), uniform start, balance with respect to a best arm (E13), bound log d/eta + eta T against every point of the simplex (E4)."
+    - source: "thm:dimension_lower_bound — Theorem 35"
+      lean: "Schlisselberg2026Hidden.exists_approxMirrorDescent_le_regret_of_isPowerBarrier"
+      module: "Schlisselberg2026Hidden.SSKM2026.Theorem35"
+      status: "stated"
+      relation: "narrowMatch"
+      erratum: "E21"
+      note: "Adds eta <= c1 d^(nu-1)/(3 nu) (false for large eta, E21); keeps eps >= 4 eta^2/(c1 d^nu); constant losses, uniform start, regret T/2; steps on the open simplex (E1)."
+    - source: "thm:three_phase_lower_bound — Theorem 36"
+      lean: "Schlisselberg2026Hidden.exists_approxMirrorDescent_le_regret_negEntropy_threePhase"
+      module: "Schlisselberg2026Hidden.SSKM2026.Theorem36"
+      status: "stated"
+      relation: "closeMatch"
+      erratum: "E22"
+      note: "tau in N (k = 2 eta tau), eta <= 1, T >= 40 tau, regret T/3 for every eps >= 4 eta exp(-eta tau), with the balance of the losses and the weight >= 1/2 of the exact trajectory on the optimal arm as conclusions (E22)."
+    - source: "thm:approx_ftrl — Theorem 52"
+      lean: "Schlisselberg2026Hidden.approxFTRL_regret_le"
+      module: "Schlisselberg2026Hidden.SSKM2026.Theorem52"
+      status: "stated"
+      relation: "broadMatch"
+      note: "Any real normed space and compact convex K."

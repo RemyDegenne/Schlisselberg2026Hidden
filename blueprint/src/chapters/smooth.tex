@@ -1,0 +1,93 @@
+\chapter{Smooth regularizers}
+\label{chap:smooth}
+
+Section 3 and Appendix B of \cite{SSKM26}. Let $\cK$ be a convex set of a real normed space $E$
+with $\norm{x - x'} \le D$ for $x, x' \in \cK$. The regularizer $R \colon E \to \R$ has a
+derivative $R'(x)$ within $\cK$ at every $x \in \cK$, is $1$-strongly convex on $\cK$ for the norm
+of $E$ (the paper's standing assumption of Section 2), and is $\beta$-smooth on $\cK$:
+$\norm{R'(x) - R'(x')} \le \beta \norm{x - x'}$ for $x, x' \in \cK$, the norm on the left being the
+operator norm, which is the dual norm.
+
+\begin{lemma}[{\cite[proof of Theorem 2]{SSKM26}}]
+  \label{lem:smooth_one_step}
+  \uses{lem:approx_first_order, lem:smooth_quadratic_bound}
+  Under these assumptions, let $\eps \le D^2/2$, $\eta > 0$, and let $x$ be an $\eps$-approximate
+  mirror descent step on $\cK$ from $a \in \cK$ for a loss $\ell$, with potential $R$ and
+  derivative $R'(a)$. Then for every $u \in \cK$,
+  \[ \eta\, \ell(x - u) \le D_R(u, a) - D_R(u, x) - D_R(x, a) + D \sqrt{2 \beta \eps}, \]
+  where the divergences from $a$ and from $x$ use $R'(a)$ and $R'(x)$.
+\end{lemma}
+
+\begin{proof}
+  \uses{lem:approx_first_order, lem:smooth_quadratic_bound}
+  If $\cK$ has two distinct points $x_1 \ne x_2$, then
+  $\frac12 \norm{x_1 - x_2}^2 \le D_R(x_1, x_2) \le \frac\beta2 \norm{x_1 - x_2}^2$ by strong
+  convexity and Lemma~\ref{lem:smooth_quadratic_bound}, so $\beta \ge 1$ and $\eps \le \beta D^2 /
+  2$. Otherwise $x = a = u$ and both sides vanish. The objective $\phi(b) = \eta\,\ell(b) + D_R(b,
+  a)$ has derivative $\eta \ell + R'(b) - R'(a)$ within $\cK$ at $b$ and the same Bregman
+  divergence as $R$, so it satisfies the quadratic upper bound of
+  Lemma~\ref{lem:smooth_quadratic_bound} on $\cK$. Lemma~\ref{lem:approx_first_order} gives
+  $(\eta \ell + R'(x) - R'(a))(u - x) \ge -D\sqrt{2 \beta \eps}$. The three-point identity
+  $(R'(x) - R'(a))(u - x) = D_R(u, a) - D_R(u, x) - D_R(x, a)$ (LML's
+  \texttt{bregDiv\_three\_point}) concludes.
+\end{proof}
+
+\begin{theorem}[{\cite[Theorem 2]{SSKM26}}]
+  \label{thm:ub_smooth}
+  \lean{Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_smooth}
+  \leanok
+  \uses{def:approx_step, lem:smooth_one_step, lem:omd_helper}
+  Under these assumptions, let $\eta > 0$, $\eps \le D^2/2$, and let the losses satisfy
+  $\norm{\ell_t} \le 1$ for $t < T$. For every $\eps$-approximate trajectory $(w_t)$ of mirror
+  descent on $\cK$ with potential $R$ and every $u \in \cK$,
+  \[ \mathrm{Regret}_T(u) \le \frac{D_R(u, w_0)}{\eta} + \frac{\eta T}{2}
+    + \frac{T D \sqrt{2 \beta \eps}}{\eta}. \]
+\end{theorem}
+
+\begin{proof}
+  \uses{lem:smooth_one_step, lem:omd_helper}
+  Split $\ell_t(w_t - u) = \ell_t(w_t - w_{t+1}) + \ell_t(w_{t+1} - u)$. By
+  Lemma~\ref{lem:smooth_one_step}, summed over $t < T$, the second terms add up to at most
+  $(D_R(u, w_0) - D_R(u, w_T) - \sum_{t<T} D_R(w_{t+1}, w_t) + T D \sqrt{2\beta\eps}) / \eta$, and
+  $D_R(u, w_T) \ge 0$ by convexity. By Lemma~\ref{lem:omd_helper},
+  $\ell_t(w_t - w_{t+1}) - D_R(w_{t+1}, w_t)/\eta \le \eta/2$.
+
+  The paper states the bound with $O(\cdot)$; the constants are those of its proof. Its proof
+  writes the sums over $t \le T$ of the paper's indexing, and uses Lemma~\ref{lem:approx_first_order}
+  in the form $\ip{\nabla f(\hat w)}{w - \hat w} \ge -D\sqrt{2\beta\eps}$.
+\end{proof}
+
+\begin{lemma}[{\cite[Lemma 27]{SSKM26}}]
+  \label{lem:omd_helper}
+  If $R$ is $1$-strongly convex on $\cK$ and $\norm{\ell} \le 1$, then for $a, x \in \cK$ and
+  $\eta > 0$, $\ell(a - x) - D_R(x, a)/\eta \le \eta / 2$.
+\end{lemma}
+
+\begin{proof}
+  $D_R(x, a) \ge \frac12 \norm{x - a}^2$ (LMLExplore's
+  \texttt{StrongConvexOn.mul\_norm\_sub\_sq\_le\_bregDiv}), $\ell(a - x) \le \norm{a - x}$, and
+  $s - s^2/(2\eta) \le \eta/2$. This is LMLExplore's
+  \texttt{apply\_sub\_sub\_div\_le\_of\_mul\_norm\_sq\_le} with $m = 1$.
+\end{proof}
+
+\begin{theorem}[{\cite[Theorem 3]{SSKM26}}]
+  \label{thm:lb_smooth}
+  \lean{Schlisselberg2026Hidden.exists_approxMirrorDescent_le_regret_euclidean}
+  \leanok
+  \uses{def:approx_step}
+  Let $\beta, \eps, D, \eta > 0$, $\cK = [0, D]$ and $R(x) = \beta x^2 / 2$. There are losses
+  $\ell_t$ with $\abs{\ell_t} \le 1$, an $\eps$-approximate trajectory $(w_t)$ and $u \in \cK$ such
+  that for every $T$,
+  \[ \mathrm{Regret}_T(u) \ge \frac12 \min\Bigl\{ \frac{T D \sqrt{\beta \eps}}{\eta}, D T
+    \Bigr\}. \]
+\end{theorem}
+
+\begin{proof}
+  Let $\ell_t = \ell = \min\{\sqrt{2 \beta \eps} / \eta, 1\}$ for all $t$ and $w_t = D/2$ for all
+  $t$, $u = 0$. The objective $\phi(b) = \eta \ell b + \frac\beta2 (b - D/2)^2$ of every round is a
+  quadratic with unconstrained minimizer $D/2 - \eta\ell/\beta$ and unconstrained minimum
+  $\phi(D/2) - \eta^2\ell^2/(2\beta)$, a lower bound for its minimum over $[0, D]$. Since
+  $\eta^2 \ell^2 / (2 \beta) \le \eps$, staying at $D/2$ is an $\eps$-approximate step. The regret
+  is $T \ell D / 2 = \frac{TD}{2}\min\{\sqrt{2\beta\eps}/\eta, 1\} \ge
+  \frac12\min\{TD\sqrt{\beta\eps}/\eta, DT\}$.
+\end{proof}

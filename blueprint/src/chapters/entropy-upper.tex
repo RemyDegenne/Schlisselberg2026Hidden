@@ -1,0 +1,187 @@
+\chapter{Negative entropy: upper bounds}
+\label{chap:entropy_upper}
+
+Appendix E and Sections 4.1, 5.3 of \cite{SSKM26}, with the corrected constants of
+\texttt{notes/constants-entropy-upper.md} (area A), which gives every computation in full; the
+item names L\ldots{} below are those of that file. Throughout, $\alpha$ is a finite set of
+$d \ge 1$ arms, $\Delta$ the simplex, $\bar u = (1/d)_i$ its uniform point, $\ip{x}{y} =
+\sum_k x_k y_k$, and $D(x, y) = \sum_k (x_k \log(x_k/y_k) - x_k + y_k)$ the Bregman divergence of
+\texttt{negEntropy}. The trajectory hypotheses are: (T1) $a_0 = \bar u$; (T2) $a_t$ has positive
+coordinates for $t \le T$; (T3) $a_{t+1}$ is an $\eps$-approximate step on $\Delta$ from $a_t$ for
+$\ell_t$, for $t < T$. We write $g_t = \eta\ell_t + \log a_{t+1} - \log a_t$ (the gradient of the
+objective of round $t$ at $a_{t+1}$), $L_{[s,t)}(i) = \sum_{s \le r < t} \ell_r(i)$, and
+$B_{ji}(s, t) = \log(a_s(j)/a_t(j)) + \log(a_t(i)/a_s(i))$ for the balance.
+
+\begin{lemma}[L21; {\cite[Lemma 21]{SSKM26}}, entropy form]
+  \label{lem:entropy_scalar}
+  Let $D_1(x, y) = x\log(x/y) - x + y$. For $x \ge 0$, $y > 0$: $0 \le D_1(x, y) \le (x - y)^2/y$;
+  for $0 \le x \le y$: $D_1(x, y) \ge (y - x)^2/(2y)$; and $x \mapsto D_1(x, y)$ is antitone on
+  $[0, y]$ and monotone on $[y, \infty)$.
+\end{lemma}
+
+\begin{proof}
+  $\log z \le z - 1$; $s \log s - s + 1 - (1 - s)^2/2$ is nonincreasing to $0$ on $[0, 1]$; the
+  derivative in $x$ is $\log(x/y)$.
+\end{proof}
+
+\begin{lemma}[L26$'$, L22; {\cite[Lemmas 22, 26]{SSKM26}}]
+  \label{lem:entropy_approx_first_order}
+  \uses{lem:entropy_scalar}
+  Under (T2), (T3), for $t < T$ and $x \in \Delta$:
+  $\phi_t(x) - \phi_t(a_{t+1}) = \ip{g_t}{x - a_{t+1}} + D(x, a_{t+1})$. Consequently, for $h$ with
+  $a_{t+1} + h \in \Delta$ and $0 < u \le 1$,
+  $\ip{g_t}{h} \ge -\eps/u - u \sum_k h_k^2 / a_{t+1}(k)$.
+\end{lemma}
+
+\begin{proof}
+  The three-point identity, then the step condition at $a_{t+1} + uh$ and the $\chi^2$ bound of
+  Lemma~\ref{lem:entropy_scalar}. The paper's Lemma 22 has the sign of its second case wrong.
+\end{proof}
+
+\begin{lemma}[L24, L25; {\cite[Lemmas 24, 25]{SSKM26}}, corrected]
+  \label{lem:entropy_step_size}
+  \uses{lem:entropy_scalar, lem:solve_quadratic}
+  Under (T2), (T3) and $\abs{\ell_t(k)} \le 1$, if $a_{t+1}(i) \le a_t(i)$ then
+  $a_t(i) - a_{t+1}(i) \le 4\eta a_t(i) + \sqrt{2\eps a_t(i)}$. Hence, if $\eta \le 1/16$ and
+  $\eps \le a_t(i)/32$, then $a_{t+1}(i) \ge a_t(i)/2$.
+\end{lemma}
+
+\begin{proof}
+  Compare $a_{t+1}$ with the point $\tilde w$ that restores coordinate $i$ to $a_t(i)$ and moves
+  each increased coordinate back proportionally (L24). The paper's $\sqrt{\eps/h}$ is false; the
+  constant is $\sqrt{2\eps/h}$.
+\end{proof}
+
+\begin{lemma}[L33a, L33, L29; {\cite[Lemmas 11, 29, 33]{SSKM26}}, corrected]
+  \label{lem:entropy_balance}
+  \uses{lem:entropy_approx_first_order}
+  Under (T2), (T3), if $1 \le T$, $0 < \psi$, $\eps \le \psi/(8T^2)$, $s \le t \le T$, and
+  $a_r(i), a_r(j) \ge \psi$ for $s < r \le t$, then
+  $B_{ji}(s, t) \le \eta(L_{[s,t)}(j) - L_{[s,t)}(i)) + 1$.
+\end{lemma}
+
+\begin{proof}
+  Telescoping; each round, Lemma~\ref{lem:entropy_approx_first_order} with
+  $h = a_{r+1}(i)(e_j - e_i)$ and $u = \psi/(4T a_{r+1}(i))$ costs at most $1/T$. The paper's
+  Lemma 33 forgets that $\norm{e_{i^*} - e_i}_1 = 2$ and is false as stated; Lemma 11 drops a
+  $\sqrt2$ and a $2^\nu$.
+\end{proof}
+
+\begin{lemma}[L13; {\cite[Lemma 13]{SSKM26}}]
+  \label{lem:entropy_coordinate_bounds}
+  If $a_s(i) \le a_t(i)$ and $B_{ji}(s, t) \le K$, then $a_s(j) \le e^K a_t(j)$; if
+  $a_t(j) \le a_s(j)$ and $B_{ji}(s, t) \le K$, then $a_t(i) \le e^K a_s(i)$.
+\end{lemma}
+
+\begin{proof}
+  The other logarithm in $B_{ji}$ has a sign.
+\end{proof}
+
+\begin{lemma}[L40; {\cite[Lemma 40]{SSKM26}}, corrected]
+  \label{lem:entropy_best_arm_lower}
+  \uses{lem:entropy_step_size, lem:entropy_balance, lem:entropy_coordinate_bounds}
+  Under (T1)--(T3), $1 \le T$, $0 \le \eta \le 1/16$, $\abs{\ell_t(k)} \le 1$, if
+  $L_{[s,t)}(j) - L_{[s,t)}(i) \le A$ for all $s \le t \le T$ and $i$, and
+  $\eps \le \xi/(32T^2)$ with $\xi = e^{-(\eta A + 1)}/d$, then $a_t(j) \ge \xi$ for every $t \le T$.
+\end{lemma}
+
+\begin{proof}
+  Strong induction on $t$, with the three cases of L40; the paper's $\eps \le \xi/(2T^2)$ is not
+  enough for its own argument.
+\end{proof}
+
+\begin{lemma}[L27, L39; {\cite[Lemmas 27, 39]{SSKM26}}, new proof]
+  \label{lem:entropy_regret_best_arm}
+  \uses{lem:entropy_approx_first_order}
+  Under (T2), (T3), $0 < \eta \le 1$, $\abs{\ell_t(k)} \le 1$, if $a_t(j) \ge \xi > 0$ for
+  $1 \le t \le T$ and $\eps \le \eta^4\xi/16$, then
+  $\sum_{t<T}(\ip{\ell_t}{a_t} - \ell_t(j)) \le -\log(a_0(j))/\eta + \eta T$; if moreover $j$ is a
+  best arm and (T1) holds, $\mathrm{Regret}_T(u) \le \log d/\eta + \eta T$ for every $u \in \Delta$.
+\end{lemma}
+
+\begin{proof}
+  Lemma~\ref{lem:entropy_approx_first_order} in the direction of the vertex, $h = e_j - a_{t+1}$,
+  $u = \eta^2\xi/4$: since $\sum_k h_k^2/a_{t+1}(k) = (1 - a_{t+1}(j))/a_{t+1}(j) \le 1/\xi$, the
+  error is $\eta^2/2$ per round. Then the three-point identity, telescoping, and Pinsker's
+  inequality (LMLExplore's \texttt{strongConvexOn\_negEntropy}) for the stability terms. This
+  replaces the paper's proof of Lemma 39 (sets $S_t$, Lemmas 37, 38), which has several gaps and
+  only gives the comparator $e_{i^*}$.
+\end{proof}
+
+\begin{lemma}[{\cite[Lemma 15]{SSKM26}}, corrected]
+  \label{lem:balance_upper_bound}
+  \lean{Schlisselberg2026Hidden.approxMirrorDescent_regret_le_negEntropy_of_balanced}
+  \leanok
+  \uses{lem:entropy_best_arm_lower, lem:entropy_regret_best_arm}
+  Let $0 < \eta \le 1/16$, $\abs{\ell_t(k)} \le 1$, $i^*$ a best arm over $[0, T)$,
+  $L_{[s,t)}(i^*) - L_{[s,t)}(i) \le A$ for all $s \le t \le T$ and $i$, and
+  $\eps \le e^{-\eta A}\min(\eta^4, T^{-2})/(100d)$. Under (T1)--(T3),
+  $\mathrm{Regret}_T(u) \le \log d/\eta + \eta T$ for every $u \in \Delta$.
+\end{lemma}
+
+\begin{proof}
+  \uses{lem:entropy_best_arm_lower, lem:entropy_regret_best_arm}
+  With $\xi = e^{-(\eta A + 1)}/d$: $32e \le 100$ gives the hypothesis of
+  Lemma~\ref{lem:entropy_best_arm_lower} and $16e \le 100$ that of
+  Lemma~\ref{lem:entropy_regret_best_arm}.
+\end{proof}
+
+\begin{lemma}[L5a; {\cite[proof of Theorem 5]{SSKM26}}]
+  \label{lem:unit_losses_balanced}
+  For losses in $[0, 1]^d$ and a best arm $i^*$,
+  $L_{[s,t)}(i^*) - L_{[s,t)}(i) \le \min(t - s, T - (t - s)) \le T/2$.
+\end{lemma}
+
+\begin{proof}
+  Bound the interval by its length, and by the complement using the optimality of $i^*$. For
+  losses in $[-1, 1]^d$ the bound is $T$, attained.
+\end{proof}
+
+\begin{theorem}[{\cite[Theorem 5]{SSKM26}}, corrected]
+  \label{thm:up_barrier_adversarial}
+  \lean{Schlisselberg2026Hidden.approxMirrorDescent_regret_le_negEntropy}
+  \leanok
+  \uses{lem:balance_upper_bound, lem:unit_losses_balanced}
+  Let $0 < \eta \le 1/16$, losses in $[0, 1]^d$, and
+  $\eps \le e^{-\eta T/2}\min(\eta^4, T^{-2})/(100d)$. Under (T1)--(T3),
+  $\mathrm{Regret}_T(u) \le \log d/\eta + \eta T$ for every $u \in \Delta$.
+\end{theorem}
+
+\begin{proof}
+  \uses{lem:balance_upper_bound, lem:unit_losses_balanced}
+  Lemma~\ref{lem:balance_upper_bound} with $A = T/2$ (Lemma~\ref{lem:unit_losses_balanced}). The
+  paper's version for losses in $[-1, 1]^d$ is false (erratum).
+\end{proof}
+
+\begin{lemma}[L7a; {\cite[proof of Theorem 7]{SSKM26}}, corrected]
+  \label{lem:iid_balanced}
+  For losses i.i.d.\ over the rounds with coordinates in $[-1, 1]$, $0 < \delta \le 1$, $1 \le T$
+  and $A = \sqrt{2T\log(d^2(T+1)^2/\delta)}$, there is a measurable event of probability at least
+  $1 - \delta$ on which, for every best arm $i^*$, $L_{[s,t)}(i^*) - L_{[s,t)}(i) \le A$ for all
+  $s \le t \le T$ and $i$.
+\end{lemma}
+
+\begin{proof}
+  Hoeffding's inequality (Mathlib's \texttt{measure\_sum\_ge\_le\_of\_iIndepFun}) for the bridges
+  $Z_{ij}(s, t) = (L_{[s,t)}(i) - L_{[s,t)}(j)) - \frac{t - s}{T}(L_{[0,T)}(i) - L_{[0,T)}(j))$,
+  which have mean $0$ and sub-Gaussian parameter at most $T$, and a union bound over the
+  $d^2(T+1)^2$ tuples; on the event, the optimality of $i^*$ removes the drift.
+\end{proof}
+
+\begin{theorem}[{\cite[Theorem 7]{SSKM26}}, corrected]
+  \label{thm:ub_barrier_stochastic}
+  \lean{Schlisselberg2026Hidden.approxMirrorDescent_regret_le_negEntropy_iid}
+  \leanok
+  \uses{lem:balance_upper_bound, lem:iid_balanced}
+  For losses i.i.d.\ over the rounds with coordinates in $[-1, 1]$, $0 < \delta \le 1$,
+  $T \ge 256 \log d$, $\eta = \sqrt{\log d / T}$ and $\eps \le \delta/(6d^3T^4)$, there is a
+  measurable event of probability at least $1 - \delta$ on which every trajectory satisfying
+  (T1)--(T3) has $\mathrm{Regret}_T(u) \le 2\sqrt{T\log d}$ for every $u \in \Delta$.
+\end{theorem}
+
+\begin{proof}
+  \uses{lem:balance_upper_bound, lem:iid_balanced}
+  For $d = 1$ the regret is $0$. Otherwise $\eta \le 1/16$, and $\eta A \le \log(d^2(T+1)/\sqrt\delta)$
+  by AM--GM, so the threshold implies that of Lemma~\ref{lem:balance_upper_bound}, which gives
+  $\log d/\eta + \eta T = 2\sqrt{T\log d}$ (L7b).
+\end{proof}

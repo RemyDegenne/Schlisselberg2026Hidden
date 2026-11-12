@@ -1,0 +1,12 @@
+{
+    "challenge_module": "Challenge_approxFTRL_regret_le",
+    "solution_module": "Solution",
+    "theorem_names": [
+        "Schlisselberg2026Hidden.approxFTRL_regret_le"
+    ],
+    "permitted_axioms": [
+        "propext",
+        "Quot.sound",
+        "Classical.choice"
+    ]
+}

@@ -1,0 +1,56 @@
+\chapter{Inexact online mirror descent}
+\label{chap:setting}
+
+Section 2 and Appendix A of \cite{SSKM26}. Online linear optimization on a convex set $\cK$ of a
+real normed space $E$: at each round $t = 0, 1, \dots$ the learner plays $w_t \in \cK$, then a
+linear loss $\ell_t \in E^*$ is revealed. Rounds are numbered from $0$, so that the paper's
+$w_t$ is our $w_{t-1}$; the regret after $T$ rounds against $u \in \cK$ is
+\[ \mathrm{Regret}_T(u) = \sum_{t < T} \bigl(\ell_t(w_t) - \ell_t(u)\bigr), \]
+LMLExplore's \texttt{regret}. For $F \colon E \to \R$ and a linear map $F'$ (a derivative of $F$
+at $a$), the Bregman divergence is $D_F(b, a) = F(b) - F(a) - F'(b - a)$, LML's
+\texttt{bregDiv}.
+
+\begin{definition}[{\cite[Section 2, Definition 17]{SSKM26}}]
+  \label{def:approx_step}
+  \lean{LMLExplore.OnlineLearning.IsApproxMirrorDescentStep}
+  \leanok
+  \uses{def:approx_step_lib}
+  Let $\eta > 0$ and $\eps \ge 0$. A point $x$ is an \emph{$\eps$-approximate mirror descent
+  step} on $\cK$ from $a$, with potential $F$, derivative $F'$ of $F$ at $a$, learning rate $\eta$
+  and loss $\ell$, if $x \in \cK$ and $\phi(x) \le \phi(b) + \eps$ for every $b \in \cK$, where
+  $\phi(b) = \eta\, \ell(b) + D_F(b, a)$. A sequence $(w_t)$ with $w_0 \in \cK$ is an
+  \emph{$\eps$-approximate trajectory} for $T$ rounds if each $w_{t+1}$, $t < T$, is an
+  $\eps$-approximate step from $w_t$ for the loss $\ell_t$, with the derivative of $F$ at $w_t$.
+\end{definition}
+
+The paper's definition of an approximate trajectory (Definition 17) writes the objective as
+$\eta\ip{\ell_t}{w} + D_R(w_{t-1}, w)$, with the arguments of the divergence swapped and an index
+shifted; Section 2 has the correct $\phi_t(w) = \eta\ip{\ell_t}{w} + D_R(w \,\|\, w_t)$, which we
+follow.
+
+\begin{definition}[{\cite[Definition 1]{SSKM26}}]
+  \label{def:power_barrier}
+  \lean{LMLExplore.IsPowerBarrier}
+  \leanok
+  A function $r \colon \R \to \R$ is a \emph{$\nu$-barrier} with constants $c_1, c_2$ if
+  $\nu \ge 1$, $c_1 > 0$, and $r$ is twice differentiable on $(0, 1)$ with
+  \[ \frac{c_1}{x^\nu} \le r''(x) \le \frac{c_2}{x^\nu} \qquad \text{for } x \in (0, 1). \]
+  The \emph{coordinate-separable regularizer} of $r$ on $\R^\alpha$, for a finite set $\alpha$ of
+  $d$ coordinates, is $R(w) = \sum_{i \in \alpha} r(w_i)$, with gradient
+  $\nabla R(w) = (r'(w_i))_{i \in \alpha}$ at every $w$ with coordinates in $(0, 1)$.
+\end{definition}
+
+The paper asks the bounds on $(0, 1]$ for a function on $[0, 1]$. Every point of the simplex with
+positive coordinates, in dimension $d \ge 2$, has coordinates in $(0, 1)$, and so does every
+segment between two such points; the bounds are never used elsewhere. The examples are the
+negative entropy $x \log x$ ($\nu = 1$, $c_1 = c_2 = 1$), the Tsallis entropies
+$(x - x^q)/(1 - q)$ for $q \in (0, 1)$ ($\nu = 2 - q$, $c_1 = c_2 = q$) and the log barrier
+$-\log x$ ($\nu = 2$, $c_1 = c_2 = 1$). For the negative entropy we use LMLExplore's
+\texttt{negEntropy} $w \mapsto \sum_i (w_i \log w_i - w_i)$: it differs from $\sum_i w_i \log w_i$
+by the linear map $w \mapsto \sum_i w_i$, so the two have the same Bregman divergence and the
+same approximate trajectories.
+
+\paragraph{Positivity of the iterates.} The objective of round $t$ uses $\nabla R(w_t)$, which
+does not exist at a point with a zero coordinate for any $\nu$-barrier ($r' \to -\infty$ at
+$0$). The paper's trajectories therefore have positive coordinates, which our statements on the
+simplex and its subsets assume explicitly (upper bounds) or prove (lower bounds).

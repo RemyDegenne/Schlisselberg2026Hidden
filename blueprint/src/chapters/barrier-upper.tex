@@ -1,0 +1,139 @@
+\chapter{Power barriers with \texorpdfstring{$\nu > 1$}{nu > 1}: upper bound}
+\label{chap:barrier_upper}
+
+Sections 4.1, 5.1, 5.2 and Appendix F of \cite{SSKM26}, with the corrected constants and the
+repaired proof of \texttt{notes/constants-barrier-polytope.md} (area B), which gives every
+computation in full; the item names B\ldots{} below are those of that file. Let $K = \{w \ge 0,
+Aw = b\} \subseteq \Delta$ with the uniform point $q = \bar u \in K$, $K^+$ its points with positive
+coordinates, $r$ a $\nu$-barrier with $\nu > 1$ and constants $c_1, c_2$ (Definition~\ref{def:power_barrier}),
+$R(w) = \sum_i r(w_i)$, $D_r(y, x) = r(y) - r(x) - r'(x)(y - x)$, and $\Phi_t(w) = \eta\ip{\ell_t}{w} +
+D_R(w, a_t)$, $G_t(w) = \eta\ell_t + \nabla R(w) - \nabla R(a_t)$. The trajectory has $a_0 = q$,
+$a_t \in K^+$ for $t \le T$, and $a_{t+1}$ is an $\eps$-approximate step from $a_t$ for $t < T$. Let
+\[ \Psi = (2d)^{\nu - 1} + \frac{8(\nu - 1)\eta T d}{c_1}, \qquad \psi = \Psi^{-1/(\nu-1)}. \]
+
+\begin{lemma}[B1]
+  \label{lem:bar_constants}
+  If $0 < \eta \le 2$ and $\eps \le \eta^4\psi^\nu/(4^{\nu+2}\max(1, c_2))$, then
+  (E1) $\eps \le \eta^2\psi^\nu/(4^{\nu+1}c_2)$, (E2) $\eps \le \eta\psi/8$,
+  (E3) $\eps \le \eta^4\psi^\nu/(2^{\nu+4}c_2)$ and (E4) $\eps \le \eta^2/8$; and
+  $\delta := \sqrt{4^\nu c_2\eps/\psi^\nu} + 4\eps/\psi \le \eta$.
+\end{lemma}
+
+\begin{proof}
+  $\psi \le 1/(2d) \le 1/4$, $\eta^2 \le 4$, $\eta^3 \le 8$, $4^{\nu+2} \ge 64$.
+\end{proof}
+
+\begin{lemma}[B2; {\cite[Lemma 31]{SSKM26}}]
+  \label{lem:polytope_facts}
+  Let $d \ge 2$. Points of $K^+$ have coordinates in $(0, 1)$; $K$ is convex; if $x, y, z \in K$ and
+  $x + \gamma(y - z) \ge 0$ then $x + \gamma(y - z) \in K$; differences $v$ of points of $K$ have
+  $\sum_i v_i = 0$, hence $\abs{v_i} \le \norm{v}_1/2$ and $\sum_i v_i^2 \le \norm{v}_1^2/2$.
+\end{lemma}
+
+\begin{proof}
+  Linear algebra and $K \subseteq \Delta$.
+\end{proof}
+
+\begin{lemma}[B3, B4; {\cite[Lemmas 21, 41]{SSKM26}}, corrected]
+  \label{lem:barrier_scalar}
+  $r'$ is monotone on $(0, 1)$, and for $0 < x \le y < 1$,
+  $r'(y) - r'(x) \ge \frac{c_1}{\nu - 1}(x^{1-\nu} - y^{1-\nu})$. For $x, y \in (0, 1)$ and $I$ the
+  interval between them: if $r'' \le M$ on $I$ then $D_r(y, x) \le M(y - x)^2/2$; $D_r(y, x) \ge 0$;
+  and $D_r(y, x) \ge c_1(y - x)^2/(2\max(x, y))$.
+\end{lemma}
+
+\begin{proof}
+  $s \mapsto r'(s) + c_1 s^{1-\nu}/(\nu - 1)$ has nonnegative derivative; Taylor bounds by
+  monotonicity of $g'$. The paper's Lemma 41 drops the factor $1/(\nu - 1)$, which makes it false
+  for $\nu > 2$.
+\end{proof}
+
+\begin{lemma}[B6, B7; {\cite[Lemmas 11, 22]{SSKM26}}, corrected and localized]
+  \label{lem:bar_one_step_balance}
+  \uses{lem:polytope_facts, lem:barrier_scalar}
+  Let $t < T$ and $0 < \psi' < 1$ with $a_{t+1} \ge \psi'$. For $y, z \in K$,
+  \[ \ip{\nabla R(a_t) - \nabla R(a_{t+1})}{y - z} \le \eta\ip{\ell_t}{y - z}
+    + \Bigl(\sqrt{c_2(2/\psi')^\nu\eps} + 2\eps/\psi'\Bigr)\norm{y - z}_1. \]
+\end{lemma}
+
+\begin{proof}
+  The step condition at $a_{t+1} + \gamma h$, $h = (y - z)/\norm{y - z}_1$, $\gamma \le \psi'$,
+  where the coordinates stay $\ge \psi'/2$ and $r'' \le c_2(2/\psi')^\nu$; only this initial part
+  of the segment needs a smoothness bound.
+\end{proof}
+
+\begin{lemma}[B8, B9; {\cite[Lemmas 10, 12]{SSKM26}}, corrected]
+  \label{lem:bar_balance}
+  \uses{lem:bar_one_step_balance, lem:barrier_scalar}
+  If $a_{s+1} \ge \psi/2$ for every $s < t$, then $\ip{\nabla R(q) - \nabla R(a_t)}{y - z} \le
+  t(\eta + \delta)\norm{y - z}_1$ for $y, z \in K$. If $y \in K^+$ and
+  $S_q(y) := \ip{\nabla R(q) - \nabla R(y)}{q - y} \le 4\eta T$, then $y \ge \psi$.
+\end{lemma}
+
+\begin{proof}
+  Telescoping Lemma~\ref{lem:bar_one_step_balance} with $\psi' = \psi/2$. For the second part,
+  every term of $S_q(y)$ is nonnegative, and a coordinate $y_i < \psi$ makes its term exceed
+  $4\eta T$ by Lemma~\ref{lem:barrier_scalar}. The paper's Lemma 10 has its loss indices shifted by
+  one.
+\end{proof}
+
+\begin{lemma}[B10; replaces {\cite[Lemma 25]{SSKM26}} on polytopes]
+  \label{lem:bar_pull_to_start}
+  \uses{lem:bar_balance, lem:bar_constants, lem:polytope_facts}
+  Under (E1), (E2), if $t < T$ and $a_{s+1} \ge \psi/2$ for every $s < t$, then
+  $a_{t+1} \ge \psi/2$.
+\end{lemma}
+
+\begin{proof}
+  Let $x = a_{t+1}$, $\lambda = \psi/2$ and $z = (1 - \lambda)x + \lambda q \in K^+$. The step
+  condition at $z$ and the convexity of $\Phi_t$ give $\ip{G_t(z)}{q - x} \ge -\eps/\lambda$.
+  Splitting $G_t(z)$ and using Lemma~\ref{lem:bar_balance} gives $S_q(z) \le 4\eta T$, hence
+  $z \ge \psi$ and $x \ge \psi/2$. The paper's proof uses Lemma 25, which is proved on the simplex
+  only.
+\end{proof}
+
+\begin{lemma}[B11; {\cite[Lemma 42]{SSKM26}}, corrected]
+  \label{lem:bar_iterates_lower}
+  \uses{lem:bar_pull_to_start, lem:bar_balance}
+  Under (E1), (E2), $a_t \ge \psi$ for every $t \le T$.
+\end{lemma}
+
+\begin{proof}
+  Induction: Lemma~\ref{lem:bar_pull_to_start}, then Lemma~\ref{lem:bar_balance} with
+  $y = q$, $z = a_{t+1}$. The paper's lower bound is false for $\nu > 9$, even for exact steps.
+\end{proof}
+
+\begin{lemma}[B12, B13; {\cite[Lemmas 26, 27]{SSKM26}}, corrected]
+  \label{lem:bar_one_round}
+  \uses{lem:barrier_scalar, lem:polytope_facts, lem:bar_constants}
+  For $x, y \in K^+$ and $\abs{\ell_i} \le 1$, $\ip{\ell}{x - y} - D_R(y, x)/\eta \le \eta/c_1$.
+  Under (E3), (E4), if $a_{t+1} \ge \psi$ then for every $u \in K$,
+  $\eta\ip{\ell_t}{a_{t+1} - u} \le D_R(u, a_t) - D_R(u, a_{t+1}) - D_R(a_{t+1}, a_t) + \eta^2$.
+\end{lemma}
+
+\begin{proof}
+  A $\nu$-barrier is $(c_1/2)$-strongly convex for $\norm{\cdot}_1$ on $K^+$, not $1$-strongly
+  convex as the paper's proof uses. The second inequality is the localized first-order condition
+  on $[a_{t+1}, a_{t+1} + \frac12(u - a_{t+1})]$ and the three-point identity.
+\end{proof}
+
+\begin{theorem}[{\cite[Theorem 6]{SSKM26}}, corrected]
+  \label{thm:ub_nonentropy}
+  \lean{Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier}
+  \leanok
+  \uses{lem:bar_iterates_lower, lem:bar_one_round, lem:bar_constants}
+  Let $\eta > 0$, $\abs{\ell_t(i)} \le 1$ and
+  $\eps \le \eta^4\psi^\nu/(4^{\nu+2}\max(1, c_2))$. For every $u \in K$ with positive coordinates,
+  and for every $u \in K$ if $r$ is right-continuous at $0$,
+  \[ \mathrm{Regret}_T(u) \le \frac{D_R(u, a_0)}{\eta} + \Bigl(1 + \frac1{c_1}\Bigr)\eta T. \]
+\end{theorem}
+
+\begin{proof}
+  \uses{lem:bar_iterates_lower, lem:bar_one_round, lem:bar_constants}
+  For $d = 1$ the regret is $0$; for $\eta > 2$ the regret is at most $2T < \eta T$ and
+  $D_R(u, a_0) \ge 0$. Otherwise Lemma~\ref{lem:bar_constants},
+  Lemma~\ref{lem:bar_iterates_lower}, and Lemma~\ref{lem:bar_one_round} summed over the rounds
+  give the core form $\mathrm{Regret}_T(u) \le (D_R(u, a_0) - D_R(u, a_T))/\eta + (1 + 1/c_1)\eta T$
+  for every $u \in K$, in which $r(0)$ cancels; $D_R(u, a_T) \ge 0$ for positive $u$, and for every
+  $u$ when $r$ is right-continuous at $0$ (B15).
+\end{proof}

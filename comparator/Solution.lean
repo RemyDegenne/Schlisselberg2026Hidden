@@ -3,9 +3,19 @@ Copyright (c) 2026 Remy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Remy Degenne
 -/
--- One import per file proving a headline result of formalization.yaml, for instance
--- `import Schlisselberg2026Hidden.SSKM2026.Theorem1`. Until then, the library's root.
-import Schlisselberg2026Hidden
+-- One import per file proving a headline result of formalization.yaml.
+import Schlisselberg2026Hidden.SSKM2026.Theorem2
+import Schlisselberg2026Hidden.SSKM2026.Theorem3
+import Schlisselberg2026Hidden.SSKM2026.Theorem4
+import Schlisselberg2026Hidden.SSKM2026.Theorem5
+import Schlisselberg2026Hidden.SSKM2026.Theorem6
+import Schlisselberg2026Hidden.SSKM2026.Theorem7
+import Schlisselberg2026Hidden.SSKM2026.Theorem8
+import Schlisselberg2026Hidden.SSKM2026.Lemma14
+import Schlisselberg2026Hidden.SSKM2026.Lemma15
+import Schlisselberg2026Hidden.SSKM2026.Theorem35
+import Schlisselberg2026Hidden.SSKM2026.Theorem36
+import Schlisselberg2026Hidden.SSKM2026.Theorem52
 
 /-! # Comparator solution module
 

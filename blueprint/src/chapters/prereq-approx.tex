@@ -1,0 +1,64 @@
+\chapter{Approximate minimizers}
+\label{chap:prereq_approx}
+
+Library-shaped material for \texttt{ForLMLExplore/}: approximate steps of mirror descent and FTRL,
+and the approximate first-order optimality condition of an $\eps$-minimizer of a function with
+a quadratic upper bound. $E$ is a real normed space and $\cK \subseteq E$.
+
+\begin{definition}
+  \label{def:approx_step_lib}
+  \lean{LMLExplore.OnlineLearning.IsApproxMirrorDescentStep,
+    LMLExplore.OnlineLearning.isApproxMirrorDescentStep_zero_iff,
+    LMLExplore.OnlineLearning.IsApproxMirrorDescentStep.mono,
+    LMLExplore.OnlineLearning.IsApproxMirrorDescentStep.nonneg,
+    LMLExplore.OnlineLearning.exists_isApproxMirrorDescentStep}
+  \leanok
+  The $\eps$-approximate mirror descent steps of Definition~\ref{def:approx_step}, with their basic
+  API: the $0$-approximate steps are LMLExplore's \texttt{IsMirrorDescentStep}; an
+  $\eps$-approximate step is $\eps'$-approximate for $\eps' \ge \eps$; approximate steps exist only
+  for $\eps \ge 0$; and for $\eps > 0$ they exist on a nonempty set on which the objective is
+  bounded below.
+\end{definition}
+
+\begin{lemma}[{\cite[Lemma 23]{SSKM26}}]
+  \label{lem:solve_quadratic}
+  If $a, b, c > 0$ and $a x^2 - b x - c \le 0$, then $x < b/a + \sqrt{c/a}$.
+\end{lemma}
+
+\begin{proof}
+  The roots of $a x^2 - bx - c$ are below $(b + \sqrt{b^2 + 4ac})/(2a) < b/a + \sqrt{c/a}$.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:smooth_quadratic_bound}
+  Let $\cK$ be convex and let $f$ have a derivative $f'(x)$ within $\cK$ at every $x \in \cK$ with
+  $\norm{f'(x) - f'(y)} \le \beta \norm{x - y}$ for $x, y \in \cK$. Then for $x, y \in \cK$,
+  $f(y) - f(x) - f'(x)(y - x) \le \frac\beta2 \norm{y - x}^2$.
+\end{lemma}
+
+\begin{proof}
+  Let $g(s) = f(x + s(y - x)) - f(x) - s f'(x)(y - x) - \frac{\beta s^2}{2}\norm{y - x}^2$ on
+  $[0, 1]$; its right derivative at $s$ is
+  $(f'(x + s(y - x)) - f'(x))(y - x) - \beta s \norm{y - x}^2 \le 0$, so $g(1) \le g(0) = 0$.
+\end{proof}
+
+\begin{lemma}[{\cite[Lemma 22]{SSKM26}}]
+  \label{lem:approx_first_order}
+  Let $\cK$ be convex, let $\hat w \in \cK$ satisfy $f(\hat w) \le f(b) + \eps$ for all $b \in \cK$,
+  let $f$ have a derivative $f'$ within $\cK$ at $\hat w$, let $w \in \cK$, and assume
+  $f(y) - f(\hat w) - f'(y - \hat w) \le \frac\beta2 \norm{y - \hat w}^2$ for $y$ on the segment
+  $[\hat w, w]$, with $\beta > 0$. Then
+  \[ f'(w - \hat w) \ge -\max\bigl\{\norm{w - \hat w}\sqrt{2 \beta \eps}, 2 \eps\bigr\}. \]
+  In particular, if $\norm{w - \hat w} \le D$ and $\eps \le \beta D^2/2$, then
+  $f'(w - \hat w) \ge -D\sqrt{2\beta\eps}$.
+\end{lemma}
+
+\begin{proof}
+  For $\gamma \in (0, 1]$, $f(\hat w) - \eps \le f(\hat w + \gamma(w - \hat w)) \le f(\hat w) +
+  \gamma f'(w - \hat w) + \gamma^2 \frac\beta2 \norm{w - \hat w}^2$, so
+  $f'(w - \hat w) \ge -\eps/\gamma - \gamma\frac\beta2\norm{w - \hat w}^2$. Take $\gamma = 1$ if
+  $2\eps \ge \beta\norm{w - \hat w}^2$, which gives $-2\eps$, and
+  $\gamma = \sqrt{2\eps/\beta}/\norm{w - \hat w}$ otherwise, which gives
+  $-\norm{w - \hat w}\sqrt{2\beta\eps}$. For the last claim, $\eps \le \beta D^2/2$ gives
+  $2\eps \le D\sqrt{2\beta\eps}$. (The paper's proof has the sign of the second case wrong.)
+\end{proof}

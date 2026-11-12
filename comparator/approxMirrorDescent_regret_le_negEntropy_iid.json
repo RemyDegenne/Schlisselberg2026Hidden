@@ -1,0 +1,12 @@
+{
+    "challenge_module": "Challenge_approxMirrorDescent_regret_le_negEntropy_iid",
+    "solution_module": "Solution",
+    "theorem_names": [
+        "Schlisselberg2026Hidden.approxMirrorDescent_regret_le_negEntropy_iid"
+    ],
+    "permitted_axioms": [
+        "propext",
+        "Quot.sound",
+        "Classical.choice"
+    ]
+}

@@ -1,6 +1,7 @@
 # Schlisselberg2026Hidden
 
-A Lean 4 formalization of *<title of the paper>* (<authors>, <venue, year>), on top of
+A Lean 4 formalization of *The Hidden Cost of Approximation in Online Mirror Descent* (O.
+Schlisselberg, U. Sherman, T. Koren, Y. Mansour, arXiv:2511.22283v2, 2026), on top of
 [LMLExplore](https://github.com/LeanMachineLearning/LMLExplore), and so of
 [LML](https://github.com/LeanMachineLearning/LML), [Tau Ceti](https://github.com/TauCetiProject/TauCeti)
 and [Mathlib](https://github.com/leanprover-community/mathlib4). Made from
@@ -10,7 +11,9 @@ and [Mathlib](https://github.com/leanprover-community/mathlib4). Made from
   literature links (which declarations formalize which results of the paper). CI builds it on each
   push to `main`. `scripts/formalize.sh` also commits the literature links, as
   `literature/annotations.jsonl`, when the paper is formalized and after the final bump.
-- The paper: `source/`. Errors found in it, with their corrections: `notes/paper-errata.md`.
+- The paper: `source/`. Errors found in it, with their corrections: `notes/paper-errata.md`. The
+  headline results are stated with explicit constants, corrected where the paper's are wrong;
+  `notes/constants-*.md` derives every constant.
 - The paper's results: `Schlisselberg2026Hidden/SSKM2026/`, one file per result, listed with their status in
   `formalization.yaml`; comparator challenges in `comparator/`.
 - Library-shaped material: `Schlisselberg2026Hidden/ForLMLExplore/`, which Tau Ceti workers port to LMLExplore;

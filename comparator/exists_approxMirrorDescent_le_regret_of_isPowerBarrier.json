@@ -1,0 +1,12 @@
+{
+    "challenge_module": "Challenge_exists_approxMirrorDescent_le_regret_of_isPowerBarrier",
+    "solution_module": "Solution",
+    "theorem_names": [
+        "Schlisselberg2026Hidden.exists_approxMirrorDescent_le_regret_of_isPowerBarrier"
+    ],
+    "permitted_axioms": [
+        "propext",
+        "Quot.sound",
+        "Classical.choice"
+    ]
+}

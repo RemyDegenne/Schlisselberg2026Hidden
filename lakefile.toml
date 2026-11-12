@@ -39,4 +39,16 @@ leanOptions = { weak.linter.mathlibStandardSet = false, weak.linter.style.header
 globs = [
   "Comparator",
   "Solution",
+  "Challenge_approxMirrorDescent_regret_le_of_smooth",
+  "Challenge_exists_approxMirrorDescent_le_regret_euclidean",
+  "Challenge_exists_approxMirrorDescent_le_regret_negEntropy",
+  "Challenge_approxMirrorDescent_regret_le_negEntropy",
+  "Challenge_approxMirrorDescent_regret_le_of_isPowerBarrier",
+  "Challenge_approxMirrorDescent_regret_le_negEntropy_iid",
+  "Challenge_exists_approxMirrorDescent_le_integral_regret_polytope",
+  "Challenge_exists_approxMirrorDescent_le_regret_of_balanced",
+  "Challenge_approxMirrorDescent_regret_le_negEntropy_of_balanced",
+  "Challenge_exists_approxMirrorDescent_le_regret_of_isPowerBarrier",
+  "Challenge_exists_approxMirrorDescent_le_regret_negEntropy_threePhase",
+  "Challenge_approxFTRL_regret_le",
 ]

@@ -1,0 +1,78 @@
+\chapter{Stochastic losses on a subset of the simplex}
+\label{chap:polytope_lower}
+
+Section 4.2 and Appendix G of \cite{SSKM26}, with the corrected statement and the repaired proof
+of \texttt{notes/constants-polytope-lower.md} (area D), which gives every computation in full,
+including the variant with Rademacher losses used here. Let $\eta > 0$, $0 < \eps \le 1/3$ with
+$100\eta\log(1/\eps) \le 1$, $L = \log(1/\eps)$, $m = \lceil 16L\rceil$, $d = 5m + 2$ (so
+$d \le 100L$ and $\eta d \le 1$), $\mu = \sqrt{\eta d}$ and $\tau = \lceil 3/\eta\rceil$. The
+coordinates are $X_i$, $Y_{k,i}$ ($k = 1, 2, 3$), $Z_i$ ($i < m$), $P$ and $Q$.
+
+\begin{lemma}[{\cite[Lemmas 43, 44]{SSKM26}}]
+  \label{lem:polytope_lower_polytope}
+  The paper's polytope $K = \{w \ge 0, Aw = b\}$, with $b = Au_0$, is the set of $w \ge 0$ with
+  $w(Y_{1,i}) = w(Y_{2,i}) = w(Y_{3,i})$, $w(Z_i) = w(P)$, $w(X_i) + 3w(Y_{1,i}) + w(Z_i) = 5/d$ and
+  $w(P) + w(Q) = 2/d$. It lies in the simplex and contains $u_0$ and the comparator $w^*$ with
+  $w^*(X_i) = 5/d$, $w^*(Q) = 2/d$ and $0$ elsewhere, whose loss is $0$ for the losses below.
+\end{lemma}
+
+\begin{proof}
+  Read the rows of $A$.
+\end{proof}
+
+\begin{lemma}[8.1--8.7, 48; replaces {\cite[Lemma 48]{SSKM26}}]
+  \label{lem:polytope_lower_steps}
+  \uses{lem:polytope_lower_polytope}
+  On the curve $q \mapsto W_n(q) \in K$ of the note (all $Y$-coordinates equal, all $Z$-coordinates
+  equal to the $P$-coordinate, $Q$-coordinate $q$), for losses with $\ell(X_i) = 0 = \ell(Q)$ and
+  $\ell(Y_{k,i}) = 1$: the exact step from $W_n(q)$ is $W_{n+1}(F_{n+1}(f_n(q) + \eta S(\ell)))$,
+  with $S(\ell) = \sum_i\ell(Z_i) + \ell(P)$ and $F_n$ the inverse of an explicit increasing
+  $f_n$; and the frozen step $W_{n+1}(q)$ is $q\,h(r)$-approximate, $h(r) = e^{-r} - 1 + r$, for an
+  explicit $r$. The trajectory that takes exact steps for $\tau$ rounds and then frozen steps while
+  they are $\eps$-approximate is $\eps$-approximate for every such loss sequence, has positive
+  coordinates, and each play is a measurable function of the past losses.
+\end{lemma}
+
+\begin{proof}
+  The objective's residual along $K$ is one-dimensional, by the coordinate description of
+  Lemma~\ref{lem:polytope_lower_polytope}; the frozen step's suboptimality is a one-dimensional
+  conjugate bound. The paper's modification of the exact step has gaps (erratum).
+\end{proof}
+
+\begin{lemma}[45--47; replaces {\cite[Lemmas 45, 47]{SSKM26}}]
+  \label{lem:polytope_lower_stuck}
+  \uses{lem:polytope_lower_steps}
+  For the law of the losses (the paper's, with independent Rademacher signs on the $Z$-coordinates
+  and $\ell(P) = \mu$), the event $\{G_\tau \le \tau\mu\}$, $G_\tau = \sum_{s<\tau}S(\ell_s)$, has
+  probability at least $1/2$ by symmetry, and on it the $Q$-coordinate of every play stays at most
+  $1/d$: before $\tau$ by the exact dynamics, after $\tau$ because the sharpened Lemma 47,
+  $F_n(\gamma) \le (2/d)(2/\rho_n)^m e^\gamma$, makes it at most $(41/d)\eps^4$ and every frozen step
+  is $\eps$-approximate.
+\end{lemma}
+
+\begin{proof}
+  The paper's event $\{G \le 0\}$ has probability about $5\cdot10^{-5}$ and its Lemma 47 has
+  inverted signs (errata); the median event and the sharper bound replace them.
+\end{proof}
+
+\begin{theorem}[{\cite[Theorem 8]{SSKM26}}, corrected; {\cite[Theorem 49]{SSKM26}}]
+  \label{thm:lb_nonsimplex}
+  \lean{Schlisselberg2026Hidden.exists_approxMirrorDescent_le_integral_regret_polytope}
+  \leanok
+  \uses{lem:polytope_lower_polytope, lem:polytope_lower_steps, lem:polytope_lower_stuck}
+  With $\eta, \eps$ as above, there are $d \le 100\log(1/\eps)$, a polytope $K \subseteq \Delta_d$ in
+  standard form containing $u_0$, a law of losses in $[-1, 1]^d$, a trajectory depending measurably
+  on the past losses only, almost surely $\eps$-approximate from $u_0$ with positive coordinates,
+  and $w^* \in K$, such that for i.i.d.\ losses of that law and every $T$,
+  $\E[\mathrm{Regret}_T(w^*)] \ge T\sqrt{\eta/\log(1/\eps)}/20$, and
+  $\E[\mathrm{Regret}_T(w^*)] \ge D_R(w^*, u_0)/(6\eta) + T\sqrt{\eta/\log(1/\eps)}/20$ if $\eta T \ge 1$.
+\end{theorem}
+
+\begin{proof}
+  \uses{lem:polytope_lower_polytope, lem:polytope_lower_steps, lem:polytope_lower_stuck}
+  Each play is independent of the loss of its round, so
+  $\E\,\mathrm{Regret}_T(w^*) = \sum_{t<T}(3m\,\E[y_t] + \mu\,\E[2/d - q_t])$, and
+  $\E[2/d - q_t] \ge 1/(2d)$ by Lemma~\ref{lem:polytope_lower_stuck}; this gives
+  $T\mu/(2d) = T\sqrt{\eta/d}/2 \ge T\sqrt{\eta/\log(1/\eps)}/20$. If $\eta T \ge 1$, the
+  $Y$-coordinates add at least $3m/(2d\eta) \ge D_R(w^*, u_0)/(6\eta)$.
+\end{proof}
