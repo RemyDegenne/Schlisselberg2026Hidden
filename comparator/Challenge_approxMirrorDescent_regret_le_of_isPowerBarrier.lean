@@ -1,9 +1,20 @@
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.FDeriv.Prod
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import LMLExplore.Analysis.Convex.Bregman.Taylor
 public import LMLExplore.OnlineLearning.MirrorDescent
 public import LMLExplore.Analysis.Convex.Simplex
+public import LeanMachineLearning.ForMathlib.Analysis.Convex.Bregman.Basic
+public import Mathlib.Analysis.Convex.Segment
+public import Mathlib.Analysis.Normed.Module.Basic
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-! # Standalone extraction for `Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier`
 Definitions are copied verbatim; theorem proofs are replaced by `sorry`.
@@ -16,6 +27,8 @@ set_option autoImplicit false
 set_option relaxedAutoImplicit false
 
 -- Namespace stubs (so later `open`s resolve).
+namespace Real
+end Real
 namespace LMLExplore
 end LMLExplore
 namespace LMLExplore.OnlineLearning
@@ -25,7 +38,7 @@ end Schlisselberg2026Hidden
 
 -- ═══ Schlisselberg2026Hidden.ForLMLExplore.Analysis.Convex.PowerBarrier ═══
 @[expose] public section
-open Set
+open Set Real
 namespace LMLExplore
 
 /-- `r` is a **power barrier** with exponent `ν` and constants `c₁`, `c₂` [SSKM26, Definition 1]:
@@ -83,9 +96,15 @@ let the losses have coordinates in `[-1, 1]`, and let
 with potential `w ↦ ∑ i, r (w i)` and learning rate `η`, taken on the points of `K` with positive
 coordinates and started at the uniform point, has regret at most
 `D_R(u, a 0) / η + (1 + 1/c₁) η T` against every `u ∈ K` with positive coordinates, and against
-every `u ∈ K` if `r` is right-continuous at `0`. -/
-theorem approxMirrorDescent_regret_le_of_isPowerBarrier {ν c₁ c₂ : ℝ} {r : ℝ → ℝ}
-    (hr : IsPowerBarrier ν c₁ c₂ r) (hν : 1 < ν) (A : (α → ℝ) →ₗ[ℝ] M) (b : M)
+every `u ∈ K` if `r` is right-continuous at `0` and left-continuous at `1`.
+
+The definition of a power barrier constrains `r` on `(0, 1)` only, and the values `r 0` and `r 1`
+enter `D_R(u, a 0)` when `u` has a zero coordinate or is a vertex of the simplex. The statement
+frozen at the end of phase 1 asked right-continuity at `0` only, which is false
+(`exists_not_regret_le_of_isPowerBarrier`); the continuity at `1` was added on 2026-11-12
+(`notes/statement-corrections.md`, Theorem 6). -/
+theorem approxMirrorDescent_regret_le_of_isPowerBarrier {ν c₁ c₂ : ℝ}
+    {r : ℝ → ℝ} (hr : IsPowerBarrier ν c₁ c₂ r) (hν : 1 < ν) (A : (α → ℝ) →ₗ[ℝ] M) (b : M)
     (hK : {w | (∀ i, 0 ≤ w i) ∧ A w = b} ⊆ simplex α)
     (hunif : (fun _ ↦ (Fintype.card α : ℝ)⁻¹) ∈ {w : α → ℝ | (∀ i, 0 ≤ w i) ∧ A w = b})
     {η ε : ℝ} (hη : 0 < η) {T : ℕ} (ℓ : ℕ → α → ℝ) (hℓ : ∀ t < T, ∀ i, |ℓ t i| ≤ 1)
@@ -96,7 +115,8 @@ theorem approxMirrorDescent_regret_le_of_isPowerBarrier {ν c₁ c₂ : ℝ} {r 
       (fun w ↦ ∑ i, r (w i)) η (∑ i, ℓ t i • ContinuousLinearMap.proj i) (a t)
       (∑ i, deriv r (a t i) • ContinuousLinearMap.proj i) ε (a (t + 1)))
     {u : α → ℝ} (hu : u ∈ {w : α → ℝ | (∀ i, 0 ≤ w i) ∧ A w = b})
-    (hu' : (∀ i, 0 < u i) ∨ ContinuousWithinAt r (Set.Ici 0) 0) :
+    (hu' : (∀ i, 0 < u i) ∨
+      (ContinuousWithinAt r (Set.Ici 0) 0 ∧ ContinuousWithinAt r (Set.Iic 1) 1)) :
     regret (fun t w ↦ ∑ i, ℓ t i * w i) a u T ≤
       bregDiv (fun w ↦ ∑ i, r (w i)) u (a 0)
           (∑ i, deriv r (a 0 i) • ContinuousLinearMap.proj i : (α → ℝ) →L[ℝ] ℝ) / η +

@@ -12,13 +12,15 @@ public import LMLExplore.OnlineLearning.Regret
 /-!
 # The statement of Theorem 6 frozen at the end of phase 1 is false
 
-`Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier` bounds the regret
+As frozen at the end of phase 1,
+`Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier` bounded the regret
 against every `u ∈ K` when `r` is right-continuous at `0`. The definition of a power barrier
 (`LMLExplore.IsPowerBarrier`) constrains `r` on `(0, 1)` only, and `r 1` enters `D_R(u, w₁)` when
 `u` is a vertex of the simplex. Changing a Tsallis entropy at `1` alone keeps a power barrier
 that is right-continuous at `0` (`LMLExplore.IsPowerBarrier.congr`), and makes `D_R(u, w₁)`
 negative for a vertex `u`. With `T = 0` rounds the regret is `0`, and the bound reads
-`0 ≤ D_R(u, w₁) / η`, which fails. See `notes/statement-corrections.md`.
+`0 ≤ D_R(u, w₁) / η`, which fails. The theorem now also asks `r` to be left-continuous at `1`
+(`notes/statement-corrections.md`, Theorem 6).
 
 ## Main statements
 

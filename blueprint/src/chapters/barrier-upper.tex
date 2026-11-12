@@ -237,21 +237,16 @@ $a_t \in K^+$ for $t \le T$, and $a_{t+1}$ is an $\eps$-approximate step from $a
   Lemma~\ref{lem:bar_one_round} summed over the rounds; $r(u_i)$ cancels.
 \end{proof}
 
-\begin{lemma}[{\cite[Theorem 6]{SSKM26}}, corrected again]
-  \label{lem:bar_corrected}
-  \lean{Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier_of_continuousWithinAt,
-    Schlisselberg2026Hidden.eq_one_of_mem_simplex_of_card_eq_one}
+\begin{lemma}[dimension one]
+  \label{lem:bar_dim_one}
+  \lean{Schlisselberg2026Hidden.eq_one_of_mem_simplex_of_card_eq_one}
   \leanok
-  \uses{lem:bar_core, lem:barrier_scalar}
-  The bound of Theorem~\ref{thm:ub_nonentropy} holds for every $u \in K$ with positive coordinates,
-  and for every $u \in K$ if $r$ is right-continuous at $0$ and left-continuous at $1$.
+  For $d = 1$, the only point of the simplex is the constant function $1$.
 \end{lemma}
 
 \begin{proof}
   \leanok
-  The proof of Theorem~\ref{thm:ub_nonentropy} below, with $m = 1/d$ and
-  $\psi = \Psi^{-1/(\nu-1)}$ in Lemma~\ref{lem:bar_core}; $D_R(u, y) \ge 0$ for $y \in K^+$ by
-  Lemma~\ref{lem:barrier_scalar}.
+  Its single coordinate sums to $1$.
 \end{proof}
 
 \begin{lemma}[counterexample to the frozen statement]
@@ -261,7 +256,8 @@ $a_t \in K^+$ for $t \le T$, and $a_{t+1}$ is an $\eps$-approximate step from $a
   \uses{lem:barrier_examples}
   With right-continuity at $0$ only, the bound of Theorem~\ref{thm:ub_nonentropy} fails for a vertex
   $u$: for $d = 2$, $K = \Delta$, $T = 0$ and the Tsallis entropy of index $1/2$ changed to $-10$
-  at $1$, $D_R(e_1, a_0) \le -8 < 0$.
+  at $1$, $D_R(e_1, a_0) \le -8 < 0$. This disproves the statement frozen at the end of phase 1,
+  which asked right-continuity at $0$ only.
 \end{lemma}
 
 \begin{proof}
@@ -274,18 +270,19 @@ $a_t \in K^+$ for $t \le T$, and $a_{t+1}$ is an $\eps$-approximate step from $a
   \label{thm:ub_nonentropy}
   \lean{Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier}
   \leanok
-  \uses{lem:bar_core, lem:bar_corrected}
+  \uses{lem:bar_core}
   Let $\eta > 0$, $\abs{\ell_t(i)} \le 1$ and
   $\eps \le \eta^4\psi^\nu/(4^{\nu+2}\max(1, c_2))$. For every $u \in K$ with positive coordinates,
-  and for every $u \in K$ if $r$ is right-continuous at $0$,
+  and for every $u \in K$ if $r$ is right-continuous at $0$ and left-continuous at $1$,
   \[ \mathrm{Regret}_T(u) \le \frac{D_R(u, a_0)}{\eta} + \Bigl(1 + \frac1{c_1}\Bigr)\eta T. \]
-  The second case is false as stated (Lemma~\ref{lem:bar_counterexample}); the Lean proof covers
-  the first, and Lemma~\ref{lem:bar_corrected} the second when $r$ is also left-continuous at $1$.
+  The continuity at $1$ was added after phase 1 (Lemma~\ref{lem:bar_counterexample},
+  \texttt{notes/statement-corrections.md}).
 \end{theorem}
 
 \begin{proof}
-  \uses{lem:bar_core, lem:bar_corrected}
-  For $d = 1$ the regret is $0$; for $\eta > 2$ the regret is at most $2T < \eta T$ and
+  \leanok
+  \uses{lem:bar_core, lem:bar_dim_one, lem:barrier_scalar}
+  For $d = 1$ the regret is $0$ (Lemma~\ref{lem:bar_dim_one}); for $\eta > 2$ the regret is at most $2T < \eta T$ and
   $D_R(u, a_0) \ge 0$. Otherwise Lemma~\ref{lem:bar_constants},
   Lemma~\ref{lem:bar_iterates_lower}, and Lemma~\ref{lem:bar_one_round} summed over the rounds
   give the core form $\mathrm{Regret}_T(u) \le (D_R(u, a_0) - D_R(u, a_T))/\eta + (1 + 1/c_1)\eta T$

@@ -29,8 +29,8 @@ user's decision (`/lml:formalize-paper decide`). The errors of the paper itself 
   `Regret_T(u) ≤ (D_R(u, a 0) - D_R(u, a T)) / η + (1 + 1/c₁) η T` for every `u ∈ K`
   (`Schlisselberg2026Hidden.regret_le_sub_div_add_of_isPowerBarrier`, `η ≤ 2`, any initial point
   with positive coordinates); and the statement with the right alternative of `hu'` replaced by
-  `ContinuousWithinAt r (Set.Ici 0) 0 ∧ ContinuousWithinAt r (Set.Iic 1) 1`
-  (`Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier_of_continuousWithinAt`).
+  `ContinuousWithinAt r (Set.Ici 0) 0 ∧ ContinuousWithinAt r (Set.Iic 1) 1` (then a separate
+  lemma, `approxMirrorDescent_regret_le_of_isPowerBarrier_of_continuousWithinAt`).
 - **Choices:** (a) replace the right alternative of `hu'` by the two one-sided continuities above,
   which makes the headline a one-line specialization of the proved lemma (recommended; relation
   `closeMatch`, erratum E6 unchanged); (b) replace it by `ContinuousOn r (Set.Icc 0 1)`, simpler to
@@ -38,4 +38,7 @@ user's decision (`/lml:formalize-paper decide`). The errors of the paper itself 
   comparators with positive coordinates (`narrowMatch`), which loses the vertices for the Tsallis
   entropies.
 - **Found:** round of 2026-11-12 (slot 2, on top of commit a7e3b85).
-- **Decision:** pending.
+- **Decision:** choice (a), by the user on 2026-11-12: the right alternative of `hu'` is now
+  `ContinuousWithinAt r (Set.Ici 0) 0 ∧ ContinuousWithinAt r (Set.Iic 1) 1`. The proof of the
+  separate lemma became the proof of the headline theorem, and the lemma was removed. Relation
+  `closeMatch`, erratum E6. Applied in the commit "Decide: Theorem 6, continuity of r at 1".

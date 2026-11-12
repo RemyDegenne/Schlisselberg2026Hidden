@@ -38,25 +38,20 @@ lower bound on the iterates, and uses `1`-strong convexity where the barrier is 
 The steps are taken on the points of `K` with positive coordinates, the domain of the barrier: in
 Lean the value `r 0` is a junk value, which for the log barrier would make every positive step
 fail to be approximate on `K` itself. For the same reason the comparator `u` is required to have
-positive coordinates, or `r` to be right-continuous at `0` (for the log barrier, the paper's bound
-is `+∞` at the boundary).
-
-The theorem as stated is false when `r` is right-continuous at `0` and `u` is a vertex of the
-simplex: the definition of a power barrier does not constrain `r 1`, which enters `D_R(u, w₁)`
-(`notes/statement-corrections.md`). It is proved for comparators with positive coordinates, and
-`approxMirrorDescent_regret_le_of_isPowerBarrier_of_continuousWithinAt` proves it for every `u ∈ K`
-when `r` is moreover left-continuous at `1`.
+positive coordinates, or `r` to be right-continuous at `0` and left-continuous at `1` (for the log
+barrier, the paper's bound is `+∞` at the boundary). The definition of a power barrier constrains
+`r` on `(0, 1)` only, and `r 1` enters `D_R(u, w₁)` when `u` is a vertex of the simplex: the
+statement frozen at the end of phase 1 asked right-continuity at `0` only, which is false
+(`notes/statement-corrections.md`, Theorem 6).
 
 ## Main statements
 
 * `Schlisselberg2026Hidden.regret_le_sub_div_add_of_isPowerBarrier`: [SSKM26, Theorem 6], the core
   form, for any initial point with positive coordinates and `η ≤ 2`, with
   `D_R(u, a 0) - D_R(u, a T)`, in which the value `r (u i)` cancels.
-* `Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier_of_continuousWithinAt`:
+* `Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier`:
   [SSKM26, Theorem 6], corrected, for comparators with positive coordinates, or for every
   comparator when `r` is continuous at `0` and `1` within `[0, 1]`.
-* `Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier`:
-  [SSKM26, Theorem 6], corrected, as frozen at the end of phase 1.
 
 ## References
 
@@ -158,12 +153,23 @@ lemma regret_le_sub_div_add_of_isPowerBarrier (h2 : 2 ≤ Fintype.card α) {ν c
         rw [sum_add_distrib, sum_const, card_range, ← sum_div, sum_range_sub', nsmul_eq_mul]
         ring
 
-/-- **Polynomially small errors suffice for power barriers** [SSKM26, Theorem 6], corrected: the
-statement of `approxMirrorDescent_regret_le_of_isPowerBarrier`, in which the comparator `u` has
-positive coordinates, or `r` is right-continuous at `0` and left-continuous at `1`. The definition
-of a power barrier constrains `r` on `(0, 1)` only, and the values `r 0` and `r 1` enter
-`D_R(u, w₁)` when `u` has a zero coordinate or is a vertex of the simplex. -/
-lemma approxMirrorDescent_regret_le_of_isPowerBarrier_of_continuousWithinAt {ν c₁ c₂ : ℝ}
+/-- **Polynomially small errors suffice for power barriers** [SSKM26, Theorem 6], with corrected
+constants. Let `r` be a power barrier with exponent `ν > 1` and constants `c₁, c₂`, and let
+`K = {w | w ≥ 0, A w = b}` be contained in the simplex and contain the uniform point. Let `η > 0`,
+let the losses have coordinates in `[-1, 1]`, and let
+`ε ≤ η⁴ Ψ^{-ν/(ν-1)} / (4^{ν+2} max (1, c₂))` with `Ψ = (2d)^{ν-1} + 8 (ν - 1) η T d / c₁` and
+`d` the number of coordinates. Then every `ε`-approximate trajectory `a` of mirror descent on `K`
+with potential `w ↦ ∑ i, r (w i)` and learning rate `η`, taken on the points of `K` with positive
+coordinates and started at the uniform point, has regret at most
+`D_R(u, a 0) / η + (1 + 1/c₁) η T` against every `u ∈ K` with positive coordinates, and against
+every `u ∈ K` if `r` is right-continuous at `0` and left-continuous at `1`.
+
+The definition of a power barrier constrains `r` on `(0, 1)` only, and the values `r 0` and `r 1`
+enter `D_R(u, a 0)` when `u` has a zero coordinate or is a vertex of the simplex. The statement
+frozen at the end of phase 1 asked right-continuity at `0` only, which is false
+(`exists_not_regret_le_of_isPowerBarrier`); the continuity at `1` was added on 2026-11-12
+(`notes/statement-corrections.md`, Theorem 6). -/
+theorem approxMirrorDescent_regret_le_of_isPowerBarrier {ν c₁ c₂ : ℝ}
     {r : ℝ → ℝ} (hr : IsPowerBarrier ν c₁ c₂ r) (hν : 1 < ν) (A : (α → ℝ) →ₗ[ℝ] M) (b : M)
     (hK : {w | (∀ i, 0 ≤ w i) ∧ A w = b} ⊆ simplex α)
     (hunif : (fun _ ↦ (Fintype.card α : ℝ)⁻¹) ∈ {w : α → ℝ | (∀ i, 0 ≤ w i) ∧ A w = b})
@@ -277,44 +283,5 @@ lemma approxMirrorDescent_regret_le_of_isPowerBarrier_of_continuousWithinAt {ν 
       have h4 : 2 ≤ (1 + 1 / c₁) * η := by linarith
       exact mul_le_mul_of_nonneg_right h4 (Nat.cast_nonneg T)
     linarith
-
-/-- **Polynomially small errors suffice for power barriers** [SSKM26, Theorem 6], with corrected
-constants. Let `r` be a power barrier with exponent `ν > 1` and constants `c₁, c₂`, and let
-`K = {w | w ≥ 0, A w = b}` be contained in the simplex and contain the uniform point. Let `η > 0`,
-let the losses have coordinates in `[-1, 1]`, and let
-`ε ≤ η⁴ Ψ^{-ν/(ν-1)} / (4^{ν+2} max (1, c₂))` with `Ψ = (2d)^{ν-1} + 8 (ν - 1) η T d / c₁` and
-`d` the number of coordinates. Then every `ε`-approximate trajectory `a` of mirror descent on `K`
-with potential `w ↦ ∑ i, r (w i)` and learning rate `η`, taken on the points of `K` with positive
-coordinates and started at the uniform point, has regret at most
-`D_R(u, a 0) / η + (1 + 1/c₁) η T` against every `u ∈ K` with positive coordinates, and against
-every `u ∈ K` if `r` is right-continuous at `0`.
-
-The second case is false as stated: the definition of a power barrier does not constrain `r 1`,
-which enters `D_R(u, a 0)` when `u` is a vertex of the simplex (`notes/statement-corrections.md`,
-Theorem 6). The first case is proved, and
-`approxMirrorDescent_regret_le_of_isPowerBarrier_of_continuousWithinAt` proves the second when `r`
-is moreover left-continuous at `1`. -/
-theorem approxMirrorDescent_regret_le_of_isPowerBarrier {ν c₁ c₂ : ℝ} {r : ℝ → ℝ}
-    (hr : IsPowerBarrier ν c₁ c₂ r) (hν : 1 < ν) (A : (α → ℝ) →ₗ[ℝ] M) (b : M)
-    (hK : {w | (∀ i, 0 ≤ w i) ∧ A w = b} ⊆ simplex α)
-    (hunif : (fun _ ↦ (Fintype.card α : ℝ)⁻¹) ∈ {w : α → ℝ | (∀ i, 0 ≤ w i) ∧ A w = b})
-    {η ε : ℝ} (hη : 0 < η) {T : ℕ} (ℓ : ℕ → α → ℝ) (hℓ : ∀ t < T, ∀ i, |ℓ t i| ≤ 1)
-    (hε : ε ≤ η ^ 4 * ((2 * Fintype.card α) ^ (ν - 1) +
-      8 * (ν - 1) * η * T * Fintype.card α / c₁) ^ (-(ν / (ν - 1))) / (4 ^ (ν + 2) * max 1 c₂))
-    (a : ℕ → α → ℝ) (ha0 : a 0 = fun _ ↦ (Fintype.card α : ℝ)⁻¹)
-    (ha : ∀ t < T, IsApproxMirrorDescentStep {w | (∀ i, 0 < w i) ∧ A w = b}
-      (fun w ↦ ∑ i, r (w i)) η (∑ i, ℓ t i • ContinuousLinearMap.proj i) (a t)
-      (∑ i, deriv r (a t i) • ContinuousLinearMap.proj i) ε (a (t + 1)))
-    {u : α → ℝ} (hu : u ∈ {w : α → ℝ | (∀ i, 0 ≤ w i) ∧ A w = b})
-    (hu' : (∀ i, 0 < u i) ∨ ContinuousWithinAt r (Set.Ici 0) 0) :
-    regret (fun t w ↦ ∑ i, ℓ t i * w i) a u T ≤
-      bregDiv (fun w ↦ ∑ i, r (w i)) u (a 0)
-          (∑ i, deriv r (a 0 i) • ContinuousLinearMap.proj i : (α → ℝ) →L[ℝ] ℝ) / η +
-        (1 + 1 / c₁) * η * T := by
-  rcases hu' with hu' | hu'
-  · exact approxMirrorDescent_regret_le_of_isPowerBarrier_of_continuousWithinAt hr hν A b hK hunif
-      hη ℓ hℓ hε a ha0 ha hu (Or.inl hu')
-  · -- false as stated: see `notes/statement-corrections.md`, Theorem 6
-    sorry
 
 end Schlisselberg2026Hidden
