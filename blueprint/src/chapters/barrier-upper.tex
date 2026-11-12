@@ -13,24 +13,39 @@ $a_t \in K^+$ for $t \le T$, and $a_{t+1}$ is an $\eps$-approximate step from $a
 
 \begin{lemma}[B1]
   \label{lem:bar_constants}
-  If $0 < \eta \le 2$ and $\eps \le \eta^4\psi^\nu/(4^{\nu+2}\max(1, c_2))$, then
-  (E1) $\eps \le \eta^2\psi^\nu/(4^{\nu+1}c_2)$, (E2) $\eps \le \eta\psi/8$,
-  (E3) $\eps \le \eta^4\psi^\nu/(2^{\nu+4}c_2)$ and (E4) $\eps \le \eta^2/8$; and
-  $\delta := \sqrt{4^\nu c_2\eps/\psi^\nu} + 4\eps/\psi \le \eta$.
+  \lean{Schlisselberg2026Hidden.barrier_constants}
+  \leanok
+  If $\nu \ge 1$, $c_2 > 0$, $0 < \eta \le 2$, $0 < \psi \le 1$, $\eps \ge 0$ and
+  $\eps \le \eta^4\psi^\nu/(4^{\nu+2}\max(1, c_2))$, then
+  $\delta := \sqrt{4^\nu c_2\eps/\psi^\nu} + 4\eps/\psi \le \eta$, $\eps \le \eta\psi$,
+  $2^\nu c_2\eps/\psi^\nu \le \eta^4/4$ and $4\eps \le \eta^2$.
 \end{lemma}
 
 \begin{proof}
-  $\psi \le 1/(2d) \le 1/4$, $\eta^2 \le 4$, $\eta^3 \le 8$, $4^{\nu+2} \ge 64$.
+  \leanok
+  $\psi^\nu \le \psi \le 1$, $\eta^4 \le 8\eta$, $\eta^4 \le 4\eta^2$, $4^{\nu+2} = 16 \cdot 4^\nu$ and
+  $4^\nu \ge 4$, so that $4^\nu c_2\eps/\psi^\nu \le \eta^4/16$ and $\eps \le \eta^4\psi/64$.
 \end{proof}
 
 \begin{lemma}[B2; {\cite[Lemma 31]{SSKM26}}]
   \label{lem:polytope_facts}
-  Let $d \ge 2$. Points of $K^+$ have coordinates in $(0, 1)$; $K$ is convex; if $x, y, z \in K$ and
-  $x + \gamma(y - z) \ge 0$ then $x + \gamma(y - z) \in K$; differences $v$ of points of $K$ have
-  $\sum_i v_i = 0$, hence $\abs{v_i} \le \norm{v}_1/2$ and $\sum_i v_i^2 \le \norm{v}_1^2/2$.
+  \lean{LMLExplore.convex_setOf_forall_nonneg_and_apply_eq,
+    LMLExplore.convex_setOf_forall_pos_and_apply_eq, LMLExplore.apply_add_smul_sub_eq,
+    LMLExplore.abs_le_sum_abs_div_two_of_sum_eq_zero,
+    LMLExplore.sum_sq_le_sq_sum_abs_div_two_of_sum_eq_zero,
+    LMLExplore.sum_sub_eq_zero_of_mem_simplex, LMLExplore.sum_abs_sub_le_two_of_mem_simplex,
+    LMLExplore.mem_Ioo_of_mem_simplex_of_pos, Schlisselberg2026Hidden.mem_Ioo_of_mem_polytope,
+    Schlisselberg2026Hidden.sum_mul_le_sum_abs}
+  \leanok
+  Let $d \ge 2$. Points of $K^+$ have coordinates in $(0, 1)$; $K$ and $K^+$ are convex; if
+  $x, y, z \in K$ and $x + \gamma(y - z) \ge 0$ then $x + \gamma(y - z) \in K$; differences $v$ of
+  points of $K$ have $\sum_i v_i = 0$, hence $\abs{v_i} \le \norm{v}_1/2$ and
+  $\sum_i v_i^2 \le \norm{v}_1^2/2$, and $\norm{v}_1 \le 2$. For $\abs{\ell_i} \le 1$,
+  $\ip{\ell}{v} \le \norm{v}_1$.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   Linear algebra and $K \subseteq \Delta$.
 \end{proof}
 
@@ -44,7 +59,13 @@ $a_t \in K^+$ for $t \le T$, and $a_{t+1}$ is an $\eps$-approximate step from $a
     LMLExplore.IsPowerBarrier.sub_sub_le_mul_sq, LMLExplore.IsPowerBarrier.mul_sq_le_sub_sub,
     LMLExplore.IsPowerBarrier.sub_sub_nonneg,
     LMLExplore.IsPowerBarrier.mul_sq_div_max_le_sub_sub,
-    Convex.exists_mem_segment_sub_sub_mul_eq, LMLExplore.bregDiv_sum_apply}
+    Convex.exists_mem_segment_sub_sub_mul_eq, LMLExplore.bregDiv_sum_apply,
+    LMLExplore.IsPowerBarrier.le_upper, LMLExplore.IsPowerBarrier.upper_pos,
+    LMLExplore.IsPowerBarrier.deriv_deriv_le_div_rpow,
+    LMLExplore.IsPowerBarrier.sub_sub_nonneg_of_continuousWithinAt,
+    LMLExplore.IsPowerBarrier.sub_sub_nonneg_of_continuousWithinAt_Iic,
+    LMLExplore.IsPowerBarrier.sub_sub_nonneg_of_mem_Icc,
+    Schlisselberg2026Hidden.deriv_sub_mul_sub_nonneg}
   \leanok
   $r'$ is strictly monotone on $(0, 1)$, and for $0 < x \le y < 1$,
   $r'(y) - r'(x) \ge \frac{c_1}{\nu - 1}(x^{1-\nu} - y^{1-\nu})$ if $\nu > 1$, and
@@ -52,7 +73,9 @@ $a_t \in K^+$ for $t \le T$, and $a_{t+1}$ is an $\eps$-approximate step from $a
   them: if $r'' \le M$ on $I$ then $D_r(y, x) \le M(y - x)^2/2$; if $r'' \ge \kappa$ on $I$ then
   $D_r(y, x) \ge \kappa(y - x)^2/2$; $D_r(y, x) \ge 0$; and
   $D_r(y, x) \ge c_1(y - x)^2/(2\max(x, y))$. The Bregman divergence of $w \mapsto \sum_i r(w_i)$
-  is the sum of the scalar divergences of the coordinates.
+  is the sum of the scalar divergences of the coordinates. Moreover $0 < c_1 \le c_2$, and
+  $D_r(0, x) \ge 0$ if $r$ is right-continuous at $0$, $D_r(1, x) \ge 0$ if $r$ is left-continuous
+  at $1$; the definition does not constrain $r(0)$ and $r(1)$.
 \end{lemma}
 
 \begin{proof}
@@ -60,18 +83,65 @@ $a_t \in K^+$ for $t \le T$, and $a_{t+1}$ is an $\eps$-approximate step from $a
   $s \mapsto r'(s) + c_1 s^{1-\nu}/(\nu - 1)$ (and $s \mapsto r'(s) - c_1\log s$ for $\nu = 1$) has
   nonnegative derivative. The bounds on $D_r$ are Taylor's formula with Lagrange remainder of order
   two, $D_r(y, x) = r''(z)(y - x)^2/2$ for some $z \in I$, which needs no continuity of $r''$. The
-  paper's Lemma 41 drops the factor $1/(\nu - 1)$, which makes it false for $\nu > 2$.
+  paper's Lemma 41 drops the factor $1/(\nu - 1)$, which makes it false for $\nu > 2$. The bounds
+  at $0$ and $1$ are limits of $D_r(s, x) \ge 0$.
 \end{proof}
 
-\begin{lemma}[B6, B7; {\cite[Lemmas 11, 22]{SSKM26}}, corrected and localized]
+\begin{lemma}[{\cite[Section 2]{SSKM26}}]
+  \label{lem:barrier_examples}
+  \lean{LMLExplore.isPowerBarrier_mul_log, LMLExplore.isPowerBarrier_tsallis,
+    LMLExplore.isPowerBarrier_neg_log, LMLExplore.IsPowerBarrier.congr,
+    LMLExplore.hasFDerivAt_sum_apply, LMLExplore.IsPowerBarrier.hasFDerivAt_sum,
+    LMLExplore.IsPowerBarrier.mul_sq_sum_abs_sub_le_bregDiv}
+  \leanok
+  \uses{lem:barrier_scalar}
+  $x \log x$ is a $1$-barrier with $c_1 = c_2 = 1$, the Tsallis entropy $(x - x^q)/(1 - q)$,
+  $q \in (0, 1)$, a $(2 - q)$-barrier with $c_1 = c_2 = q$, and $-\log x$ a $2$-barrier with
+  $c_1 = c_2 = 1$. A function equal to a $\nu$-barrier on $(0, 1)$ is a $\nu$-barrier. The derivative
+  of $R(w) = \sum_i r(w_i)$ at $w$ is $h \mapsto \sum_i r'(w_i)h_i$. On the points of the simplex
+  with coordinates in $(0, 1)$, $D_R(y, x) \ge c_1\norm{y - x}_1^2/4$: $R$ is
+  $(c_1/2)$-strongly convex for $\norm{\cdot}_1$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  Direct computation of the derivatives. For the strong convexity, sum the bounds
+  $D_r(y_i, x_i) \ge c_1(y_i - x_i)^2/(2m_i)$, $m_i = \max(x_i, y_i)$, and apply Cauchy--Schwarz
+  with $\sum_i m_i \le 2$.
+\end{proof}
+
+\begin{lemma}[B5, B6; {\cite[Lemma 22]{SSKM26}}, localized]
+  \label{lem:bar_localized_foc}
+  \lean{Schlisselberg2026Hidden.sum_le_of_isApproxMirrorDescentStep,
+    Schlisselberg2026Hidden.neg_max_le_mul_sum_of_isApproxMirrorDescentStep}
+  \leanok
+  \uses{lem:barrier_scalar}
+  Let $x$ be an $\eps$-approximate step from $a$ on a set $S$, $h$ a direction and $\gamma_0 \ge 0$
+  such that, for $\gamma \in [0, \gamma_0]$, $x + \gamma h \in S$ and
+  $\sum_i D_r(x_i + \gamma h_i, x_i) \le Q\gamma^2/2$. Then
+  $\gamma_0\ip{G(x)}{h} \ge -\max(\gamma_0\sqrt{2Q\eps}, 2\eps)$, with
+  $G(x) = \eta\ell + \nabla R(x) - \nabla R(a)$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  The approximate first-order condition of an $\eps$-minimizer (the library form of
+  \cite[Lemma 22]{SSKM26}) applied to $s \mapsto \Phi(x + sh)$ on $[0, \gamma_0]$, whose Bregman
+  divergence at $0$ is $\sum_i D_r(x_i + sh_i, x_i)$.
+\end{proof}
+
+\begin{lemma}[B7; {\cite[Lemma 11]{SSKM26}}, corrected and localized]
   \label{lem:bar_one_step_balance}
-  \uses{lem:polytope_facts, lem:barrier_scalar}
+  \lean{Schlisselberg2026Hidden.sum_deriv_sub_mul_le_of_isApproxMirrorDescentStep}
+  \leanok
+  \uses{lem:polytope_facts, lem:barrier_scalar, lem:bar_localized_foc}
   Let $t < T$ and $0 < \psi' < 1$ with $a_{t+1} \ge \psi'$. For $y, z \in K$,
   \[ \ip{\nabla R(a_t) - \nabla R(a_{t+1})}{y - z} \le \eta\ip{\ell_t}{y - z}
     + \Bigl(\sqrt{c_2(2/\psi')^\nu\eps} + 2\eps/\psi'\Bigr)\norm{y - z}_1. \]
 \end{lemma}
 
 \begin{proof}
+  \leanok
   The step condition at $a_{t+1} + \gamma h$, $h = (y - z)/\norm{y - z}_1$, $\gamma \le \psi'$,
   where the coordinates stay $\ge \psi'/2$ and $r'' \le c_2(2/\psi')^\nu$; only this initial part
   of the segment needs a smoothness bound.
@@ -79,13 +149,20 @@ $a_t \in K^+$ for $t \le T$, and $a_{t+1}$ is an $\eps$-approximate step from $a
 
 \begin{lemma}[B8, B9; {\cite[Lemmas 10, 12]{SSKM26}}, corrected]
   \label{lem:bar_balance}
+  \lean{Schlisselberg2026Hidden.sum_deriv_sub_mul_le_of_forall_isApproxMirrorDescentStep,
+    Schlisselberg2026Hidden.le_of_sum_deriv_sub_mul_sub_le,
+    Schlisselberg2026Hidden.le_half_of_add_le_rpow}
+  \leanok
   \uses{lem:bar_one_step_balance, lem:barrier_scalar}
   If $a_{s+1} \ge \psi/2$ for every $s < t$, then $\ip{\nabla R(q) - \nabla R(a_t)}{y - z} \le
   t(\eta + \delta)\norm{y - z}_1$ for $y, z \in K$. If $y \in K^+$ and
-  $S_q(y) := \ip{\nabla R(q) - \nabla R(y)}{q - y} \le 4\eta T$, then $y \ge \psi$.
+  $S_q(y) := \ip{\nabla R(q) - \nabla R(y)}{q - y} \le 4\eta T$, then $y \ge \psi$. In Lean the
+  second part holds for every $q$ with coordinates in $[m, 1)$, $m > 0$, and every $\psi$ with
+  $(2/m)^{\nu-1} + 2(\nu - 1)\kappa/(c_1 m) \le \psi^{1-\nu}$ when $S_q(y) \le \kappa$.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   Telescoping Lemma~\ref{lem:bar_one_step_balance} with $\psi' = \psi/2$. For the second part,
   every term of $S_q(y)$ is nonnegative, and a coordinate $y_i < \psi$ makes its term exceed
   $4\eta T$ by Lemma~\ref{lem:barrier_scalar}. The paper's Lemma 10 has its loss indices shifted by
@@ -94,12 +171,15 @@ $a_t \in K^+$ for $t \le T$, and $a_{t+1}$ is an $\eps$-approximate step from $a
 
 \begin{lemma}[B10; replaces {\cite[Lemma 25]{SSKM26}} on polytopes]
   \label{lem:bar_pull_to_start}
+  \lean{Schlisselberg2026Hidden.half_le_of_forall_isApproxMirrorDescentStep}
+  \leanok
   \uses{lem:bar_balance, lem:bar_constants, lem:polytope_facts}
   Under (E1), (E2), if $t < T$ and $a_{s+1} \ge \psi/2$ for every $s < t$, then
   $a_{t+1} \ge \psi/2$.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   Let $x = a_{t+1}$, $\lambda = \psi/2$ and $z = (1 - \lambda)x + \lambda q \in K^+$. The step
   condition at $z$ and the convexity of $\Phi_t$ give $\ip{G_t(z)}{q - x} \ge -\eps/\lambda$.
   Splitting $G_t(z)$ and using Lemma~\ref{lem:bar_balance} gives $S_q(z) \le 4\eta T$, hence
@@ -109,46 +189,106 @@ $a_t \in K^+$ for $t \le T$, and $a_{t+1}$ is an $\eps$-approximate step from $a
 
 \begin{lemma}[B11; {\cite[Lemma 42]{SSKM26}}, corrected]
   \label{lem:bar_iterates_lower}
+  \lean{Schlisselberg2026Hidden.le_of_forall_isApproxMirrorDescentStep}
+  \leanok
   \uses{lem:bar_pull_to_start, lem:bar_balance}
   Under (E1), (E2), $a_t \ge \psi$ for every $t \le T$.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   Induction: Lemma~\ref{lem:bar_pull_to_start}, then Lemma~\ref{lem:bar_balance} with
   $y = q$, $z = a_{t+1}$. The paper's lower bound is false for $\nu > 9$, even for exact steps.
 \end{proof}
 
 \begin{lemma}[B12, B13; {\cite[Lemmas 26, 27]{SSKM26}}, corrected]
   \label{lem:bar_one_round}
-  \uses{lem:barrier_scalar, lem:polytope_facts, lem:bar_constants}
+  \lean{Schlisselberg2026Hidden.sum_mul_sub_sub_bregDiv_div_le,
+    Schlisselberg2026Hidden.mul_sum_mul_sub_le_of_isApproxMirrorDescentStep}
+  \leanok
+  \uses{lem:barrier_scalar, lem:barrier_examples, lem:polytope_facts, lem:bar_localized_foc}
   For $x, y \in K^+$ and $\abs{\ell_i} \le 1$, $\ip{\ell}{x - y} - D_R(y, x)/\eta \le \eta/c_1$.
-  Under (E3), (E4), if $a_{t+1} \ge \psi$ then for every $u \in K$,
+  If $2^\nu c_2\eps/\psi^\nu \le \eta^4/4$, $4\eps \le \eta^2$ and $a_{t+1} \ge \psi$, then for every
+  $u \in K$ and every loss $\ell_t$,
   $\eta\ip{\ell_t}{a_{t+1} - u} \le D_R(u, a_t) - D_R(u, a_{t+1}) - D_R(a_{t+1}, a_t) + \eta^2$.
 \end{lemma}
 
 \begin{proof}
+  \leanok
   A $\nu$-barrier is $(c_1/2)$-strongly convex for $\norm{\cdot}_1$ on $K^+$, not $1$-strongly
   convex as the paper's proof uses. The second inequality is the localized first-order condition
   on $[a_{t+1}, a_{t+1} + \frac12(u - a_{t+1})]$ and the three-point identity.
+\end{proof}
+
+\begin{lemma}[B14; {\cite[Theorem 6]{SSKM26}}, core form]
+  \label{lem:bar_core}
+  \lean{Schlisselberg2026Hidden.regret_le_sub_div_add_of_isPowerBarrier}
+  \leanok
+  \uses{lem:bar_iterates_lower, lem:bar_one_round, lem:bar_constants}
+  Let $d \ge 2$, $0 < \eta \le 2$, $a_0 \in K^+$ with coordinates at least $m > 0$, $\psi > 0$ with
+  $(2/m)^{\nu-1} + 8(\nu - 1)\eta T/(c_1 m) \le \psi^{1-\nu}$, and
+  $\eps \le \eta^4\psi^\nu/(4^{\nu+2}\max(1, c_2))$. For every $u \in K$,
+  $\mathrm{Regret}_T(u) \le (D_R(u, a_0) - D_R(u, a_T))/\eta + (1 + 1/c_1)\eta T$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  Lemmas~\ref{lem:bar_constants} and~\ref{lem:bar_iterates_lower}, then
+  Lemma~\ref{lem:bar_one_round} summed over the rounds; $r(u_i)$ cancels.
+\end{proof}
+
+\begin{lemma}[{\cite[Theorem 6]{SSKM26}}, corrected again]
+  \label{lem:bar_corrected}
+  \lean{Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier_of_continuousWithinAt,
+    Schlisselberg2026Hidden.eq_one_of_mem_simplex_of_card_eq_one}
+  \leanok
+  \uses{lem:bar_core, lem:barrier_scalar}
+  The bound of Theorem~\ref{thm:ub_nonentropy} holds for every $u \in K$ with positive coordinates,
+  and for every $u \in K$ if $r$ is right-continuous at $0$ and left-continuous at $1$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  The proof of Theorem~\ref{thm:ub_nonentropy} below, with $m = 1/d$ and
+  $\psi = \Psi^{-1/(\nu-1)}$ in Lemma~\ref{lem:bar_core}; $D_R(u, y) \ge 0$ for $y \in K^+$ by
+  Lemma~\ref{lem:barrier_scalar}.
+\end{proof}
+
+\begin{lemma}[counterexample to the frozen statement]
+  \label{lem:bar_counterexample}
+  \lean{Schlisselberg2026Hidden.exists_not_regret_le_of_isPowerBarrier}
+  \leanok
+  \uses{lem:barrier_examples}
+  With right-continuity at $0$ only, the bound of Theorem~\ref{thm:ub_nonentropy} fails for a vertex
+  $u$: for $d = 2$, $K = \Delta$, $T = 0$ and the Tsallis entropy of index $1/2$ changed to $-10$
+  at $1$, $D_R(e_1, a_0) \le -8 < 0$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  The definition of a $\nu$-barrier only constrains $r$ on $(0, 1)$
+  (\texttt{notes/statement-corrections.md}).
 \end{proof}
 
 \begin{theorem}[{\cite[Theorem 6]{SSKM26}}, corrected]
   \label{thm:ub_nonentropy}
   \lean{Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier}
   \leanok
-  \uses{lem:bar_iterates_lower, lem:bar_one_round, lem:bar_constants}
+  \uses{lem:bar_core, lem:bar_corrected}
   Let $\eta > 0$, $\abs{\ell_t(i)} \le 1$ and
   $\eps \le \eta^4\psi^\nu/(4^{\nu+2}\max(1, c_2))$. For every $u \in K$ with positive coordinates,
   and for every $u \in K$ if $r$ is right-continuous at $0$,
   \[ \mathrm{Regret}_T(u) \le \frac{D_R(u, a_0)}{\eta} + \Bigl(1 + \frac1{c_1}\Bigr)\eta T. \]
+  The second case is false as stated (Lemma~\ref{lem:bar_counterexample}); the Lean proof covers
+  the first, and Lemma~\ref{lem:bar_corrected} the second when $r$ is also left-continuous at $1$.
 \end{theorem}
 
 \begin{proof}
-  \uses{lem:bar_iterates_lower, lem:bar_one_round, lem:bar_constants}
+  \uses{lem:bar_core, lem:bar_corrected}
   For $d = 1$ the regret is $0$; for $\eta > 2$ the regret is at most $2T < \eta T$ and
   $D_R(u, a_0) \ge 0$. Otherwise Lemma~\ref{lem:bar_constants},
   Lemma~\ref{lem:bar_iterates_lower}, and Lemma~\ref{lem:bar_one_round} summed over the rounds
   give the core form $\mathrm{Regret}_T(u) \le (D_R(u, a_0) - D_R(u, a_T))/\eta + (1 + 1/c_1)\eta T$
   for every $u \in K$, in which $r(0)$ cancels; $D_R(u, a_T) \ge 0$ for positive $u$, and for every
-  $u$ when $r$ is right-continuous at $0$ (B15).
+  $u$ when $r$ is right-continuous at $0$ and left-continuous at $1$ (B15).
 \end{proof}

@@ -5,8 +5,11 @@ Authors: Remy Degenne
 -/
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.FDeriv.Prod
 public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
 public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 public import LMLExplore.Analysis.Convex.Bregman.Taylor
@@ -41,8 +44,14 @@ a point `z` between `x` and `y`, from which all the bounds below follow.
 
 * `LMLExplore.bregDiv_sum_apply`: the Bregman divergence of a coordinate-separable function
   `w ↦ ∑ a, r (w a)` is the sum of the scalar divergences of its coordinates.
+* `LMLExplore.hasFDerivAt_sum_apply`, `LMLExplore.IsPowerBarrier.hasFDerivAt_sum`: the derivative
+  of a coordinate-separable function.
 * `Convex.exists_mem_segment_sub_sub_mul_eq`: Taylor's formula of order two, for a real function
   with a derivative and a second derivative within a convex set.
+* `LMLExplore.isPowerBarrier_mul_log`, `LMLExplore.isPowerBarrier_tsallis`,
+  `LMLExplore.isPowerBarrier_neg_log`: the negative entropy, the Tsallis entropies and the log
+  barrier are power barriers.
+* `LMLExplore.IsPowerBarrier.congr`: being a power barrier only depends on the values on `(0, 1)`.
 * `LMLExplore.IsPowerBarrier.strictMonoOn_deriv`: the derivative of a power barrier is strictly
   monotone on `(0, 1)`.
 * `LMLExplore.IsPowerBarrier.sub_sub_le_mul_sq`: the scalar Bregman divergence is at most
@@ -52,6 +61,15 @@ a point `z` between `x` and `y`, from which all the bounds below follow.
   nonnegative, and has quadratic lower bounds given by lower bounds on `r''`.
 * `LMLExplore.IsPowerBarrier.mul_rpow_sub_rpow_le_deriv_sub`: the increments of `r'` for `ν > 1`
   [SSKM26, Lemma 41], with the factor `1 / (ν - 1)` that [SSKM26] omits.
+* `LMLExplore.IsPowerBarrier.sub_sub_nonneg_of_continuousWithinAt`,
+  `LMLExplore.IsPowerBarrier.sub_sub_nonneg_of_continuousWithinAt_Iic`,
+  `LMLExplore.IsPowerBarrier.sub_sub_nonneg_of_mem_Icc`: the scalar Bregman divergence from a
+  point of `(0, 1)` to `0` (to `1`) is nonnegative when `r` is right-continuous at `0`
+  (left-continuous at `1`). The definition does not constrain `r 0` and `r 1`.
+* `LMLExplore.IsPowerBarrier.mul_sq_sum_abs_sub_le_bregDiv`: strong convexity for the `ℓ¹` norm:
+  on the points of the simplex with coordinates in `(0, 1)`, the Bregman divergence of
+  `w ↦ ∑ a, r (w a)` is at least `c₁ / 4 * ‖y - x‖₁ ^ 2`, so the regularizer is
+  `c₁ / 2`-strongly convex there.
 * `LMLExplore.IsPowerBarrier.mul_sub_le_deriv_sub`,
   `LMLExplore.IsPowerBarrier.mul_log_div_le_deriv_sub`: the increments of `r'` from a lower bound
   on `r''`, and for `ν = 1`.
@@ -99,6 +117,14 @@ lemma bregDiv_sum_apply {α : Type*} [Fintype α] (r r' : ℝ → ℝ) (x y : α
   simp only [bregDiv, sum_apply, smul_apply, ContinuousLinearMap.proj_apply, Pi.sub_apply,
     smul_eq_mul, Finset.sum_sub_distrib]
 
+/-- The derivative of a coordinate-separable function `w ↦ ∑ a, r (w a)` on `α → ℝ` at a point `w`
+at whose coordinates `r` is differentiable is `h ↦ ∑ a, r' (w a) * h a`. -/
+lemma hasFDerivAt_sum_apply {α : Type*} [Fintype α] {r : ℝ → ℝ} {w : α → ℝ}
+    (h : ∀ a, DifferentiableAt ℝ r (w a)) :
+    HasFDerivAt (fun w : α → ℝ ↦ ∑ a, r (w a))
+      (∑ a, deriv r (w a) • ContinuousLinearMap.proj a : (α → ℝ) →L[ℝ] ℝ) w :=
+  HasFDerivAt.fun_sum fun a _ ↦ (h a).hasDerivAt.comp_hasFDerivAt w (hasFDerivAt_apply a w)
+
 /-- `r` is a **power barrier** with exponent `ν` and constants `c₁`, `c₂` [SSKM26, Definition 1]:
 `ν ≥ 1`, `c₁ > 0`, and `r` is twice differentiable on `(0, 1)` with
 `c₁ / x ^ ν ≤ r'' x ≤ c₂ / x ^ ν` for `x ∈ (0, 1)`. -/
@@ -133,6 +159,16 @@ lemma hasDerivAt_deriv (hr : IsPowerBarrier ν c₁ c₂ r) (hx : x ∈ Ioo 0 1)
 /-- The derivative of a power barrier is continuous on `(0, 1)`. -/
 lemma continuousOn_deriv (hr : IsPowerBarrier ν c₁ c₂ r) : ContinuousOn (deriv r) (Ioo 0 1) :=
   hr.differentiableOn_deriv.continuousOn
+
+/-- Being a power barrier only depends on the values on `(0, 1)`: a function that agrees with a
+power barrier there is a power barrier, whatever its values at `0` and `1`. -/
+lemma congr (hr : IsPowerBarrier ν c₁ c₂ r) {r' : ℝ → ℝ} (h : EqOn r' r (Ioo 0 1)) :
+    IsPowerBarrier ν c₁ c₂ r' := by
+  have h1 : EqOn (deriv r') (deriv r) (Ioo 0 1) := h.deriv isOpen_Ioo
+  have h2 : EqOn (deriv (deriv r')) (deriv (deriv r)) (Ioo 0 1) := h1.deriv isOpen_Ioo
+  exact ⟨hr.one_le, hr.pos, hr.differentiableOn.congr h, hr.differentiableOn_deriv.congr h1,
+    fun x hx ↦ (h2 hx).symm ▸ hr.le_deriv_deriv x hx,
+    fun x hx ↦ (h2 hx).symm ▸ hr.deriv_deriv_le x hx⟩
 
 /-- The second derivative of a power barrier is positive on `(0, 1)`. -/
 lemma deriv_deriv_pos (hr : IsPowerBarrier ν c₁ c₂ r) (hx : x ∈ Ioo 0 1) :
@@ -199,6 +235,113 @@ lemma mul_sq_div_max_le_sub_sub (hr : IsPowerBarrier ν c₁ c₂ r) (hx : x ∈
         field_simp
     _ ≤ _ := h
 
+/-- The upper constant of a power barrier is at least its lower constant. -/
+lemma le_upper (hr : IsPowerBarrier ν c₁ c₂ r) : c₁ ≤ c₂ := by
+  have h : (1 / 2 : ℝ) ∈ Ioo 0 1 := by norm_num
+  have h1 := (hr.le_deriv_deriv _ h).trans (hr.deriv_deriv_le _ h)
+  exact (div_le_div_iff_of_pos_right (rpow_pos_of_pos (by norm_num) ν)).mp h1
+
+/-- The upper constant of a power barrier is positive. -/
+lemma upper_pos (hr : IsPowerBarrier ν c₁ c₂ r) : 0 < c₂ :=
+  hr.pos.trans_le hr.le_upper
+
+/-- The second derivative of a power barrier is at most `c₂ / κ ^ ν` at the points of `(0, 1)`
+above `κ > 0`. -/
+lemma deriv_deriv_le_div_rpow (hr : IsPowerBarrier ν c₁ c₂ r) (hx : x ∈ Ioo 0 1) (hκ : 0 < κ)
+    (hκx : κ ≤ x) : deriv (deriv r) x ≤ c₂ / κ ^ ν :=
+  (hr.deriv_deriv_le x hx).trans <| div_le_div_of_nonneg_left hr.upper_pos.le
+    (rpow_pos_of_pos hκ _) (rpow_le_rpow hκ.le hκx (zero_le_one.trans hr.one_le))
+
+/-- A power barrier is differentiable at every point of `(0, 1)`, so the coordinate-separable
+function `w ↦ ∑ a, r (w a)` has the derivative `h ↦ ∑ a, r' (w a) * h a` at every point with
+coordinates in `(0, 1)`. -/
+lemma hasFDerivAt_sum {α : Type*} [Fintype α] (hr : IsPowerBarrier ν c₁ c₂ r) {w : α → ℝ}
+    (hw : ∀ a, w a ∈ Ioo 0 1) :
+    HasFDerivAt (fun w : α → ℝ ↦ ∑ a, r (w a))
+      (∑ a, deriv r (w a) • ContinuousLinearMap.proj a : (α → ℝ) →L[ℝ] ℝ) w :=
+  hasFDerivAt_sum_apply fun a ↦ (hr.hasDerivAt (hw a)).differentiableAt
+
+/-- If a power barrier is right-continuous at `0`, its scalar Bregman divergence
+`r x - r y - r' y (x - y)` is nonnegative for `x ∈ [0, 1)` and `y ∈ (0, 1)`: the value `r 0` is
+the limit of the values on `(0, 1)`, which lie above the tangent at `y`. -/
+lemma sub_sub_nonneg_of_continuousWithinAt (hr : IsPowerBarrier ν c₁ c₂ r)
+    (hc : ContinuousWithinAt r (Ici 0) 0) (hx : x ∈ Ico 0 1) (hy : y ∈ Ioo 0 1) :
+    0 ≤ r x - r y - deriv r y * (x - y) := by
+  rcases hx.1.eq_or_lt with rfl | hx0
+  · have h1 : Filter.Tendsto r (nhdsWithin 0 (Ioi 0)) (nhds (r 0)) :=
+      (hc.mono Ioi_subset_Ici_self).tendsto
+    have h2 : Filter.Tendsto (fun s ↦ r s - r y - deriv r y * (s - y)) (nhdsWithin 0 (Ioi 0))
+        (nhds (r 0 - r y - deriv r y * (0 - y))) :=
+      (h1.sub tendsto_const_nhds).sub (tendsto_const_nhds.mul
+        ((tendsto_nhdsWithin_of_tendsto_nhds Filter.tendsto_id).sub tendsto_const_nhds))
+    refine ge_of_tendsto h2 ?_
+    filter_upwards [Ioo_mem_nhdsGT hy.1] with s hs
+    exact hr.sub_sub_nonneg ⟨hs.1, hs.2.trans hy.2⟩ hy
+  · exact hr.sub_sub_nonneg ⟨hx0, hx.2⟩ hy
+
+/-- If a power barrier is left-continuous at `1`, its scalar Bregman divergence
+`r x - r y - r' y (x - y)` is nonnegative for `x ∈ (0, 1]` and `y ∈ (0, 1)`. -/
+lemma sub_sub_nonneg_of_continuousWithinAt_Iic (hr : IsPowerBarrier ν c₁ c₂ r)
+    (hc : ContinuousWithinAt r (Iic 1) 1) (hx : x ∈ Ioc 0 1) (hy : y ∈ Ioo 0 1) :
+    0 ≤ r x - r y - deriv r y * (x - y) := by
+  rcases hx.2.eq_or_lt with rfl | hx1
+  · have h1 : Filter.Tendsto r (nhdsWithin 1 (Iio 1)) (nhds (r 1)) :=
+      (hc.mono Iio_subset_Iic_self).tendsto
+    have h2 : Filter.Tendsto (fun s ↦ r s - r y - deriv r y * (s - y)) (nhdsWithin 1 (Iio 1))
+        (nhds (r 1 - r y - deriv r y * (1 - y))) :=
+      (h1.sub tendsto_const_nhds).sub (tendsto_const_nhds.mul
+        ((tendsto_nhdsWithin_of_tendsto_nhds Filter.tendsto_id).sub tendsto_const_nhds))
+    refine ge_of_tendsto h2 ?_
+    filter_upwards [Ioo_mem_nhdsLT hy.2] with s hs
+    exact hr.sub_sub_nonneg ⟨hy.1.trans hs.1, hs.2⟩ hy
+  · exact hr.sub_sub_nonneg ⟨hx.1, hx1⟩ hy
+
+/-- If a power barrier is right-continuous at `0` and left-continuous at `1`, its scalar Bregman
+divergence `r x - r y - r' y (x - y)` is nonnegative for `x ∈ [0, 1]` and `y ∈ (0, 1)`. -/
+lemma sub_sub_nonneg_of_mem_Icc (hr : IsPowerBarrier ν c₁ c₂ r)
+    (hc₀ : ContinuousWithinAt r (Ici 0) 0) (hc₁ : ContinuousWithinAt r (Iic 1) 1)
+    (hx : x ∈ Icc 0 1) (hy : y ∈ Ioo 0 1) : 0 ≤ r x - r y - deriv r y * (x - y) := by
+  rcases hx.2.eq_or_lt with h | h
+  · exact hr.sub_sub_nonneg_of_continuousWithinAt_Iic hc₁ ⟨h ▸ zero_lt_one, hx.2⟩ hy
+  · exact hr.sub_sub_nonneg_of_continuousWithinAt hc₀ ⟨hx.1, h⟩ hy
+
+/-- **Strong convexity of a power barrier for the `ℓ¹` norm.** On the points of the simplex with
+coordinates in `(0, 1)`, the Bregman divergence of `w ↦ ∑ a, r (w a)` is at least
+`c₁ / 4 * (∑ a, |y a - x a|) ^ 2`: the regularizer is `c₁ / 2`-strongly convex there. The proof
+bounds each scalar divergence below by `c₁ (y a - x a) ^ 2 / (2 max (y a) (x a))` and applies the
+Cauchy–Schwarz inequality, with `∑ a, max (y a) (x a) ≤ 2`. -/
+lemma mul_sq_sum_abs_sub_le_bregDiv {α : Type*} [Fintype α] (hr : IsPowerBarrier ν c₁ c₂ r)
+    {x y : α → ℝ} (hx : ∀ a, x a ∈ Ioo 0 1) (hy : ∀ a, y a ∈ Ioo 0 1) (hx1 : ∑ a, x a = 1)
+    (hy1 : ∑ a, y a = 1) :
+    c₁ / 4 * (∑ a, |y a - x a|) ^ 2 ≤ bregDiv (fun w : α → ℝ ↦ ∑ a, r (w a)) y x
+      (∑ a, deriv r (x a) • ContinuousLinearMap.proj a : (α → ℝ) →L[ℝ] ℝ) := by
+  rw [bregDiv_sum_apply]
+  set m : α → ℝ := fun a ↦ max (y a) (x a) with hm_def
+  have hm : ∀ a ∈ Finset.univ, 0 < m a := fun a _ ↦ lt_max_of_lt_left (hy a).1
+  have hm1 : 1 ≤ ∑ a, m a :=
+    hx1 ▸ Finset.sum_le_sum fun a _ ↦ le_max_right (y a) (x a)
+  have hm2 : ∑ a, m a ≤ 2 := by
+    calc ∑ a, m a ≤ ∑ a, (y a + x a) :=
+          Finset.sum_le_sum fun a _ ↦ max_le (by linarith [(hx a).1]) (by linarith [(hy a).1])
+      _ = 2 := by rw [Finset.sum_add_distrib, hx1, hy1]; norm_num
+  have hCS := Finset.sq_sum_div_le_sum_sq_div Finset.univ (fun a ↦ |y a - x a|) hm
+  have h1 : (∑ a, |y a - x a|) ^ 2 / 2 ≤ (∑ a, |y a - x a|) ^ 2 / ∑ a, m a :=
+    div_le_div_of_nonneg_left (sq_nonneg _) (by linarith) hm2
+  have h2 : ∀ a, c₁ / 2 * ((y a - x a) ^ 2 / m a) ≤
+      r (y a) - r (x a) - deriv r (x a) * (y a - x a) := fun a ↦ by
+      have := hr.mul_sq_div_max_le_sub_sub (hy a) (hx a)
+      rw [hm_def]
+      calc c₁ / 2 * ((y a - x a) ^ 2 / max (y a) (x a)) =
+          c₁ * (y a - x a) ^ 2 / (2 * max (y a) (x a)) := by ring
+        _ ≤ _ := this
+  calc c₁ / 4 * (∑ a, |y a - x a|) ^ 2 = c₁ / 2 * ((∑ a, |y a - x a|) ^ 2 / 2) := by ring
+    _ ≤ c₁ / 2 * ∑ a, |y a - x a| ^ 2 / m a :=
+        mul_le_mul_of_nonneg_left (h1.trans hCS) (by linarith [hr.pos])
+    _ = ∑ a, c₁ / 2 * ((y a - x a) ^ 2 / m a) := by
+        rw [Finset.mul_sum]
+        simp_rw [sq_abs]
+    _ ≤ _ := Finset.sum_le_sum fun a _ ↦ h2 a
+
 /-- The increments of the derivative of a power barrier: if `κ` bounds `r''` below on `[x, y]`,
 then `κ (y - x) ≤ r' y - r' x`. -/
 lemma mul_sub_le_deriv_sub (hr : IsPowerBarrier ν c₁ c₂ r) (hx : x ∈ Ioo 0 1) (hy : y ∈ Ioo 0 1)
@@ -259,5 +402,68 @@ lemma mul_log_div_le_deriv_sub (hr : IsPowerBarrier 1 c₁ c₂ r) (hx : x ∈ I
   linarith
 
 end IsPowerBarrier
+
+/-- The function `x ↦ x log x` is a power barrier with exponent `1` and constants `1, 1`: the
+negative entropy [SSKM26, Section 2]. -/
+lemma isPowerBarrier_mul_log : IsPowerBarrier 1 1 1 (fun x ↦ x * log x) := by
+  set r : ℝ → ℝ := fun x ↦ x * log x with hr
+  have h1 : ∀ x : ℝ, 0 < x → HasDerivAt r (log x + 1) x := fun x hx ↦
+    hasDerivAt_mul_log hx.ne'
+  have hderiv : ∀ x : ℝ, 0 < x → deriv r =ᶠ[nhds x] fun y ↦ log y + 1 := fun x hx ↦
+    (eventually_gt_nhds hx).mono fun y hy ↦ (h1 y hy).deriv
+  have h2 : ∀ x : ℝ, 0 < x → HasDerivAt (deriv r) x⁻¹ x := fun x hx ↦
+    ((hasDerivAt_log hx.ne').add_const 1).congr_of_eventuallyEq (hderiv x hx)
+  have hval : ∀ x : ℝ, x⁻¹ = 1 / x ^ (1 : ℝ) := fun x ↦ by rw [rpow_one, one_div]
+  refine ⟨le_rfl, one_pos, fun x hx ↦ (h1 x hx.1).differentiableAt.differentiableWithinAt,
+    fun x hx ↦ (h2 x hx.1).differentiableAt.differentiableWithinAt, fun x hx ↦ ?_,
+    fun x hx ↦ ?_⟩
+  · rw [(h2 x hx.1).deriv, hval]
+  · rw [(h2 x hx.1).deriv, hval]
+
+/-- The **Tsallis entropy** `(x - x ^ q) / (1 - q)` of index `q ∈ (0, 1)` is a power barrier with
+exponent `2 - q` and constants `q, q` [SSKM26, Section 2]. -/
+lemma isPowerBarrier_tsallis {q : ℝ} (hq0 : 0 < q) (hq1 : q < 1) :
+    IsPowerBarrier (2 - q) q q (fun x ↦ (x - x ^ q) / (1 - q)) := by
+  set r : ℝ → ℝ := fun x ↦ (x - x ^ q) / (1 - q) with hr
+  set r' : ℝ → ℝ := fun x ↦ (1 - q * x ^ (q - 1)) / (1 - q) with hr'
+  have h1 : ∀ x : ℝ, 0 < x → HasDerivAt r (r' x) x := fun x hx ↦
+    ((hasDerivAt_id x).sub (hasDerivAt_rpow_const (p := q) (Or.inl hx.ne'))).div_const (1 - q)
+  have h2 : ∀ x : ℝ, 0 < x → HasDerivAt r' (q * x ^ (q - 2)) x := fun x hx ↦ by
+    have := (((hasDerivAt_rpow_const (p := q - 1) (Or.inl hx.ne')).const_mul q).const_sub
+      1).div_const (1 - q)
+    convert this using 1
+    rw [show q - 1 - 1 = q - 2 by ring]
+    have : 1 - q ≠ 0 := by linarith
+    field_simp
+    ring
+  have hderiv : ∀ x : ℝ, 0 < x → deriv r =ᶠ[nhds x] r' := fun x hx ↦
+    (eventually_gt_nhds hx).mono fun y hy ↦ (h1 y hy).deriv
+  have h2' : ∀ x : ℝ, 0 < x → HasDerivAt (deriv r) (q * x ^ (q - 2)) x := fun x hx ↦
+    (h2 x hx).congr_of_eventuallyEq (hderiv x hx)
+  have hval : ∀ x : ℝ, 0 < x → q * x ^ (q - 2) = q / x ^ (2 - q) := fun x hx ↦ by
+    rw [show q - 2 = -(2 - q) by ring, rpow_neg hx.le, div_eq_mul_inv]
+  refine ⟨by linarith, hq0, fun x hx ↦ (h1 x hx.1).differentiableAt.differentiableWithinAt,
+    fun x hx ↦ (h2' x hx.1).differentiableAt.differentiableWithinAt, fun x hx ↦ ?_,
+    fun x hx ↦ ?_⟩
+  · rw [(h2' x hx.1).deriv, hval x hx.1]
+  · rw [(h2' x hx.1).deriv, hval x hx.1]
+
+/-- The **log barrier** `x ↦ -log x` is a power barrier with exponent `2` and constants `1, 1`
+[SSKM26, Section 2]. -/
+lemma isPowerBarrier_neg_log : IsPowerBarrier 2 1 1 (fun x ↦ -log x) := by
+  set r : ℝ → ℝ := fun x ↦ -log x with hr
+  have h1 : ∀ x : ℝ, 0 < x → HasDerivAt r (-x⁻¹) x := fun x hx ↦
+    (hasDerivAt_log hx.ne').neg
+  have hderiv : ∀ x : ℝ, 0 < x → deriv r =ᶠ[nhds x] fun y ↦ -y⁻¹ := fun x hx ↦
+    (eventually_gt_nhds hx).mono fun y hy ↦ (h1 y hy).deriv
+  have h2 : ∀ x : ℝ, 0 < x → HasDerivAt (deriv r) (1 / x ^ (2 : ℝ)) x := fun x hx ↦ by
+    have := ((hasDerivAt_inv hx.ne').neg).congr_of_eventuallyEq (hderiv x hx)
+    convert this using 1
+    rw [rpow_two, neg_neg, one_div]
+  refine ⟨by norm_num, one_pos, fun x hx ↦ (h1 x hx.1).differentiableAt.differentiableWithinAt,
+    fun x hx ↦ (h2 x hx.1).differentiableAt.differentiableWithinAt, fun x hx ↦ ?_,
+    fun x hx ↦ ?_⟩
+  · rw [(h2 x hx.1).deriv]
+  · rw [(h2 x hx.1).deriv]
 
 end LMLExplore

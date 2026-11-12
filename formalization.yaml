@@ -77,6 +77,11 @@ status:
     entropy-upper), with Lemmas 13, 21, 22, 24, 25, 26, 33, 39, 40 for the negative entropy and
     the balance of i.i.d. losses in SSKM2026/EntropyUpper/, in corrected form (E3, E4, E7, E13,
     E15-E17, E19, E24, E25).
+    Theorem 6 (blueprint chapter barrier-upper, 2026-11-12): its core form, and the statement for
+    comparators with positive coordinates, proved, with the polytope facts, the power-barrier
+    examples and the strong convexity of power barriers in ForLMLExplore/; the frozen statement is
+    false for vertex comparators when r is only right-continuous at 0, and is blocked
+    (notes/statement-corrections.md, Theorem 6).
   sorry_count: 1
   sorry_in_definitions: 0
 
@@ -142,7 +147,8 @@ alignment:
     - source: "thm:ub_nonentropy — Theorem 6"
       lean: "Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier"
       module: "Schlisselberg2026Hidden.SSKM2026.Theorem6"
-      status: "stated"
+      status: "blocked"
+      blocked: "statement-corrections: Theorem 6"
       relation: "closeMatch"
       erratum: "E6"
       note: "Corrected threshold eta^4 Psi^(-nu/(nu-1))/(4^(nu+2) max(1,c2)) with Psi = (2d)^(nu-1) + 8(nu-1) eta T d/c1, no condition on eta, constant (1 + 1/c1); steps on the points of K with positive coordinates; comparators with positive coordinates, or all of K when r is right-continuous at 0 (E1, E5, E6)."

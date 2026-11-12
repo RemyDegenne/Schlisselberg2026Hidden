@@ -19,11 +19,11 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
 | R11 | Approximate mirror descent steps: definition and basic API | staged | S1 | proved | `ForLMLExplore/OnlineLearning/ApproxMirrorDescent.lean` |
 | R12 | Regret of approximate mirror descent with a smooth regularizer, with the approximate first-order condition of an ε-minimizer | staged | S1 | proved | `ForLMLExplore/Analysis/Convex/ApproxMinimizer.lean`, `ForLMLExplore/OnlineLearning/ApproxMirrorDescent/Smooth.lean` |
 | R13 | Approximate FTRL plays: definition, basic API and regret bound | staged | S1 | proved | `ForLMLExplore/OnlineLearning/FTRL/Approx.lean`, `ForLMLExplore/Analysis/Real/Sqrt.lean` |
-| R14 | Power barriers and coordinate-separable regularizers: examples, scalar bounds, derivative, Bregman divergence, strong convexity | staged | S2 | todo | `ForLMLExplore/Analysis/Convex/PowerBarrier.lean` |
-| R15 | Polytopes in standard form inside the simplex: convexity, feasible directions, ℓ¹ bounds on differences | staged | S3 | todo | `ForLMLExplore/Analysis/Convex/StandardFormPolytope.lean` |
+| R14 | Power barriers and coordinate-separable regularizers: examples, scalar bounds, derivative, Bregman divergence, strong convexity | staged | S2 | proved | `ForLMLExplore/Analysis/Convex/PowerBarrier.lean` |
+| R15 | Polytopes in standard form inside the simplex: convexity, feasible directions, ℓ¹ bounds on differences | staged | S3 | proved | `ForLMLExplore/Analysis/Convex/StandardFormPolytope.lean` |
 | R16 | Stuck trajectories: the error of staying put, for the negative entropy and for power barriers | paper | | proved | `SSKM2026/Lemma34.lean` |
 | R17 | Negative entropy on the simplex: step sizes, balance, lower bounds on the iterates, balance of i.i.d. losses | paper | | proved | `SSKM2026/EntropyUpper/Lemma13.lean`, `SSKM2026/EntropyUpper/Lemma21.lean`, `SSKM2026/EntropyUpper/Lemma22.lean`, `SSKM2026/EntropyUpper/Lemma24.lean`, `SSKM2026/EntropyUpper/Lemma33.lean`, `SSKM2026/EntropyUpper/Lemma39.lean`, `SSKM2026/EntropyUpper/Lemma40.lean`, `SSKM2026/EntropyUpper/IidBalanced.lean` |
-| R18 | Power barriers on polytopes: balance, lower bound on the iterates, one-round inequality | paper | | todo | |
+| R18 | Power barriers on polytopes: balance, lower bound on the iterates, one-round inequality | paper | | proved | `SSKM2026/BarrierUpper/Constants.lean`, `SSKM2026/BarrierUpper/Lemma10.lean`, `SSKM2026/BarrierUpper/Lemma11.lean`, `SSKM2026/BarrierUpper/Lemma12.lean`, `SSKM2026/BarrierUpper/Lemma22.lean`, `SSKM2026/BarrierUpper/Lemma26.lean`, `SSKM2026/BarrierUpper/Lemma27.lean`, `SSKM2026/BarrierUpper/Lemma42.lean`, `SSKM2026/BarrierUpper/PullToStart.lean` |
 | R19 | The polytope, the losses and the trajectory of Theorem 8 | paper | | proved | `SSKM2026/Lemma44.lean`, `SSKM2026/Lemma48.lean`, `SSKM2026/Lemma47.lean`, `SSKM2026/Theorem49.lean` |
 
 ## Notes
@@ -96,14 +96,20 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
   them on `(0, 1)` (erratum E1, `notes/modelling.md`). The scalar bounds are the paper's Lemmas 21
   and 41, Lemma 41 in corrected form, with the factor `1 / (ν - 1)` (erratum E26). The strong
   convexity is for the `ℓ¹` norm on the points of the simplex with positive coordinates, with
-  modulus `c₁ / 2`; the paper's proof of Theorem 6 uses modulus `1` (erratum E6). Proved so far:
-  the definition, the Bregman divergence of a coordinate-separable function as a sum
-  (`bregDiv_sum_apply`), Taylor's formula of order two, and all the scalar bounds (strict
-  monotonicity of `r'`, Lemma 41 for `ν > 1` and `ν = 1`, the quadratic bounds on `D_r`). Still to
-  do: the examples, the derivative of the coordinate-separable regularizer and its strong
-  convexity.
+  modulus `c₁ / 2`; the paper's proof of Theorem 6 uses modulus `1` (erratum E6). The file has the
+  definition, the examples (`isPowerBarrier_mul_log`, `isPowerBarrier_tsallis`,
+  `isPowerBarrier_neg_log`), the invariance under changes off `(0, 1)` (`IsPowerBarrier.congr`),
+  the Bregman divergence of a coordinate-separable function as a sum (`bregDiv_sum_apply`), its
+  derivative (`hasFDerivAt_sum_apply`), Taylor's formula of order two, all the scalar bounds, the
+  nonnegativity of `D_r(0, y)` and `D_r(1, y)` under one-sided continuity at `0` and `1`, and the
+  strong convexity (`IsPowerBarrier.mul_sq_sum_abs_sub_le_bregDiv`). The definition does not
+  constrain `r 0` and `r 1`; statements about comparators on the boundary need one-sided
+  continuity there (`notes/statement-corrections.md`, Theorem 6).
 - R15: the paper's Lemma 31 and the facts of the blueprint's `lem:polytope_facts`. Tau Ceti's
-  `IsConvexPolyhedron` gives the vocabulary for the sets.
+  `IsConvexPolyhedron` gives the vocabulary for the sets. The file states the facts about the sets
+  `{w | (∀ a, 0 ≤ w a) ∧ A w = b}` and `{w | (∀ a, 0 < w a) ∧ A w = b}` directly, with no
+  definition; the closedness, the polyhedron structure and the first-order condition of Lemma 30
+  in S3 are not needed by the paper and are not in the file.
 - R16–R19: the paper's own lemmas, in `SSKM2026/`, one file per result, from the blueprint
   chapters `entropy-lower` (R16), `entropy-upper` (R17), `barrier-upper` (R18) and
   `polytope-lower` (R19). R16 is the paper's Lemma 34 and its power-barrier form. R17 covers

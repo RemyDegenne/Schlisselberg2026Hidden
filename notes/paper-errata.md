@@ -23,7 +23,9 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
 - **Correction:** ask the bounds on `(0, 1)` (all iterates and segments between them have
   coordinates in `(0, 1)` when `d ≥ 2`), take the OMD subproblems over the points of `K` with
   positive coordinates (the domain of the barrier), and state the regret bounds for comparators
-  with positive coordinates, or for all comparators when `r` is right-continuous at `0`.
+  with positive coordinates, or for all comparators when `r` is right-continuous at `0` and
+  left-continuous at `1`. The bounds on `(0, 1)` say nothing about `r(1)`, which enters `D_R(w, w₁)`
+  at a vertex `w` of the simplex; the paper's bounds on `(0, 1]` make `r` continuous at `1`.
 - **Lean:** `LMLExplore.IsPowerBarrier`; `Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier`
   and `Schlisselberg2026Hidden.exists_approxMirrorDescent_le_regret_of_isPowerBarrier` take their
   steps on the points with positive coordinates.
@@ -106,7 +108,8 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
   `⟨∇R(w₁) - ∇R(z), w₁ - z⟩ ≤ 4ηT`, hence `z ≥ ψ` coordinatewise (Lemma 12) and `x ≥ ψ/2`. This
   needs no exact minimizer and no condition on `η`. (Whether Lemma 25's conclusion fails on
   polytopes is not settled; a random search found no counterexample.)
-- **Lean:** `Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier`.
+- **Lean:** `Schlisselberg2026Hidden.approxMirrorDescent_regret_le_of_isPowerBarrier`; the
+  replacement of Lemma 25 is `Schlisselberg2026Hidden.half_le_of_forall_isApproxMirrorDescentStep`.
 - **Kind:** gap in the proof.
 - **Found:** phase-1 statement check, 2026-11-12.
 
@@ -193,7 +196,8 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
   `η`.
 - **Correction:** `B^v(t₁, t₂) = η⟨ℓ_{t₁:t₂-1}, v⟩` for exact trajectories with positive iterates.
 - **Lean:** not stated separately; the corrected proofs use one-step inequalities (blueprint
-  `lem:bar_balance`, `lem:entropy_balance`).
+  `lem:bar_balance`, `lem:entropy_balance`). On polytopes:
+  `Schlisselberg2026Hidden.sum_deriv_sub_mul_le_of_forall_isApproxMirrorDescentStep`.
 - **Kind:** typo.
 - **Found:** phase-1 statement check, 2026-11-12.
 
@@ -236,7 +240,8 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
   stay above `ψ` on the support of `v`.
 - **Lean:** blueprint `lem:bar_one_step_balance`, `lem:entropy_balance`; for the negative
   entropy, `Schlisselberg2026Hidden.log_sub_log_add_le_of_isApproxMirrorDescentStep_negEntropy` compares
-  directly with `η (ℓ j - ℓ i)`.
+  directly with `η (ℓ j - ℓ i)`; on polytopes
+  `Schlisselberg2026Hidden.sum_deriv_sub_mul_le_of_isApproxMirrorDescentStep`.
 - **Kind:** wrong constant.
 - **Found:** phase-1 statement check, 2026-11-12.
 
@@ -462,7 +467,8 @@ Kinds: typo, wrong constant, missing hypothesis, gap in the proof, false stateme
   exact OMD on `Δ₂`: `ν = 11`, `c₁ = c₂ = 1`, `η = 1/16`, losses `(1, -1)`, `T = 5·10⁶`:
   `w_T^1 = 0.209128 < ψ = 0.209814`. It is a consequence of E26.
 - **Correction:** `ψ = ((2d)^{ν-1} + 8(ν - 1)ηTd/c₁)^{-1/(ν-1)}`, under the threshold of E6.
-- **Lean:** blueprint `lem:bar_iterates_lower`.
+- **Lean:** blueprint `lem:bar_iterates_lower`,
+  `Schlisselberg2026Hidden.le_of_forall_isApproxMirrorDescentStep`.
 - **Kind:** false statement.
 - **Found:** phase-1 statement check, 2026-11-12.
 
