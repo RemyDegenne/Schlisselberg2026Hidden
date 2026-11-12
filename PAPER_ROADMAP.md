@@ -14,7 +14,7 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
 | R6 | The simplex, the negative entropy, Pinsker's inequality and the Gibbs variational principle | exists | `LMLExplore.negEntropy` | – | |
 | R7 | Hoeffding's inequality for independent bounded variables, and i.i.d. sequences as `Measure.infinitePi` | exists | `ProbabilityTheory.HasSubgaussianMGF.measure_sum_ge_le_of_iIndepFun` | – | |
 | R8 | The descent lemma: quadratic bounds for a function with a Lipschitz derivative on a convex set | target | OnlineLearning 1.3 | PR #301 | `ForLMLExplore/Analysis/Convex/Smooth.lean` |
-| R9 | Multiplicative weights as the mirror descent step of the negative entropy on the simplex | target | OnlineLearning 6.2 | proved | `ForLMLExplore/OnlineLearning/ExponentiatedGradient.lean` |
+| R9 | Multiplicative weights as the mirror descent step of the negative entropy on the simplex | target | OnlineLearning 6.2 | PR #302 | `ForLMLExplore/OnlineLearning/ExponentiatedGradient.lean` |
 | R10 | Derivative and Bregman divergence of the negative entropy on `α → ℝ` | refactor | `LMLExplore.bregDiv_negEntropy` | PR #303 | `ForLMLExplore/Analysis/Convex/NegEntropy.lean` |
 | R11 | Approximate mirror descent steps: definition and basic API | staged | S1 | proved | `ForLMLExplore/OnlineLearning/ApproxMirrorDescent.lean` |
 | R12 | Regret of approximate mirror descent with a smooth regularizer, with the approximate first-order condition of an ε-minimizer | staged | S1 | proved | `ForLMLExplore/Analysis/Convex/ApproxMinimizer.lean`, `ForLMLExplore/OnlineLearning/ApproxMirrorDescent/Smooth.lean` |
@@ -62,7 +62,13 @@ Paper: RemyDegenne/Schlisselberg2026Hidden · LMLExplore 469c4c5710e0 · LMLRoad
   (`isMirrorDescentStep_negEntropy_iff`, with its uniqueness), the approximate steps as the points
   at relative entropy at most `ε` from it, the trajectory from the uniform point as
   `softmax (-η ∑ s < t, ℓ s)` with its uniqueness, and the invariance under adding a constant to a
-  loss (`isMirrorDescentStep_negEntropy_add_const_iff`).
+  loss (`isMirrorDescentStep_negEntropy_add_const_iff`). PR #302 ports the first three claims of
+  6.2 in `LMLExplore/OnlineLearning/ExponentiatedGradient.lean`, with the objective's value as one
+  `IsLeast` statement (`isLeast_mul_apply_add_bregDiv_negEntropy`) and the trajectory in the
+  `softmax (-(η • ∑ s < t, ℓ s))` form of `softmax_regret_le`. It drops the approximate-step lemmas,
+  since `IsApproxMirrorDescentStep` is R11. It also adds `hasFDerivAt_negEntropy_pi` and
+  `bregDiv_negEntropy_pi` to `LMLExplore/Analysis/Convex/NegEntropy.lean`, beside the `PiLp` forms:
+  part of R10, under the local names, which PR #303 replaces by the plain ones.
 - R10: LMLExplore states `hasFDerivAt_negEntropy` and `bregDiv_negEntropy` on `PiLp p`. The
   paper's statements use `negEntropy` on `α → ℝ`, with the derivative
   `∑ a, log (y a) • ContinuousLinearMap.proj a`. The refactor states both on `α → ℝ` and derives
