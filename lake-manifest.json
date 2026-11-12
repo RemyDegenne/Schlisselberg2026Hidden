@@ -15,7 +15,7 @@
    "type": "git",
    "subDir": null,
    "scope": "",
-   "rev": "b4e0ab91c5cdec7e1249a78d5dab29dc3ab0d0d4",
+   "rev": "469c4c5710e0ba6fe449befd434b5603e580e4ba",
    "name": "LMLExplore",
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",
@@ -171,6 +171,6 @@
    "inputRev": "main",
    "inherited": true,
    "configFile": "lakefile.lean"}],
- "name": "PaperLib",
+ "name": "Schlisselberg2026Hidden",
  "lakeDir": ".lake",
  "fixedToolchain": false}
